@@ -27,6 +27,7 @@ namespace CofD_Sheet.Sheet_Components
 		{
 			maxValue = Convert.ToInt32(node.Attributes["MaxValue"].Value);
 			currentValue = Convert.ToInt32(node.Attributes["CurrentValue"].Value);
+			type = ISheetComponent.Type.Simple;
 		}
 
 		override protected void fillElement(ref XmlElement node, XmlDocument doc)

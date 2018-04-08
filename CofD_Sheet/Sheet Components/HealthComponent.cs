@@ -32,6 +32,7 @@ namespace CofD_Sheet.Sheet_Components
 			aggrivated = Convert.ToInt32(node.Attributes["Aggrivated"].Value);
 			lethal = Convert.ToInt32(node.Attributes["Lethal"].Value);
 			bashing = Convert.ToInt32(node.Attributes["Bashing"].Value);
+			type = ISheetComponent.Type.Health;
 		}
 
 		override protected void fillElement(ref XmlElement node, XmlDocument doc)
@@ -77,6 +78,7 @@ namespace CofD_Sheet.Sheet_Components
 						uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, separatorWidth * separatorProportion));
 						TextBox slot = new TextBox();
 						slot.Anchor = System.Windows.Forms.AnchorStyles.None;
+						slot.KeyDown += new KeyEventHandler(backSpacePressed);
 						slot.AutoSize = true;
 						slot.Location = new System.Drawing.Point(22, 14);
 						slot.Name = "slot" + name + "_" + slotNr;
@@ -167,6 +169,38 @@ namespace CofD_Sheet.Sheet_Components
 					slots[i].Text = "";
 				}
 				slots[i].TextChanged += valueChanged;
+			}
+		}
+
+		void backSpacePressed(object sender, KeyEventArgs e)
+		{
+			if (e.KeyData == Keys.Back)
+			{
+				((TextBox)sender).Text = "";
+				valueChanged(sender, null);
+			}
+			else if (e.KeyData == Keys.Left
+					 || e.KeyData == Keys.Right)
+			{
+				int currentFocusIndex = 0;
+				for (int i = 0; i < slots.Count; i++)
+				{
+					if (sender == slots[i])
+					{
+						currentFocusIndex = i;
+						break;
+					}
+				}
+				if (e.KeyData == Keys.Left
+					&& currentFocusIndex > 0)
+				{
+					slots[currentFocusIndex - 1].Focus();
+				}
+				else if (e.KeyData == Keys.Right
+						 && currentFocusIndex < slots.Count - 1)
+				{
+					slots[currentFocusIndex + 1].Focus();
+				}
 			}
 		}
 	}

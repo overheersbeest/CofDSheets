@@ -34,6 +34,7 @@ namespace CofD_Sheet
 					components.Add(new SimpleComponent("Willpower"));
 					components.Add(new StatComponent("Integrity"));
 					components.Add(new ExperienceComponent("Experience", "Beats"));
+					components.Add(new AspirationsComponent("Aspirations"));
 					break;
 				case SheetType.Mage:
 					components.Add(new HealthComponent("Health"));
@@ -43,6 +44,8 @@ namespace CofD_Sheet
 					components.Add(new StatComponent("Gnosis"));
 					components.Add(new ExperienceComponent("Experience", "Beats"));
 					components.Add(new ExperienceComponent("Arcane_Experience", "Arcane_Beats"));
+					components.Add(new AspirationsComponent("Aspirations"));
+					components.Add(new AspirationsComponent("Obsessions", 1));
 					break;
 				case SheetType.Werewolf:
 					components.Add(new HealthComponent("Health"));
@@ -51,12 +54,14 @@ namespace CofD_Sheet
 					components.Add(new StatComponent("Harmony"));
 					components.Add(new StatComponent("Primal_Urge"));
 					components.Add(new ExperienceComponent("Experience", "Beats"));
+					components.Add(new AspirationsComponent("Aspirations"));
 					break;
 				case SheetType.Spirit:
 					components.Add(new HealthComponent("Corpus"));
 					components.Add(new SimpleComponent("Willpower"));
 					components.Add(new SimpleComponent("Essence"));
 					components.Add(new StatComponent("Rank"));
+					components.Add(new AspirationsComponent("Aspirations"));
 					break;
 			}
 		}
@@ -86,7 +91,9 @@ namespace CofD_Sheet
 				case ISheetComponent.Type.Stat:
 					return new StatComponent(node);
 				case ISheetComponent.Type.Experience:
-					return new StatComponent(node);
+					return new ExperienceComponent(node);
+				case ISheetComponent.Type.Aspirations:
+					return new AspirationsComponent(node);
 				default:
 					return new SimpleComponent("unknownType:" + node.Attributes["Type"].Value);
 			}
