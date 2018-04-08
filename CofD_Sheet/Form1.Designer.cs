@@ -124,7 +124,7 @@
 			this.HeaderTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 47F));
 			this.HeaderTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 153F));
 			this.HeaderTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 65F));
-			this.HeaderTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 142F));
+			this.HeaderTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 143F));
 			this.HeaderTable.Controls.Add(this.ChronicleTextBox, 5, 0);
 			this.HeaderTable.Controls.Add(this.PlayerTextBox, 3, 0);
 			this.HeaderTable.Controls.Add(this.NameLabel, 0, 0);
@@ -143,16 +143,16 @@
 			// ChronicleTextBox
 			// 
 			this.ChronicleTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ChronicleTextBox.Location = new System.Drawing.Point(500, 3);
+			this.ChronicleTextBox.Location = new System.Drawing.Point(499, 3);
 			this.ChronicleTextBox.Name = "ChronicleTextBox";
-			this.ChronicleTextBox.Size = new System.Drawing.Size(137, 20);
+			this.ChronicleTextBox.Size = new System.Drawing.Size(138, 20);
 			this.ChronicleTextBox.TabIndex = 5;
 			this.ChronicleTextBox.TextChanged += new System.EventHandler(this.ChronicleChanged);
 			// 
 			// PlayerTextBox
 			// 
 			this.PlayerTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.PlayerTextBox.Location = new System.Drawing.Point(282, 3);
+			this.PlayerTextBox.Location = new System.Drawing.Point(281, 3);
 			this.PlayerTextBox.Name = "PlayerTextBox";
 			this.PlayerTextBox.Size = new System.Drawing.Size(147, 20);
 			this.PlayerTextBox.TabIndex = 4;
@@ -172,7 +172,7 @@
 			// 
 			this.PlayerLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
 			this.PlayerLabel.AutoSize = true;
-			this.PlayerLabel.Location = new System.Drawing.Point(237, 5);
+			this.PlayerLabel.Location = new System.Drawing.Point(236, 5);
 			this.PlayerLabel.Name = "PlayerLabel";
 			this.PlayerLabel.Size = new System.Drawing.Size(39, 13);
 			this.PlayerLabel.TabIndex = 1;
@@ -182,7 +182,7 @@
 			// 
 			this.ChronicleLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
 			this.ChronicleLabel.AutoSize = true;
-			this.ChronicleLabel.Location = new System.Drawing.Point(440, 5);
+			this.ChronicleLabel.Location = new System.Drawing.Point(439, 5);
 			this.ChronicleLabel.Name = "ChronicleLabel";
 			this.ChronicleLabel.Size = new System.Drawing.Size(54, 13);
 			this.ChronicleLabel.TabIndex = 2;
@@ -193,7 +193,7 @@
 			this.NameTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.NameTextBox.Location = new System.Drawing.Point(58, 3);
 			this.NameTextBox.Name = "NameTextBox";
-			this.NameTextBox.Size = new System.Drawing.Size(171, 20);
+			this.NameTextBox.Size = new System.Drawing.Size(170, 20);
 			this.NameTextBox.TabIndex = 3;
 			this.NameTextBox.TextChanged += new System.EventHandler(this.NameChanged);
 			// 

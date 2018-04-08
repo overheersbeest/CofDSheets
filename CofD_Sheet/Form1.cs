@@ -40,7 +40,7 @@ namespace CofD_Sheet
 			Stream myStream = null;
 			OpenFileDialog openFileDialog1 = new OpenFileDialog();
 
-			openFileDialog1.InitialDirectory = initialSearchFolder;
+			//openFileDialog1.InitialDirectory = initialSearchFolder;
 			openFileDialog1.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*";
 			openFileDialog1.FilterIndex = 1;
 
@@ -152,7 +152,7 @@ namespace CofD_Sheet
 			}
 			else
 			{
-				this.Text = sheet.name;
+				this.Text = "CofD Sheet - " + sheet.name;
 			}
 		}
 

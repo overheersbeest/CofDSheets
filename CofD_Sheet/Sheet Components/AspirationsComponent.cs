@@ -31,7 +31,7 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				if (i < node.ChildNodes.Count)
 				{
-					aspirations.Add(node.ChildNodes[i].Attributes["Text"].Value);
+					aspirations.Add(node.ChildNodes[i].InnerText);
 				}
 				else
 				{
@@ -49,7 +49,8 @@ namespace CofD_Sheet.Sheet_Components
 				if (aspiration.Length > 0)
 				{
 					XmlElement aspirationElement = doc.CreateElement("Aspiration");
-					aspirationElement.SetAttribute("Text", aspiration);
+					aspirationElement.InnerText = aspiration;
+					//aspirationElement.SetAttribute("Text", aspiration);
 					node.AppendChild(aspirationElement);
 				}
 			}
