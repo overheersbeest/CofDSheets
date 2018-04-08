@@ -25,13 +25,34 @@ namespace CofD_Sheet.Sheet_Components
 		
 		public AspirationsComponent(XmlNode node) : base(node.Name)
 		{
-			maxAspirations = Convert.ToInt32(node.Attributes["maxAspirations"].Value);
+			maxAspirations = Convert.ToInt32(node.Attributes["MaxAspirations"].Value);
+
+			for (int i = 0; i < maxAspirations; i++)
+			{
+				if (i < node.ChildNodes.Count)
+				{
+					aspirations.Add(node.ChildNodes[i].Attributes["Text"].Value);
+				}
+				else
+				{
+					aspirations.Add("");
+				}
+			}
 			type = ISheetComponent.Type.Aspirations;
 		}
 
 		override protected void fillElement(ref XmlElement node, XmlDocument doc)
 		{
-			node.SetAttribute("maxAspirations", maxAspirations.ToString());
+			node.SetAttribute("MaxAspirations", maxAspirations.ToString());
+			foreach (string aspiration in aspirations)
+			{
+				if (aspiration.Length > 0)
+				{
+					XmlElement aspirationElement = doc.CreateElement("Aspiration");
+					aspirationElement.SetAttribute("Text", aspiration);
+					node.AppendChild(aspirationElement);
+				}
+			}
 		}
 
 		override public Control getUIElement()
@@ -59,6 +80,7 @@ namespace CofD_Sheet.Sheet_Components
 				textBox.Size = new System.Drawing.Size(15, 14);
 				textBox.Dock = DockStyle.Fill;
 				textBox.TabIndex = 0;
+				textBox.Text = aspirations[r];
 				textBox.TextChanged += onValueChanged;
 				textBoxes.Add(textBox);
 				uiElement.Controls.Add(textBox, 0, r);

@@ -110,8 +110,8 @@ namespace CofD_Sheet
 				componentUIElement.Location = new Point(3, 3);
 				componentUIElement.Name = "tableLayout" + component.name;
 				componentUIElement.RowCount = 2;
-				componentUIElement.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-				componentUIElement.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+				componentUIElement.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+				componentUIElement.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 				componentUIElement.Size = new Size(292, 60);
 				componentUIElement.TabIndex = 0;
 
