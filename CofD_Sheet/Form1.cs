@@ -15,13 +15,62 @@ namespace CofD_Sheet
 {
 	public partial class Form1 : Form
 	{
-		static string initialSearchFolder = "c:\\";
+		public static Form1 instance = null;
 
-		Sheet sheet = new Sheet();
+		public Sheet sheet = new Sheet();
 
+		private bool _autoSave = true;
+		public bool autoSave
+		{
+			get { return _autoSave; }
+			set
+			{
+				_autoSave = value;
+				if (sheet.changedSinceSave)
+				{
+					saveAgain();
+				}
+			}
+		}
+		public bool autoSaveDisabled = false;
+
+		private bool _autoLoad = false;
+		public bool autoLoad
+		{
+			get { return _autoLoad; }
+			set
+			{
+				_autoLoad = value;
+				if (assosiatedFile.Length != 0)
+				{
+					watcher.EnableRaisingEvents = value;
+					int slashIndex = assosiatedFile.LastIndexOf('\\');
+					string dir = assosiatedFile.Substring(0, slashIndex);
+					string name  = assosiatedFile.Substring(slashIndex + 1, assosiatedFile.Length - slashIndex - 1);
+					loadAgain(this, new FileSystemEventArgs(WatcherChangeTypes.Changed, dir, name));
+				}
+			}
+		}
+
+		private string _assosiatedFile = "";
+		public string assosiatedFile
+		{
+			get { return _assosiatedFile; }
+			set
+			{
+				_assosiatedFile = value;
+				if (value.Length > 0)
+				{
+					watcher.EnableRaisingEvents = autoLoad;
+				}
+			}
+		}
+
+		FileSystemWatcher watcher = new FileSystemWatcher();
 
 		public Form1()
 		{
+			instance = this;
 			InitializeComponent();
 
 			foreach (SheetType type in Enum.GetValues(typeof(SheetType)))
@@ -33,29 +82,36 @@ namespace CofD_Sheet
 				newButton.Click += new System.EventHandler(this.NewSheetButtonClicked);
 				this.newToolStripMenuItem.DropDownItems.Add(newButton);
 			}
+			
+			watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+			watcher.Changed += new FileSystemEventHandler(loadAgain);
+			autoSaveToolStripMenuItem.Checked = autoSave;
+			autoLoadToolStripMenuItem.Checked = autoLoad;
 		}
 
 		private void loadToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			Stream myStream = null;
 			OpenFileDialog openFileDialog1 = new OpenFileDialog();
-
-			//openFileDialog1.InitialDirectory = initialSearchFolder;
-			openFileDialog1.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*";
-			openFileDialog1.FilterIndex = 1;
-
+			openFileDialog1.Filter = "CofD Sheet files (*.cofds)|*.cofds|XML files (*.xml)|*.xml|All files (*.*)|*.*";
+			openFileDialog1.FilterIndex = 0;
+			
+			autoSaveDisabled = true;
 			if (openFileDialog1.ShowDialog() == DialogResult.OK)
 			{
 				try
 				{
-					if ((myStream = openFileDialog1.OpenFile()) != null)
+					Stream myStream = openFileDialog1.OpenFile();
+					if (myStream != null)
 					{
 						using (myStream)
 						{
+							string path = openFileDialog1.FileName;
+							watcher.Path = path.Substring(0, path.LastIndexOf('\\'));
+							assosiatedFile = path;
 							XmlDocument doc = new XmlDocument();
 							doc.Load(myStream);
 							sheet = new Sheet(doc);
-							string xmlcontents = doc.InnerXml;
+							sheet.changedSinceSave = false;
 						}
 					}
 				}
@@ -65,29 +121,116 @@ namespace CofD_Sheet
 				}
 			}
 
+			autoSaveDisabled = false;
 			refreshSheet();
 		}
 
 		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			Stream myStream;
 			SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-
-			saveFileDialog1.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*";
-			saveFileDialog1.FilterIndex = 1;
+			saveFileDialog1.Filter = "CofD Sheet files (*.cofds)|*.cofds|XML files (*.xml)|*.xml|All files (*.*)|*.*";
+			saveFileDialog1.FilterIndex = 0;
+			watcher.EnableRaisingEvents = false;
 
 			if (saveFileDialog1.ShowDialog() == DialogResult.OK)
 			{
-				if ((myStream = saveFileDialog1.OpenFile()) != null)
+				try
 				{
-					sheet.getXMLDoc().Save(myStream);
-					myStream.Close();
+					Stream myStream = saveFileDialog1.OpenFile();
+					if (myStream != null)
+					{
+						using (myStream)
+						{
+							string path = saveFileDialog1.FileName;
+							watcher.Path = path.Substring(0, path.LastIndexOf('\\'));
+							assosiatedFile = path;
+							sheet.getXMLDoc().Save(myStream);
+							sheet.changedSinceSave = false;
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show("Error: Could not write file to disk. Original error: " + ex.Message);
 				}
 			}
 		}
-		
-		private void refreshSheet()
+
+		public void saveAgain()
 		{
+			if (assosiatedFile.Length > 0)
+			{
+				watcher.EnableRaisingEvents = false;
+				try
+				{
+					StreamWriter myStream = new StreamWriter(assosiatedFile);
+					if (myStream != null)
+					{
+						using (myStream)
+						{
+							sheet.getXMLDoc().Save(myStream);
+							sheet.changedSinceSave = false;
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show("Error: Could not autosave file to disk. Original error: " + ex.Message);
+				}
+			}
+		}
+
+		public void loadAgain(object sender, FileSystemEventArgs e)
+		{
+			if (e.FullPath == assosiatedFile)
+			{
+				try
+				{
+					bool fileRead = false;
+					while (!fileRead)
+					{
+						fileRead = true;
+						try
+						{
+							StreamReader myStream = new StreamReader(assosiatedFile);
+							if (myStream != null)
+							{
+								using (myStream)
+								{
+									XmlDocument doc = new XmlDocument();
+									doc.Load(myStream);
+									sheet = new Sheet(doc);
+								}
+							}
+						}
+						catch (Exception fe)
+						{
+							fileRead = false;
+						}
+					}
+					refreshSheet();
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show("Error: Could not reload file from disk. Original error: " + ex.Message);
+				}
+
+			}
+		}
+
+		public delegate void refreshSheetCallback();
+
+		public void refreshSheet()
+		{
+			if (PlayerTextBox.InvokeRequired)
+			{
+				refreshSheetCallback d = new refreshSheetCallback(refreshSheet);
+				this.Invoke(d, new object[] { });
+				return;
+			}
+
+			autoSaveDisabled = true;
+
 			NameTextBox.Text = sheet.name;
 			PlayerTextBox.Text = sheet.player;
 			ChronicleTextBox.Text = sheet.chronicle;
@@ -141,11 +284,18 @@ namespace CofD_Sheet
 
 			LeftComponentTable.RowCount = amountOfRows;
 			RightComponentTable.RowCount = amountOfRows;
+			
+			autoSaveDisabled = false;
 		}
 
 		private void NameChanged(object sender, EventArgs e)
 		{
 			sheet.name = NameTextBox.Text;
+			RefreshFormTitle();
+		}
+
+		public void RefreshFormTitle()
+		{
 			if (sheet.name.Length == 0)
 			{
 				this.Text = "CofD Sheet";
@@ -153,6 +303,11 @@ namespace CofD_Sheet
 			else
 			{
 				this.Text = "CofD Sheet - " + sheet.name;
+			}
+
+			if (sheet.changedSinceSave)
+			{
+				this.Text += "*";
 			}
 		}
 
@@ -168,8 +323,25 @@ namespace CofD_Sheet
 
 		private void NewSheetButtonClicked(object sender, EventArgs e)
 		{
+			assosiatedFile = "";
 			sheet = new Sheet((SheetType)Enum.Parse(typeof(SheetType), sender.ToString()));
 			refreshSheet();
+		}
+
+		private void autoSaveToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			autoSaveToolStripMenuItem.Checked = !autoSaveToolStripMenuItem.Checked;
+			autoSave = autoSaveToolStripMenuItem.Checked;
+		}
+
+		private void autoLoadToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			autoLoadToolStripMenuItem.Checked = !autoLoadToolStripMenuItem.Checked;
+			autoLoad = autoLoadToolStripMenuItem.Checked;
+			if (watcher.Path.Length > 0)
+			{
+				watcher.EnableRaisingEvents = autoLoad;
+			}
 		}
 	}
 }

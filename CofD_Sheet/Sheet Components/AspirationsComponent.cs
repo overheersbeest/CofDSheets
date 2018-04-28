@@ -96,6 +96,8 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				aspirations[i] = textBoxes[i].Text;
 			}
+
+			onComponentChanged();
 		}
 	}
 }

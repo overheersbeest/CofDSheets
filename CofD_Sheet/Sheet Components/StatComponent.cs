@@ -116,6 +116,8 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				pips[i].Checked = i < currentValue;
 			}
+
+			onComponentChanged();
 		}
 	}
 }

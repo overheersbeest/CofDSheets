@@ -8,7 +8,7 @@ using System.Xml;
 
 namespace CofD_Sheet.Sheet_Components
 {
-	abstract class ISheetComponent
+	public abstract class ISheetComponent
 	{
 		public enum Type
 		{
@@ -38,5 +38,21 @@ namespace CofD_Sheet.Sheet_Components
 		abstract public Control getUIElement();
 
 		abstract protected void fillElement(ref XmlElement node, XmlDocument doc);
+
+		protected void onComponentChanged()
+		{
+			if (Form1.instance.autoSave)
+			{
+				if (Form1.instance.assosiatedFile.Length != 0)
+				{
+					Form1.instance.saveAgain();
+				}
+			}
+			else
+			{
+				Form1.instance.sheet.changedSinceSave = true;
+			}
+		}
+
 	}
 }

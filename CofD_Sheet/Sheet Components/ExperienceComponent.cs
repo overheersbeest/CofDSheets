@@ -149,6 +149,8 @@ namespace CofD_Sheet.Sheet_Components
 			experienceCounter.TextChanged -= onValueChanged;
 			experienceCounter.Text = experience.ToString();
 			experienceCounter.TextChanged += onValueChanged;
+
+			onComponentChanged();
 		}
 	}
 }

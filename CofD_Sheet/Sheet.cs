@@ -8,19 +8,31 @@ using System.Xml;
 
 namespace CofD_Sheet
 {
-	enum SheetType
+	public enum SheetType
 	{
 		Mortal,
 		Mage,
 		Werewolf,
 		Spirit
 	}
-	class Sheet
+	public class Sheet
 	{
 		public string name = "";
 		public string player = "";
 		public string chronicle = "";
 		public List<ISheetComponent> components = new List<ISheetComponent>();
+
+		public bool _changedSinceSave = false;
+		public bool changedSinceSave
+		{
+			get { return this._changedSinceSave; }
+			set
+			{
+				this._changedSinceSave = value;
+				Form1.instance.RefreshFormTitle();
+			}
+		}
+
 
 		public Sheet()
 		{ }
@@ -68,7 +80,7 @@ namespace CofD_Sheet
 
 		public Sheet(XmlDocument doc)
 		{
-			XmlNode sheet = doc.FirstChild;
+			XmlNode sheet = doc.GetElementsByTagName("Sheet")[0];
 			name = sheet.Attributes["Name"].Value;
 			player = sheet.Attributes["Player"].Value;
 			chronicle = sheet.Attributes["Chronicle"].Value;

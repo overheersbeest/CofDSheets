@@ -108,6 +108,8 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				checkBoxes[i].Checked = i < counter;
 			}
+
+			onComponentChanged();
 		}
 	}
 }

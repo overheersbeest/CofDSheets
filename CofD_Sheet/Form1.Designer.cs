@@ -34,6 +34,9 @@
 			this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.BehaviourStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.autoSaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.autoLoadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.HeaderTable = new System.Windows.Forms.TableLayoutPanel();
 			this.ChronicleTextBox = new System.Windows.Forms.TextBox();
@@ -67,7 +70,8 @@
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newToolStripMenuItem,
             this.loadToolStripMenuItem,
-            this.saveToolStripMenuItem});
+            this.saveToolStripMenuItem,
+            this.BehaviourStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Size = new System.Drawing.Size(642, 24);
@@ -93,6 +97,31 @@
 			this.saveToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
 			this.saveToolStripMenuItem.Text = "Save";
 			this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+			// 
+			// BehaviourStripMenuItem
+			// 
+			this.BehaviourStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.autoSaveToolStripMenuItem,
+            this.autoLoadToolStripMenuItem});
+			this.BehaviourStripMenuItem.Name = "BehaviourStripMenuItem";
+			this.BehaviourStripMenuItem.Size = new System.Drawing.Size(72, 20);
+			this.BehaviourStripMenuItem.Text = "Behaviour";
+			// 
+			// autoSaveToolStripMenuItem
+			// 
+			this.autoSaveToolStripMenuItem.Checked = true;
+			this.autoSaveToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.autoSaveToolStripMenuItem.Name = "autoSaveToolStripMenuItem";
+			this.autoSaveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.autoSaveToolStripMenuItem.Text = "AutoSave";
+			this.autoSaveToolStripMenuItem.Click += new System.EventHandler(this.autoSaveToolStripMenuItem_Click);
+			// 
+			// autoLoadToolStripMenuItem
+			// 
+			this.autoLoadToolStripMenuItem.Name = "autoLoadToolStripMenuItem";
+			this.autoLoadToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.autoLoadToolStripMenuItem.Text = "AutoLoad";
+			this.autoLoadToolStripMenuItem.Click += new System.EventHandler(this.autoLoadToolStripMenuItem_Click);
 			// 
 			// splitContainer1
 			// 
@@ -124,7 +153,7 @@
 			this.HeaderTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 47F));
 			this.HeaderTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 153F));
 			this.HeaderTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 65F));
-			this.HeaderTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 143F));
+			this.HeaderTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 148F));
 			this.HeaderTable.Controls.Add(this.ChronicleTextBox, 5, 0);
 			this.HeaderTable.Controls.Add(this.PlayerTextBox, 3, 0);
 			this.HeaderTable.Controls.Add(this.NameLabel, 0, 0);
@@ -143,16 +172,16 @@
 			// ChronicleTextBox
 			// 
 			this.ChronicleTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ChronicleTextBox.Location = new System.Drawing.Point(499, 3);
+			this.ChronicleTextBox.Location = new System.Drawing.Point(494, 3);
 			this.ChronicleTextBox.Name = "ChronicleTextBox";
-			this.ChronicleTextBox.Size = new System.Drawing.Size(138, 20);
+			this.ChronicleTextBox.Size = new System.Drawing.Size(143, 20);
 			this.ChronicleTextBox.TabIndex = 5;
 			this.ChronicleTextBox.TextChanged += new System.EventHandler(this.ChronicleChanged);
 			// 
 			// PlayerTextBox
 			// 
 			this.PlayerTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.PlayerTextBox.Location = new System.Drawing.Point(281, 3);
+			this.PlayerTextBox.Location = new System.Drawing.Point(276, 3);
 			this.PlayerTextBox.Name = "PlayerTextBox";
 			this.PlayerTextBox.Size = new System.Drawing.Size(147, 20);
 			this.PlayerTextBox.TabIndex = 4;
@@ -162,7 +191,7 @@
 			// 
 			this.NameLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
 			this.NameLabel.AutoSize = true;
-			this.NameLabel.Location = new System.Drawing.Point(14, 5);
+			this.NameLabel.Location = new System.Drawing.Point(12, 5);
 			this.NameLabel.Name = "NameLabel";
 			this.NameLabel.Size = new System.Drawing.Size(38, 13);
 			this.NameLabel.TabIndex = 0;
@@ -172,7 +201,7 @@
 			// 
 			this.PlayerLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
 			this.PlayerLabel.AutoSize = true;
-			this.PlayerLabel.Location = new System.Drawing.Point(236, 5);
+			this.PlayerLabel.Location = new System.Drawing.Point(231, 5);
 			this.PlayerLabel.Name = "PlayerLabel";
 			this.PlayerLabel.Size = new System.Drawing.Size(39, 13);
 			this.PlayerLabel.TabIndex = 1;
@@ -182,7 +211,7 @@
 			// 
 			this.ChronicleLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
 			this.ChronicleLabel.AutoSize = true;
-			this.ChronicleLabel.Location = new System.Drawing.Point(439, 5);
+			this.ChronicleLabel.Location = new System.Drawing.Point(434, 5);
 			this.ChronicleLabel.Name = "ChronicleLabel";
 			this.ChronicleLabel.Size = new System.Drawing.Size(54, 13);
 			this.ChronicleLabel.TabIndex = 2;
@@ -191,9 +220,9 @@
 			// NameTextBox
 			// 
 			this.NameTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.NameTextBox.Location = new System.Drawing.Point(58, 3);
+			this.NameTextBox.Location = new System.Drawing.Point(56, 3);
 			this.NameTextBox.Name = "NameTextBox";
-			this.NameTextBox.Size = new System.Drawing.Size(170, 20);
+			this.NameTextBox.Size = new System.Drawing.Size(167, 20);
 			this.NameTextBox.TabIndex = 3;
 			this.NameTextBox.TextChanged += new System.EventHandler(this.NameChanged);
 			// 
@@ -292,6 +321,9 @@
 		private System.Windows.Forms.SplitContainer ComponentContainer;
 		private System.Windows.Forms.TableLayoutPanel LeftComponentTable;
 		private System.Windows.Forms.TableLayoutPanel RightComponentTable;
+		private System.Windows.Forms.ToolStripMenuItem BehaviourStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem autoSaveToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem autoLoadToolStripMenuItem;
 	}
 }
 

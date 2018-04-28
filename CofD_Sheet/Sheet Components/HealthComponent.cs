@@ -170,6 +170,8 @@ namespace CofD_Sheet.Sheet_Components
 				}
 				slots[i].TextChanged += valueChanged;
 			}
+
+			onComponentChanged();
 		}
 
 		void backSpacePressed(object sender, KeyEventArgs e)
