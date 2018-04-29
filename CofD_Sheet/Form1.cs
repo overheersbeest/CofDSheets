@@ -203,8 +203,9 @@ namespace CofD_Sheet
 								}
 							}
 						}
-						catch (Exception fe)
+						catch (Exception ex)
 						{
+							Console.WriteLine(ex.Message);
 							fileRead = false;
 						}
 					}
@@ -252,39 +253,41 @@ namespace CofD_Sheet
 				componentUIElement.ColumnCount = 1;
 				componentUIElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
 				componentUIElement.Dock = DockStyle.Fill;
-				componentUIElement.Location = new Point(3, 3);
 				componentUIElement.Name = "tableLayout" + component.name;
 				componentUIElement.RowCount = 2;
 				componentUIElement.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 				componentUIElement.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-				componentUIElement.Size = new Size(292, 60);
 				componentUIElement.TabIndex = 0;
 
 				Label nameLabel = new Label();
 				nameLabel.Anchor = AnchorStyles.None;
 				nameLabel.AutoSize = true;
-				nameLabel.Location = new Point(128, 17);
 				nameLabel.Name = "nameLabel" + component.name;
 				nameLabel.Size = new Size(35, 13);
 				nameLabel.TabIndex = 0;
 				nameLabel.Text = component.name;
-				componentUIElement.Controls.Add(nameLabel, 0, 0);
 
-				componentUIElement.Controls.Add(component.getUIElement(), 0, 1);
+				int componentRequiredHeight = 0;
+				componentUIElement.Controls.Add(nameLabel, 0, 0);
+				componentRequiredHeight += nameLabel.Size.Height;
+				Control componentValueElement = component.getUIElement();
+				componentUIElement.Controls.Add(componentValueElement, 0, 1);
+				componentRequiredHeight += componentValueElement.Size.Height;
+				componentUIElement.Size = new Size(292, componentRequiredHeight);
 
 				if (i % 3 == 0)
 				{
-					LeftComponentTable.RowStyles.Add(new RowStyle(SizeType.Percent, Convert.ToSingle(100F / amountOfRows)));
+					LeftComponentTable.RowStyles.Add(new RowStyle(SizeType.Absolute, componentRequiredHeight));
 					LeftComponentTable.Controls.Add(componentUIElement);
 				}
 				else if (i % 3 == 1)
 				{
-					MiddleComponentTable.RowStyles.Add(new RowStyle(SizeType.Percent, Convert.ToSingle(100F / amountOfRows)));
+					MiddleComponentTable.RowStyles.Add(new RowStyle(SizeType.Absolute, componentRequiredHeight));
 					MiddleComponentTable.Controls.Add(componentUIElement);
 				}
 				else
 				{
-					RightComponentTable.RowStyles.Add(new RowStyle(SizeType.Percent, Convert.ToSingle(100F / amountOfRows)));
+					RightComponentTable.RowStyles.Add(new RowStyle(SizeType.Absolute, componentRequiredHeight));
 					RightComponentTable.Controls.Add(componentUIElement);
 				}
 			}

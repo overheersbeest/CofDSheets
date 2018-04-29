@@ -48,7 +48,6 @@ namespace CofD_Sheet.Sheet_Components
 			uiElement.RowCount = rowAmount;
 			uiElement.ColumnCount = columnAmount;
 			uiElement.Dock = DockStyle.Fill;
-			uiElement.Location = new Point(3, 3);
 			uiElement.Name = "tableLayout" + name + "values";
 			uiElement.Size = new Size(292, 60);
 			uiElement.TabIndex = 0;
@@ -73,7 +72,6 @@ namespace CofD_Sheet.Sheet_Components
 						RadioButton pip = new RadioButton();
 						pip.Anchor = System.Windows.Forms.AnchorStyles.None;
 						pip.AutoSize = true;
-						pip.Location = new System.Drawing.Point(22, 14);
 						pip.Name = "pip" + name + "_" + pipNr;
 						pip.Size = new System.Drawing.Size(15, 14);
 						pip.TabIndex = 0;

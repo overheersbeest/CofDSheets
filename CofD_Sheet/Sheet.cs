@@ -42,6 +42,9 @@ namespace CofD_Sheet
 			switch (type)
 			{
 				case SheetType.Mortal:
+					components.Add(new AttributesComponent("Mental_Attributes", new List<string>{"Intelligence", "Wits", "Resolve"}));
+					components.Add(new AttributesComponent("Physical_Attributes", new List<string>{"Strength", "Dexterity", "Stamina"}));
+					components.Add(new AttributesComponent("Social_Attributes", new List<string>{"Presence", "Manipulation", "Composure"}));
 					components.Add(new HealthComponent("Health"));
 					components.Add(new SimpleComponent("Willpower"));
 					components.Add(new StatComponent("Integrity"));
@@ -106,6 +109,8 @@ namespace CofD_Sheet
 					return new ExperienceComponent(node);
 				case ISheetComponent.Type.Aspirations:
 					return new AspirationsComponent(node);
+				case ISheetComponent.Type.Attributes:
+					return new AttributesComponent(node);
 				default:
 					return new SimpleComponent("unknownType:" + node.Attributes["Type"].Value);
 			}

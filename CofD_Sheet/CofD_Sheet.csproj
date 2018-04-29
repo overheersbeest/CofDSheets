@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Sheet Components\AspirationsComponent.cs" />
+    <Compile Include="Sheet Components\AttributesComponent.cs" />
     <Compile Include="Sheet Components\ExperienceComponent.cs" />
     <Compile Include="Sheet Components\HealthComponent.cs" />
     <Compile Include="Sheet Components\ISheetComponent.cs" />

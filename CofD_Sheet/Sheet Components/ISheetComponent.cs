@@ -16,7 +16,8 @@ namespace CofD_Sheet.Sheet_Components
 			Stat,
 			Health,
 			Experience,
-			Aspirations
+			Aspirations,
+			Attributes
 		}
 
 		public string name;
