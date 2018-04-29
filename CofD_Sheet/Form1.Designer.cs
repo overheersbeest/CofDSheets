@@ -45,19 +45,25 @@
 			this.PlayerLabel = new System.Windows.Forms.Label();
 			this.ChronicleLabel = new System.Windows.Forms.Label();
 			this.NameTextBox = new System.Windows.Forms.TextBox();
-			this.ComponentContainer = new System.Windows.Forms.SplitContainer();
+			this.MainSplitContainer = new System.Windows.Forms.SplitContainer();
 			this.LeftComponentTable = new System.Windows.Forms.TableLayoutPanel();
 			this.RightComponentTable = new System.Windows.Forms.TableLayoutPanel();
+			this.SubSplitContainer = new System.Windows.Forms.SplitContainer();
+			this.MiddleComponentTable = new System.Windows.Forms.TableLayoutPanel();
 			this.menuStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
 			this.HeaderTable.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.ComponentContainer)).BeginInit();
-			this.ComponentContainer.Panel1.SuspendLayout();
-			this.ComponentContainer.Panel2.SuspendLayout();
-			this.ComponentContainer.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.MainSplitContainer)).BeginInit();
+			this.MainSplitContainer.Panel1.SuspendLayout();
+			this.MainSplitContainer.Panel2.SuspendLayout();
+			this.MainSplitContainer.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.SubSplitContainer)).BeginInit();
+			this.SubSplitContainer.Panel1.SuspendLayout();
+			this.SubSplitContainer.Panel2.SuspendLayout();
+			this.SubSplitContainer.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// contextMenuStrip1
@@ -74,7 +80,7 @@
             this.BehaviourStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Size = new System.Drawing.Size(642, 24);
+			this.menuStrip1.Size = new System.Drawing.Size(934, 24);
 			this.menuStrip1.TabIndex = 2;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
@@ -112,14 +118,14 @@
 			this.autoSaveToolStripMenuItem.Checked = true;
 			this.autoSaveToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.autoSaveToolStripMenuItem.Name = "autoSaveToolStripMenuItem";
-			this.autoSaveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.autoSaveToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
 			this.autoSaveToolStripMenuItem.Text = "AutoSave";
 			this.autoSaveToolStripMenuItem.Click += new System.EventHandler(this.autoSaveToolStripMenuItem_Click);
 			// 
 			// autoLoadToolStripMenuItem
 			// 
 			this.autoLoadToolStripMenuItem.Name = "autoLoadToolStripMenuItem";
-			this.autoLoadToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.autoLoadToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
 			this.autoLoadToolStripMenuItem.Text = "AutoLoad";
 			this.autoLoadToolStripMenuItem.Click += new System.EventHandler(this.autoLoadToolStripMenuItem_Click);
 			// 
@@ -138,8 +144,8 @@
 			// 
 			// splitContainer1.Panel2
 			// 
-			this.splitContainer1.Panel2.Controls.Add(this.ComponentContainer);
-			this.splitContainer1.Size = new System.Drawing.Size(642, 337);
+			this.splitContainer1.Panel2.Controls.Add(this.MainSplitContainer);
+			this.splitContainer1.Size = new System.Drawing.Size(934, 337);
 			this.splitContainer1.SplitterDistance = 25;
 			this.splitContainer1.TabIndex = 3;
 			// 
@@ -148,12 +154,12 @@
 			this.HeaderTable.AutoSize = true;
 			this.HeaderTable.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.HeaderTable.ColumnCount = 6;
-			this.HeaderTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 23.73737F));
-			this.HeaderTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 76.26263F));
+			this.HeaderTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 50F));
+			this.HeaderTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
 			this.HeaderTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 47F));
-			this.HeaderTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 153F));
+			this.HeaderTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
 			this.HeaderTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 65F));
-			this.HeaderTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 148F));
+			this.HeaderTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
 			this.HeaderTable.Controls.Add(this.ChronicleTextBox, 5, 0);
 			this.HeaderTable.Controls.Add(this.PlayerTextBox, 3, 0);
 			this.HeaderTable.Controls.Add(this.NameLabel, 0, 0);
@@ -164,26 +170,25 @@
 			this.HeaderTable.Location = new System.Drawing.Point(0, 0);
 			this.HeaderTable.Name = "HeaderTable";
 			this.HeaderTable.RowCount = 1;
-			this.HeaderTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.HeaderTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.HeaderTable.Size = new System.Drawing.Size(640, 23);
+			this.HeaderTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.HeaderTable.Size = new System.Drawing.Size(932, 23);
 			this.HeaderTable.TabIndex = 0;
 			// 
 			// ChronicleTextBox
 			// 
 			this.ChronicleTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ChronicleTextBox.Location = new System.Drawing.Point(494, 3);
+			this.ChronicleTextBox.Location = new System.Drawing.Point(677, 3);
 			this.ChronicleTextBox.Name = "ChronicleTextBox";
-			this.ChronicleTextBox.Size = new System.Drawing.Size(143, 20);
+			this.ChronicleTextBox.Size = new System.Drawing.Size(252, 20);
 			this.ChronicleTextBox.TabIndex = 5;
 			this.ChronicleTextBox.TextChanged += new System.EventHandler(this.ChronicleChanged);
 			// 
 			// PlayerTextBox
 			// 
 			this.PlayerTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.PlayerTextBox.Location = new System.Drawing.Point(276, 3);
+			this.PlayerTextBox.Location = new System.Drawing.Point(356, 3);
 			this.PlayerTextBox.Name = "PlayerTextBox";
-			this.PlayerTextBox.Size = new System.Drawing.Size(147, 20);
+			this.PlayerTextBox.Size = new System.Drawing.Size(250, 20);
 			this.PlayerTextBox.TabIndex = 4;
 			this.PlayerTextBox.TextChanged += new System.EventHandler(this.PlayerChanged);
 			// 
@@ -191,7 +196,7 @@
 			// 
 			this.NameLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
 			this.NameLabel.AutoSize = true;
-			this.NameLabel.Location = new System.Drawing.Point(12, 5);
+			this.NameLabel.Location = new System.Drawing.Point(9, 5);
 			this.NameLabel.Name = "NameLabel";
 			this.NameLabel.Size = new System.Drawing.Size(38, 13);
 			this.NameLabel.TabIndex = 0;
@@ -201,7 +206,7 @@
 			// 
 			this.PlayerLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
 			this.PlayerLabel.AutoSize = true;
-			this.PlayerLabel.Location = new System.Drawing.Point(231, 5);
+			this.PlayerLabel.Location = new System.Drawing.Point(311, 5);
 			this.PlayerLabel.Name = "PlayerLabel";
 			this.PlayerLabel.Size = new System.Drawing.Size(39, 13);
 			this.PlayerLabel.TabIndex = 1;
@@ -211,7 +216,7 @@
 			// 
 			this.ChronicleLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
 			this.ChronicleLabel.AutoSize = true;
-			this.ChronicleLabel.Location = new System.Drawing.Point(434, 5);
+			this.ChronicleLabel.Location = new System.Drawing.Point(617, 5);
 			this.ChronicleLabel.Name = "ChronicleLabel";
 			this.ChronicleLabel.Size = new System.Drawing.Size(54, 13);
 			this.ChronicleLabel.TabIndex = 2;
@@ -220,30 +225,32 @@
 			// NameTextBox
 			// 
 			this.NameTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.NameTextBox.Location = new System.Drawing.Point(56, 3);
+			this.NameTextBox.Location = new System.Drawing.Point(53, 3);
 			this.NameTextBox.Name = "NameTextBox";
-			this.NameTextBox.Size = new System.Drawing.Size(167, 20);
+			this.NameTextBox.Size = new System.Drawing.Size(250, 20);
 			this.NameTextBox.TabIndex = 3;
 			this.NameTextBox.TextChanged += new System.EventHandler(this.NameChanged);
 			// 
-			// ComponentContainer
+			// MainSplitContainer
 			// 
-			this.ComponentContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ComponentContainer.Location = new System.Drawing.Point(0, 0);
-			this.ComponentContainer.Name = "ComponentContainer";
+			this.MainSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MainSplitContainer.IsSplitterFixed = true;
+			this.MainSplitContainer.Location = new System.Drawing.Point(0, 0);
+			this.MainSplitContainer.Margin = new System.Windows.Forms.Padding(0);
+			this.MainSplitContainer.Name = "MainSplitContainer";
 			// 
-			// ComponentContainer.Panel1
+			// MainSplitContainer.Panel1
 			// 
-			this.ComponentContainer.Panel1.Controls.Add(this.LeftComponentTable);
-			this.ComponentContainer.Panel1MinSize = 298;
+			this.MainSplitContainer.Panel1.Controls.Add(this.LeftComponentTable);
+			this.MainSplitContainer.Panel1MinSize = 298;
 			// 
-			// ComponentContainer.Panel2
+			// MainSplitContainer.Panel2
 			// 
-			this.ComponentContainer.Panel2.Controls.Add(this.RightComponentTable);
-			this.ComponentContainer.Panel2MinSize = 298;
-			this.ComponentContainer.Size = new System.Drawing.Size(640, 306);
-			this.ComponentContainer.SplitterDistance = 317;
-			this.ComponentContainer.TabIndex = 0;
+			this.MainSplitContainer.Panel2.Controls.Add(this.SubSplitContainer);
+			this.MainSplitContainer.Panel2MinSize = 590;
+			this.MainSplitContainer.Size = new System.Drawing.Size(932, 306);
+			this.MainSplitContainer.SplitterDistance = 308;
+			this.MainSplitContainer.TabIndex = 0;
 			// 
 			// LeftComponentTable
 			// 
@@ -256,7 +263,7 @@
 			this.LeftComponentTable.RowCount = 2;
 			this.LeftComponentTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.LeftComponentTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.LeftComponentTable.Size = new System.Drawing.Size(317, 306);
+			this.LeftComponentTable.Size = new System.Drawing.Size(308, 306);
 			this.LeftComponentTable.TabIndex = 0;
 			// 
 			// RightComponentTable
@@ -270,19 +277,52 @@
 			this.RightComponentTable.RowCount = 2;
 			this.RightComponentTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.RightComponentTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.RightComponentTable.Size = new System.Drawing.Size(319, 306);
+			this.RightComponentTable.Size = new System.Drawing.Size(308, 306);
 			this.RightComponentTable.TabIndex = 0;
+			// 
+			// SubSplitContainer
+			// 
+			this.SubSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.SubSplitContainer.Location = new System.Drawing.Point(0, 0);
+			this.SubSplitContainer.Name = "SubSplitContainer";
+			// 
+			// SubSplitContainer.Panel1
+			// 
+			this.SubSplitContainer.Panel1.Controls.Add(this.MiddleComponentTable);
+			this.SubSplitContainer.Panel1MinSize = 308;
+			// 
+			// SubSplitContainer.Panel2
+			// 
+			this.SubSplitContainer.Panel2.Controls.Add(this.RightComponentTable);
+			this.SubSplitContainer.Panel2MinSize = 308;
+			this.SubSplitContainer.Size = new System.Drawing.Size(620, 306);
+			this.SubSplitContainer.SplitterDistance = 308;
+			this.SubSplitContainer.TabIndex = 1;
+			// 
+			// MiddleComponentTable
+			// 
+			this.MiddleComponentTable.ColumnCount = 1;
+			this.MiddleComponentTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.MiddleComponentTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.MiddleComponentTable.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MiddleComponentTable.Location = new System.Drawing.Point(0, 0);
+			this.MiddleComponentTable.Name = "MiddleComponentTable";
+			this.MiddleComponentTable.RowCount = 2;
+			this.MiddleComponentTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.MiddleComponentTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.MiddleComponentTable.Size = new System.Drawing.Size(308, 306);
+			this.MiddleComponentTable.TabIndex = 1;
 			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(642, 361);
+			this.ClientSize = new System.Drawing.Size(934, 361);
 			this.Controls.Add(this.splitContainer1);
 			this.Controls.Add(this.menuStrip1);
 			this.MainMenuStrip = this.menuStrip1;
-			this.MaximumSize = new System.Drawing.Size(658, 1158);
-			this.MinimumSize = new System.Drawing.Size(658, 39);
+			this.MaximumSize = new System.Drawing.Size(950, 1158);
+			this.MinimumSize = new System.Drawing.Size(950, 39);
 			this.Name = "Form1";
 			this.Text = "CofD Sheet";
 			this.menuStrip1.ResumeLayout(false);
@@ -294,10 +334,14 @@
 			this.splitContainer1.ResumeLayout(false);
 			this.HeaderTable.ResumeLayout(false);
 			this.HeaderTable.PerformLayout();
-			this.ComponentContainer.Panel1.ResumeLayout(false);
-			this.ComponentContainer.Panel2.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.ComponentContainer)).EndInit();
-			this.ComponentContainer.ResumeLayout(false);
+			this.MainSplitContainer.Panel1.ResumeLayout(false);
+			this.MainSplitContainer.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.MainSplitContainer)).EndInit();
+			this.MainSplitContainer.ResumeLayout(false);
+			this.SubSplitContainer.Panel1.ResumeLayout(false);
+			this.SubSplitContainer.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.SubSplitContainer)).EndInit();
+			this.SubSplitContainer.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -318,12 +362,14 @@
 		private System.Windows.Forms.Label PlayerLabel;
 		private System.Windows.Forms.Label ChronicleLabel;
 		private System.Windows.Forms.TextBox NameTextBox;
-		private System.Windows.Forms.SplitContainer ComponentContainer;
+		private System.Windows.Forms.SplitContainer MainSplitContainer;
 		private System.Windows.Forms.TableLayoutPanel LeftComponentTable;
 		private System.Windows.Forms.TableLayoutPanel RightComponentTable;
 		private System.Windows.Forms.ToolStripMenuItem BehaviourStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem autoSaveToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem autoLoadToolStripMenuItem;
+		private System.Windows.Forms.SplitContainer SubSplitContainer;
+		private System.Windows.Forms.TableLayoutPanel MiddleComponentTable;
 	}
 }
 

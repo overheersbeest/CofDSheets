@@ -237,6 +237,8 @@ namespace CofD_Sheet
 
 			LeftComponentTable.Controls.Clear();
 			LeftComponentTable.RowStyles.Clear();
+			MiddleComponentTable.Controls.Clear();
+			MiddleComponentTable.RowStyles.Clear();
 			RightComponentTable.Controls.Clear();
 			RightComponentTable.RowStyles.Clear();
 
@@ -270,10 +272,15 @@ namespace CofD_Sheet
 
 				componentUIElement.Controls.Add(component.getUIElement(), 0, 1);
 
-				if (i % 2 == 0)
+				if (i % 3 == 0)
 				{
 					LeftComponentTable.RowStyles.Add(new RowStyle(SizeType.Percent, Convert.ToSingle(100F / amountOfRows)));
 					LeftComponentTable.Controls.Add(componentUIElement);
+				}
+				else if (i % 3 == 1)
+				{
+					MiddleComponentTable.RowStyles.Add(new RowStyle(SizeType.Percent, Convert.ToSingle(100F / amountOfRows)));
+					MiddleComponentTable.Controls.Add(componentUIElement);
 				}
 				else
 				{
@@ -283,6 +290,7 @@ namespace CofD_Sheet
 			}
 
 			LeftComponentTable.RowCount = amountOfRows;
+			MiddleComponentTable.RowCount = amountOfRows;
 			RightComponentTable.RowCount = amountOfRows;
 			
 			autoSaveDisabled = false;
