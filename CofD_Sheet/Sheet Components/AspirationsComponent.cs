@@ -6,15 +6,24 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace CofD_Sheet.Sheet_Components
 {
-	class AspirationsComponent : ISheetComponent
+	public class AspirationsComponent : ISheetComponent
 	{
+		[XmlAttribute]
 		int maxAspirations = 3;
+
+		[XmlArray]
 		List<string> aspirations = new List<string>();
 
+		[XmlIgnore]
 		List<TextBox> textBoxes = new List<TextBox>();
+
+		public AspirationsComponent() : base("AspirationsComponent")
+		{
+		}
 
 		public AspirationsComponent(string componentName, int amountAllowed = 3) : base(componentName)
 		{

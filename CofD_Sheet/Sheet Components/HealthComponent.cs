@@ -6,20 +6,35 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace CofD_Sheet.Sheet_Components
 {
-	class HealthComponent : ISheetComponent
+	public class HealthComponent : ISheetComponent
 	{
+		[XmlIgnore]
 		const int maxPerRow = 15;
+
+		[XmlIgnore]
 		const float separatorProportion = 2F;
 
+		[XmlAttribute]
 		int maxValue = 10;
+
+		[XmlAttribute]
 		int aggrivated = 0;
+
+		[XmlAttribute]
 		int lethal = 0;
+
+		[XmlAttribute]
 		int bashing = 0;
 
+		[XmlIgnore]
 		List<TextBox> slots = new List<TextBox>();
+
+		public HealthComponent() : base("HealthComponent")
+		{ }
 
 		public HealthComponent(string componentName) : base(componentName)
 		{

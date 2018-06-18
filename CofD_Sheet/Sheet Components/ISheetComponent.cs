@@ -5,9 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace CofD_Sheet.Sheet_Components
 {
+	[XmlInclude(typeof(AspirationsComponent))]
+	[XmlInclude(typeof(AttributesComponent))]
+	[XmlInclude(typeof(ExperienceComponent))]
+	[XmlInclude(typeof(HealthComponent))]
+	[XmlInclude(typeof(SimpleComponent))]
+	[XmlInclude(typeof(SkillsComponent))]
+	[XmlInclude(typeof(StatComponent))]
 	public abstract class ISheetComponent
 	{
 		public enum Type
@@ -17,10 +25,14 @@ namespace CofD_Sheet.Sheet_Components
 			Health,
 			Experience,
 			Aspirations,
-			Attributes
+			Attributes,
+			Skills
 		}
 
+		[XmlAttribute]
 		public string name;
+
+		[XmlAttribute]
 		public ISheetComponent.Type type;
 
 		public ISheetComponent(string componentName)
@@ -54,6 +66,5 @@ namespace CofD_Sheet.Sheet_Components
 				Form1.instance.sheet.changedSinceSave = true;
 			}
 		}
-
 	}
 }

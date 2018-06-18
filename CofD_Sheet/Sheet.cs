@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace CofD_Sheet
 {
@@ -15,13 +16,23 @@ namespace CofD_Sheet
 		Werewolf,
 		Spirit
 	}
+
+	[XmlRoot]
 	public class Sheet
 	{
+		[XmlAttribute]
 		public string name = "";
+
+		[XmlAttribute]
 		public string player = "";
+
+		[XmlAttribute]
 		public string chronicle = "";
+
+		[XmlArray]
 		public List<ISheetComponent> components = new List<ISheetComponent>();
 
+		[XmlIgnore]
 		public bool _changedSinceSave = false;
 		public bool changedSinceSave
 		{
@@ -29,7 +40,10 @@ namespace CofD_Sheet
 			set
 			{
 				this._changedSinceSave = value;
-				Form1.instance.RefreshFormTitle();
+				if (Form1.instance != null)
+				{
+					Form1.instance.RefreshFormTitle();
+				}
 			}
 		}
 
@@ -45,6 +59,9 @@ namespace CofD_Sheet
 					components.Add(new AttributesComponent("Mental_Attributes", new List<string>{"Intelligence", "Wits", "Resolve"}));
 					components.Add(new AttributesComponent("Physical_Attributes", new List<string>{"Strength", "Dexterity", "Stamina"}));
 					components.Add(new AttributesComponent("Social_Attributes", new List<string>{"Presence", "Manipulation", "Composure"}));
+					components.Add(new SkillsComponent("Mental_Skills", new List<string> { "Academics", "Computer", "Crafts", "Investigation", "Medicine", "Occult", "Politics", "Science" }));
+					components.Add(new SkillsComponent("Physical_Skills", new List<string> { "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry" }));
+					components.Add(new SkillsComponent("Social_Skills", new List<string> { "Animal_Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge" }));
 					components.Add(new HealthComponent("Health"));
 					components.Add(new SimpleComponent("Willpower"));
 					components.Add(new StatComponent("Integrity"));
@@ -111,6 +128,8 @@ namespace CofD_Sheet
 					return new AspirationsComponent(node);
 				case ISheetComponent.Type.Attributes:
 					return new AttributesComponent(node);
+				case ISheetComponent.Type.Skills:
+					return new SkillsComponent(node);
 				default:
 					return new SimpleComponent("unknownType:" + node.Attributes["Type"].Value);
 			}

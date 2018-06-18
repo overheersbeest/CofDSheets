@@ -6,17 +6,29 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace CofD_Sheet.Sheet_Components
 {
-	class SimpleComponent : ISheetComponent
+	public class SimpleComponent : ISheetComponent
 	{
+		[XmlIgnore]
 		const int maxPerRow = 15;
+
+		[XmlIgnore]
 		const float separatorProportion = 2F;
 
+		[XmlAttribute]
 		int maxValue = 10;
+
+		[XmlAttribute]
 		int currentValue = 0;
+
+		[XmlIgnore]
 		List<CheckBox> checkBoxes = new List<CheckBox>();
+
+		public SimpleComponent() : base("SimpleComponent")
+		{ }
 
 		public SimpleComponent(string componentName) : base(componentName)
 		{

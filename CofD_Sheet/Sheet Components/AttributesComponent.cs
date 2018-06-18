@@ -6,13 +6,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace CofD_Sheet.Sheet_Components
 {
-	class AttributesComponent : ISheetComponent
+	public class AttributesComponent : ISheetComponent
 	{
-		class Attribute
+		public class Attribute
 		{
+			public Attribute()
+			{ }
 			public Attribute(string _name)
 			{
 				this.name = _name;
@@ -23,16 +26,30 @@ namespace CofD_Sheet.Sheet_Components
 				this.currentValue = _value;
 			}
 
+			[XmlAttribute]
 			public string name = "Attribute";
+
+			[XmlAttribute]
 			public int currentValue = 1;
 
+			[XmlIgnore]
 			public List<RadioButton> pips = new List<RadioButton>();
 		}
+
+		[XmlIgnore]
 		const int maxDotsPerRow = 10;
+
+		[XmlIgnore]
 		const int nameLabelWidth = 100;
 
+		[XmlAttribute]
 		int maxValue = 5;
+
+		[XmlArray]
 		List<Attribute> attributes = new List<Attribute>();
+
+		public AttributesComponent() : base("AttributesComponent")
+		{ }
 
 		public AttributesComponent(string componentName, List<string> attributeNames) : base(componentName)
 		{

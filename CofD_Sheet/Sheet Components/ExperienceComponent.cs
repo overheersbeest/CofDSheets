@@ -6,21 +6,38 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace CofD_Sheet.Sheet_Components
 {
-	class ExperienceComponent : ISheetComponent
+	public class ExperienceComponent : ISheetComponent
 	{
+		[XmlIgnore]
 		const int maxPerRow = 10;
+
+		[XmlIgnore]
 		const float separatorProportion = 2F;
 
-		string beatName;
+		[XmlAttribute]
+		string beatName = "Beats";
+
+		[XmlAttribute]
 		int maxBeats = 5;
+
+		[XmlAttribute]
 		int beats = 0;
+
+		[XmlAttribute]
 		int experience = 0;
 
+		[XmlIgnore]
 		List<CheckBox> beatBoxes = new List<CheckBox>();
+
+		[XmlIgnore]
 		TextBox experienceCounter = null;
+		
+		public ExperienceComponent() : base("ExperienceComponent")
+		{ }
 
 		public ExperienceComponent(string majorName, string minorName) : base(majorName)
 		{
