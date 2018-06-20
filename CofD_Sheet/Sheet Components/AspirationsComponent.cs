@@ -1,68 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 
 namespace CofD_Sheet.Sheet_Components
 {
+	[Serializable]
 	public class AspirationsComponent : ISheetComponent
 	{
 		[XmlAttribute]
-		int maxAspirations = 3;
+		public int maxAspirations = 3;
 
 		[XmlArray]
-		List<string> aspirations = new List<string>();
+		public List<string> aspirations = new List<string>();
 
 		[XmlIgnore]
 		List<TextBox> textBoxes = new List<TextBox>();
 
 		public AspirationsComponent() : base("AspirationsComponent")
-		{
-		}
+		{ }
 
 		public AspirationsComponent(string componentName, int amountAllowed = 3) : base(componentName)
 		{
 			maxAspirations = amountAllowed;
 			aspirations = new List<string>(new string[maxAspirations]);
-			type = ISheetComponent.Type.Aspirations;
-		}
-		
-		public AspirationsComponent(XmlNode node) : base(node.Name)
-		{
-			maxAspirations = Convert.ToInt32(node.Attributes["MaxAspirations"].Value);
-
-			for (int i = 0; i < maxAspirations; i++)
-			{
-				if (i < node.ChildNodes.Count)
-				{
-					aspirations.Add(node.ChildNodes[i].InnerText);
-				}
-				else
-				{
-					aspirations.Add("");
-				}
-			}
-			type = ISheetComponent.Type.Aspirations;
-		}
-
-		override protected void fillElement(ref XmlElement node, XmlDocument doc)
-		{
-			node.SetAttribute("MaxAspirations", maxAspirations.ToString());
-			foreach (string aspiration in aspirations)
-			{
-				if (aspiration.Length > 0)
-				{
-					XmlElement aspirationElement = doc.CreateElement("Aspiration");
-					aspirationElement.InnerText = aspiration;
-					//aspirationElement.SetAttribute("Text", aspiration);
-					node.AppendChild(aspirationElement);
-				}
-			}
 		}
 
 		override public Control getUIElement()

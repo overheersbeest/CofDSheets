@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 
 namespace CofD_Sheet.Sheet_Components
 {
+	[Serializable]
 	public class ExperienceComponent : ISheetComponent
 	{
 		[XmlIgnore]
@@ -19,16 +17,16 @@ namespace CofD_Sheet.Sheet_Components
 		const float separatorProportion = 2F;
 
 		[XmlAttribute]
-		string beatName = "Beats";
+		public string beatName = "Beats";
 
 		[XmlAttribute]
-		int maxBeats = 5;
+		public int maxBeats = 5;
 
 		[XmlAttribute]
-		int beats = 0;
+		public int beats = 0;
 
 		[XmlAttribute]
-		int experience = 0;
+		public int experience = 0;
 
 		[XmlIgnore]
 		List<CheckBox> beatBoxes = new List<CheckBox>();
@@ -42,24 +40,8 @@ namespace CofD_Sheet.Sheet_Components
 		public ExperienceComponent(string majorName, string minorName) : base(majorName)
 		{
 			beatName = minorName;
-			type = ISheetComponent.Type.Experience;
 		}
-
-		public ExperienceComponent(XmlNode node) : base(node.Name)
-		{
-			maxBeats = Convert.ToInt32(node.Attributes["MaxBeats"].Value);
-			beats = Convert.ToInt32(node.Attributes["Beats"].Value);
-			experience = Convert.ToInt32(node.Attributes["Experience"].Value);
-			type = ISheetComponent.Type.Experience;
-		}
-
-		override protected void fillElement(ref XmlElement node, XmlDocument doc)
-		{
-			node.SetAttribute("MaxBeats", maxBeats.ToString());
-			node.SetAttribute("Beats", beats.ToString());
-			node.SetAttribute("Experience", experience.ToString());
-		}
-
+		
 		override public Control getUIElement()
 		{
 			int rowAmount = Convert.ToInt32(Math.Ceiling(maxBeats / Convert.ToSingle(maxPerRow)));

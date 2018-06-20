@@ -1,9 +1,5 @@
 ﻿using CofD_Sheet.Sheet_Components;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -28,12 +24,20 @@ namespace CofD_Sheet
 
 		[XmlAttribute]
 		public string chronicle = "";
-
+		
 		[XmlArray]
+		//[XmlArrayItem("AspirationsComponent", typeof(AspirationsComponent))]
+		//[XmlArrayItem("AttributesComponent", typeof(AttributesComponent))]
+		//[XmlArrayItem("ExperienceComponent", typeof(ExperienceComponent))]
+		//[XmlArrayItem("HealthComponent", typeof(HealthComponent))]
+		//[XmlArrayItem("SimpleComponent", typeof(SimpleComponent))]
+		//[XmlArrayItem("SkillsComponent", typeof(SkillsComponent))]
+		//[XmlArrayItem("StatComponent", typeof(StatComponent))]
 		public List<ISheetComponent> components = new List<ISheetComponent>();
 
 		[XmlIgnore]
 		public bool _changedSinceSave = false;
+		[XmlIgnore]
 		public bool changedSinceSave
 		{
 			get { return this._changedSinceSave; }
@@ -96,60 +100,6 @@ namespace CofD_Sheet
 					components.Add(new AspirationsComponent("Aspirations"));
 					break;
 			}
-		}
-
-		public Sheet(XmlDocument doc)
-		{
-			XmlNode sheet = doc.GetElementsByTagName("Sheet")[0];
-			name = sheet.Attributes["Name"].Value;
-			player = sheet.Attributes["Player"].Value;
-			chronicle = sheet.Attributes["Chronicle"].Value;
-
-			XmlNode componentRoot = sheet.SelectSingleNode("components");
-			foreach(XmlNode componentNode in componentRoot.ChildNodes)
-			{
-				components.Add(getSheetComponent(componentNode));
-			}
-		}
-
-		private ISheetComponent getSheetComponent(XmlNode node)
-		{
-			switch ((ISheetComponent.Type)Enum.Parse(typeof(ISheetComponent.Type), node.Attributes["Type"].Value))
-			{
-				case ISheetComponent.Type.Health:
-					return new HealthComponent(node);
-				case ISheetComponent.Type.Simple:
-					return new SimpleComponent(node);
-				case ISheetComponent.Type.Stat:
-					return new StatComponent(node);
-				case ISheetComponent.Type.Experience:
-					return new ExperienceComponent(node);
-				case ISheetComponent.Type.Aspirations:
-					return new AspirationsComponent(node);
-				case ISheetComponent.Type.Attributes:
-					return new AttributesComponent(node);
-				case ISheetComponent.Type.Skills:
-					return new SkillsComponent(node);
-				default:
-					return new SimpleComponent("unknownType:" + node.Attributes["Type"].Value);
-			}
-		}
-
-		public XmlDocument getXMLDoc()
-		{
-			XmlDocument doc = new XmlDocument();
-			XmlElement sheet = (XmlElement)doc.AppendChild(doc.CreateElement("Sheet"));
-			sheet.SetAttribute("Name", name);
-			sheet.SetAttribute("Player", player);
-			sheet.SetAttribute("Chronicle", chronicle);
-
-			XmlElement componentRoot = doc.CreateElement("components");
-			foreach ( ISheetComponent component in components)
-			{
-				componentRoot.AppendChild(component.getElement(doc));
-			}
-			sheet.AppendChild(componentRoot);
-			return doc;
 		}
 	}
 }

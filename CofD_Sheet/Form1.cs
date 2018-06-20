@@ -1,15 +1,9 @@
 ﻿using CofD_Sheet.Sheet_Components;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml;
+using System.Xml.Serialization;
 
 namespace CofD_Sheet
 {
@@ -98,31 +92,13 @@ namespace CofD_Sheet
 			autoSaveDisabled = true;
 			if (openFileDialog1.ShowDialog() == DialogResult.OK)
 			{
-				try
-				{
-					Stream myStream = openFileDialog1.OpenFile();
-					if (myStream != null)
-					{
-						using (myStream)
-						{
-							string path = openFileDialog1.FileName;
-							watcher.Path = path.Substring(0, path.LastIndexOf('\\'));
-							assosiatedFile = path;
-							XmlDocument doc = new XmlDocument();
-							doc.Load(myStream);
-							sheet = new Sheet(doc);
-							sheet.changedSinceSave = false;
-						}
-					}
-				}
-				catch (Exception ex)
-				{
-					MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
-				}
+				string path = openFileDialog1.FileName;
+				watcher.Path = path.Substring(0, path.LastIndexOf('\\'));
+				loadSheet(path);
+				sheet.changedSinceSave = false;
 			}
 
 			autoSaveDisabled = false;
-			refreshSheet();
 		}
 
 		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -134,25 +110,10 @@ namespace CofD_Sheet
 
 			if (saveFileDialog1.ShowDialog() == DialogResult.OK)
 			{
-				try
-				{
-					Stream myStream = saveFileDialog1.OpenFile();
-					if (myStream != null)
-					{
-						using (myStream)
-						{
-							string path = saveFileDialog1.FileName;
-							watcher.Path = path.Substring(0, path.LastIndexOf('\\'));
-							assosiatedFile = path;
-							sheet.getXMLDoc().Save(myStream);
-							sheet.changedSinceSave = false;
-						}
-					}
-				}
-				catch (Exception ex)
-				{
-					MessageBox.Show("Error: Could not write file to disk. Original error: " + ex.Message);
-				}
+				string path = saveFileDialog1.FileName;
+				watcher.Path = path.Substring(0, path.LastIndexOf('\\'));
+				saveSheet(path);
+				sheet.changedSinceSave = false;
 			}
 		}
 
@@ -161,22 +122,8 @@ namespace CofD_Sheet
 			if (assosiatedFile.Length > 0)
 			{
 				watcher.EnableRaisingEvents = false;
-				try
-				{
-					StreamWriter myStream = new StreamWriter(assosiatedFile);
-					if (myStream != null)
-					{
-						using (myStream)
-						{
-							sheet.getXMLDoc().Save(myStream);
-							sheet.changedSinceSave = false;
-						}
-					}
-				}
-				catch (Exception ex)
-				{
-					MessageBox.Show("Error: Could not autosave file to disk. Original error: " + ex.Message);
-				}
+				saveSheet(assosiatedFile);
+				sheet.changedSinceSave = false;
 			}
 		}
 
@@ -189,36 +136,53 @@ namespace CofD_Sheet
 					bool fileRead = false;
 					while (!fileRead)
 					{
-						fileRead = true;
-						try
-						{
-							StreamReader myStream = new StreamReader(assosiatedFile);
-							if (myStream != null)
-							{
-								using (myStream)
-								{
-									XmlDocument doc = new XmlDocument();
-									doc.Load(myStream);
-									sheet = new Sheet(doc);
-								}
-							}
-						}
-						catch (Exception ex)
-						{
-							Console.WriteLine(ex.Message);
-							fileRead = false;
-						}
+						fileRead = loadSheet(assosiatedFile);
 					}
-					refreshSheet();
 				}
 				catch (Exception ex)
 				{
 					MessageBox.Show("Error: Could not reload file from disk. Original error: " + ex.Message);
 				}
-
 			}
 		}
 
+		public bool saveSheet(string path)
+		{
+			try
+			{
+				XmlSerializer serializer = new XmlSerializer(typeof(Sheet));
+				TextWriter writer = new StreamWriter(path);
+				serializer.Serialize(writer, sheet);
+				writer.Close();
+				assosiatedFile = path;
+				return true;
+			}
+			catch (Exception e)
+			{
+				MessageBox.Show("Error: Could not save file to disk. " + e.Message);
+				return false;
+			}
+		}
+
+		public bool loadSheet(string path)
+		{
+			try
+			{
+				XmlSerializer serializer = new XmlSerializer(typeof(Sheet));
+				StreamReader reader = new StreamReader(path);
+				sheet = (Sheet)serializer.Deserialize(reader);
+				reader.Close();
+				assosiatedFile = path;
+				refreshSheet();
+				return true;
+			}
+			catch (Exception e)
+			{
+				MessageBox.Show("Error: Could not load file from disk. " + e.Message);
+				return false;
+			}
+		}
+		
 		public delegate void refreshSheetCallback();
 
 		public void refreshSheet()

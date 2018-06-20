@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 
 namespace CofD_Sheet.Sheet_Components
 {
+	[Serializable]
 	public class AttributesComponent : ISheetComponent
 	{
 		public class Attribute
@@ -43,10 +41,10 @@ namespace CofD_Sheet.Sheet_Components
 		const int nameLabelWidth = 100;
 
 		[XmlAttribute]
-		int maxValue = 5;
+		public int maxValue = 5;
 
 		[XmlArray]
-		List<Attribute> attributes = new List<Attribute>();
+		public List<Attribute> attributes = new List<Attribute>();
 
 		public AttributesComponent() : base("AttributesComponent")
 		{ }
@@ -57,31 +55,8 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				attributes.Add(new Attribute(attributeNames[i]));
 			}
-			type = ISheetComponent.Type.Attributes;
 		}
-
-		public AttributesComponent(XmlNode node) : base(node.Name)
-		{
-			maxValue = Convert.ToInt32(node.Attributes["MaxValue"].Value);
-			for (int i = 0; i < node.ChildNodes.Count; i++)
-			{
-				attributes.Add(new Attribute(node.ChildNodes[i].Attributes.GetNamedItem("Name").Value, Convert.ToInt32(node.ChildNodes[i].Attributes.GetNamedItem("CurrentValue").Value)));
-			}
-			type = ISheetComponent.Type.Attributes;
-		}
-
-		override protected void fillElement(ref XmlElement node, XmlDocument doc)
-		{
-			node.SetAttribute("MaxValue", maxValue.ToString());
-			foreach (Attribute attribute in attributes)
-			{
-				XmlElement attributeElement = doc.CreateElement("Attribute");
-				attributeElement.SetAttribute("Name", attribute.name);
-				attributeElement.SetAttribute("CurrentValue", attribute.currentValue.ToString());
-				node.AppendChild(attributeElement);
-			}
-		}
-
+		
 		override public Control getUIElement()
 		{
 			int rowsPerAttribute = Convert.ToInt32(Math.Ceiling(maxValue / Convert.ToSingle(maxDotsPerRow)));

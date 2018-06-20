@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 
 namespace CofD_Sheet.Sheet_Components
 {
+	[Serializable]
 	public class SkillsComponent : ISheetComponent
 	{
 		public class Skill
@@ -52,9 +50,7 @@ namespace CofD_Sheet.Sheet_Components
 		public List<Skill> skills = new List<Skill>();
 
 		public SkillsComponent() : base("SkillsComponent")
-		{
-			type = ISheetComponent.Type.Skills;
-		}
+		{ }
 
 		public SkillsComponent(string componentName, List<string> skillNames) : base(componentName)
 		{
@@ -62,31 +58,8 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				skills.Add(new Skill(skillNames[i]));
 			}
-			type = ISheetComponent.Type.Skills;
 		}
-
-		public SkillsComponent(XmlNode node) : base(node.Name)
-		{
-			maxValue = Convert.ToInt32(node.Attributes["MaxValue"].Value);
-			for (int i = 0; i < node.ChildNodes.Count; i++)
-			{
-				skills.Add(new Skill(node.ChildNodes[i].Attributes.GetNamedItem("Name").Value, Convert.ToInt32(node.ChildNodes[i].Attributes.GetNamedItem("CurrentValue").Value)));
-			}
-			type = ISheetComponent.Type.Skills;
-		}
-
-		override protected void fillElement(ref XmlElement node, XmlDocument doc)
-		{
-			node.SetAttribute("MaxValue", maxValue.ToString());
-			foreach (Skill attribute in skills)
-			{
-				XmlElement skillElement = doc.CreateElement("Skill");
-				skillElement.SetAttribute("Name", attribute.name);
-				skillElement.SetAttribute("CurrentValue", attribute.currentValue.ToString());
-				node.AppendChild(skillElement);
-			}
-		}
-
+		
 		override public Control getUIElement()
 		{
 			int rowsPerSkill = Convert.ToInt32(Math.Ceiling(maxValue / Convert.ToSingle(maxDotsPerRow)));

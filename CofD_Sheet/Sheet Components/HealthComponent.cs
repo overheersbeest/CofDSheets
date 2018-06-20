@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 
 namespace CofD_Sheet.Sheet_Components
 {
+	[Serializable]
 	public class HealthComponent : ISheetComponent
 	{
 		[XmlIgnore]
@@ -19,16 +18,16 @@ namespace CofD_Sheet.Sheet_Components
 		const float separatorProportion = 2F;
 
 		[XmlAttribute]
-		int maxValue = 10;
+		public int maxValue = 10;
 
 		[XmlAttribute]
-		int aggrivated = 0;
+		public int aggrivated = 0;
 
 		[XmlAttribute]
-		int lethal = 0;
+		public int lethal = 0;
 
 		[XmlAttribute]
-		int bashing = 0;
+		public int bashing = 0;
 
 		[XmlIgnore]
 		List<TextBox> slots = new List<TextBox>();
@@ -37,27 +36,8 @@ namespace CofD_Sheet.Sheet_Components
 		{ }
 
 		public HealthComponent(string componentName) : base(componentName)
-		{
-			type = ISheetComponent.Type.Health;
-		}
-
-		public HealthComponent(XmlNode node) : base(node.Name)
-		{
-			maxValue = Convert.ToInt32(node.Attributes["MaxValue"].Value);
-			aggrivated = Convert.ToInt32(node.Attributes["Aggrivated"].Value);
-			lethal = Convert.ToInt32(node.Attributes["Lethal"].Value);
-			bashing = Convert.ToInt32(node.Attributes["Bashing"].Value);
-			type = ISheetComponent.Type.Health;
-		}
-
-		override protected void fillElement(ref XmlElement node, XmlDocument doc)
-		{
-			node.SetAttribute("MaxValue", maxValue.ToString());
-			node.SetAttribute("Aggrivated", aggrivated.ToString());
-			node.SetAttribute("Lethal", lethal.ToString());
-			node.SetAttribute("Bashing", bashing.ToString());
-		}
-
+		{ }
+		
 		override public Control getUIElement()
 		{
 			int rowAmount = Convert.ToInt32(Math.Ceiling(maxValue / Convert.ToSingle(maxPerRow)));

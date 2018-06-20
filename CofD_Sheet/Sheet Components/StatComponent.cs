@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 
 namespace CofD_Sheet.Sheet_Components
 {
+	[Serializable]
 	public class StatComponent : ISheetComponent
 	{
 		[XmlIgnore]
@@ -19,10 +17,10 @@ namespace CofD_Sheet.Sheet_Components
 		const float separatorProportion = 2F;
 
 		[XmlAttribute]
-		int maxValue = 10;
+		public int maxValue = 10;
 
 		[XmlAttribute]
-		int currentValue = 0;
+		public int currentValue = 0;
 
 		[XmlIgnore]
 		List<RadioButton> pips = new List<RadioButton>();
@@ -30,23 +28,8 @@ namespace CofD_Sheet.Sheet_Components
 		public StatComponent() : base("StatComponent") { }
 
 		public StatComponent(string componentName) : base(componentName)
-		{
-			type = ISheetComponent.Type.Stat;
-		}
-
-		public StatComponent(XmlNode node) : base(node.Name)
-		{
-			maxValue = Convert.ToInt32(node.Attributes["MaxValue"].Value);
-			currentValue = Convert.ToInt32(node.Attributes["CurrentValue"].Value);
-			type = ISheetComponent.Type.Stat;
-		}
-
-		override protected void fillElement(ref XmlElement node, XmlDocument doc)
-		{
-			node.SetAttribute("MaxValue", maxValue.ToString());
-			node.SetAttribute("CurrentValue", currentValue.ToString());
-		}
-
+		{ }
+		
 		override public Control getUIElement()
 		{
 			int rowAmount = Convert.ToInt32(Math.Ceiling(maxValue / Convert.ToSingle(maxPerRow)));
