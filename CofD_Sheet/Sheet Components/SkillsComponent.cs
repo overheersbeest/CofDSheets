@@ -28,7 +28,7 @@ namespace CofD_Sheet.Sheet_Components
 			public string name = "Skill";
 
 			[XmlAttribute]
-			public int currentValue = 1;
+			public int currentValue = 0;
 
 			[XmlElement]
 			public List<String> specialties = new List<String>();
@@ -41,7 +41,7 @@ namespace CofD_Sheet.Sheet_Components
 		const int maxDotsPerRow = 10;
 
 		[XmlIgnore]
-		const int nameLabelWidth = 100;
+		const int nameLabelWidth = 180;
 
 		[XmlAttribute]
 		public int maxValue = 5;
@@ -95,7 +95,7 @@ namespace CofD_Sheet.Sheet_Components
 						skillNameLabel.Name = "skillNameLabel" + skill.name;
 						skillNameLabel.Size = new Size(nameLabelWidth, 20);
 						skillNameLabel.TabIndex = 0;
-						skillNameLabel.Text = skill.name;
+						onSpecialtiesChanged(skillNameLabel, skill);
 						uiElement.Controls.Add(skillNameLabel, 0, a * rowsPerSkill);
 					}
 				}
@@ -125,27 +125,92 @@ namespace CofD_Sheet.Sheet_Components
 			}
 			onValueChanged();
 
-			ContextMenuStrip contextMenu = new ContextMenuStrip();
-			ToolStripItem addSpecialtyItem = contextMenu.Items.Add("Add");
-			addSpecialtyItem.Click += new EventHandler(addSpecialty);
-			ToolStripItem removeSpecialtyItem = contextMenu.Items.Add("Remove");
-			removeSpecialtyItem.Click += new EventHandler(removeSpecialty);
-
-			uiElement.ContextMenuStrip = contextMenu;
-
 			return uiElement;
 		}
 
 		void addSpecialty(object sender, EventArgs e)
 		{
-			ToolStripItem addSpecialtyItem = sender as ToolStripItem;
-			// your code here
+			ContextMenuStrip owner = (sender as ToolStripItem).Owner as ContextMenuStrip;
+			Label skillLabel = owner.SourceControl as Label;
+			Skill skill = skills.Find(x => skillLabel.Text.StartsWith(x.name));
+			if (skill == null)
+			{
+				return;
+			}
+			Form prompt = new Form();
+			prompt.Width = 325;
+			prompt.Height = 100;
+			prompt.Text = "Add Specialty";
+			TextBox inputBox = new TextBox() { Left = 5, Top = 5, Width = 300 };
+			Button confirmation = new Button() { Text = "Add", Left = 205, Width = 100, Top = 30 };
+			confirmation.Click += (sender2, e2) => { prompt.Close(); };
+			prompt.Controls.Add(confirmation);
+			prompt.Controls.Add(inputBox);
+			prompt.ShowDialog();
+
+			string newSpecialty = inputBox.Text;
+			if (!skill.specialties.Contains(newSpecialty))
+			{
+				skill.specialties.Add(newSpecialty);
+			}
+
+			onSpecialtiesChanged(skillLabel, skill);
 		}
 
 		void removeSpecialty(object sender, EventArgs e)
 		{
-			ToolStripItem removeSpecialtyItem = sender as ToolStripItem;
-			// your code here
+			ContextMenuStrip owner = (sender as ToolStripItem).Owner as ContextMenuStrip;
+			Label skillLabel = owner.SourceControl as Label;
+			Skill skill = skills.Find(x => skillLabel.Text.StartsWith(x.name));
+			if (skill == null)
+			{
+				return;
+			}
+			Form prompt = new Form();
+			prompt.Width = 325;
+			prompt.Height = 100;
+			prompt.Text = "Remove Specialty";
+			ComboBox inputBox = new ComboBox() { Left = 5, Top = 5, Width = 300 };
+			foreach (string specialty in skill.specialties)
+			{
+				inputBox.Items.Add(specialty);
+			}
+			Button confirmation = new Button() { Text = "Remove", Left = 205, Width = 100, Top = 30 };
+			confirmation.Click += (sender2, e2) => { prompt.Close(); };
+			prompt.Controls.Add(confirmation);
+			prompt.Controls.Add(inputBox);
+			prompt.ShowDialog();
+
+			string specialtytoRemove = inputBox.SelectedItem as string;
+			if (skill.specialties.Contains(specialtytoRemove))
+			{
+				skill.specialties.Remove(specialtytoRemove);
+			}
+
+			onSpecialtiesChanged(skillLabel, skill);
+		}
+
+		void onSpecialtiesChanged(Label label, Skill skill)
+		{
+			if (skill.specialties.Count > 0)
+			{
+				label.Text = skill.name + " (" + string.Join(", ", skill.specialties) + ")";
+			}
+			else
+			{
+				label.Text = skill.name;
+			}
+
+			ContextMenuStrip contextMenu = new ContextMenuStrip();
+			ToolStripItem addSpecialtyItem = contextMenu.Items.Add("Add Specialty");
+			addSpecialtyItem.Click += new EventHandler(addSpecialty);
+			if (skill.specialties.Count > 0)
+			{
+				ToolStripItem removeSpecialtyItem = contextMenu.Items.Add("Remove Specialty");
+				removeSpecialtyItem.Click += new EventHandler(removeSpecialty);
+			}
+
+			label.ContextMenuStrip = contextMenu;
 		}
 
 		void valueChanged(object sender, EventArgs e)

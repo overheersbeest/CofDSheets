@@ -26,13 +26,6 @@ namespace CofD_Sheet
 		public string chronicle = "";
 		
 		[XmlArray]
-		//[XmlArrayItem("AspirationsComponent", typeof(AspirationsComponent))]
-		//[XmlArrayItem("AttributesComponent", typeof(AttributesComponent))]
-		//[XmlArrayItem("ExperienceComponent", typeof(ExperienceComponent))]
-		//[XmlArrayItem("HealthComponent", typeof(HealthComponent))]
-		//[XmlArrayItem("SimpleComponent", typeof(SimpleComponent))]
-		//[XmlArrayItem("SkillsComponent", typeof(SkillsComponent))]
-		//[XmlArrayItem("StatComponent", typeof(StatComponent))]
 		public List<ISheetComponent> components = new List<ISheetComponent>();
 
 		[XmlIgnore]
