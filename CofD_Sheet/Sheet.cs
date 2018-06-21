@@ -53,44 +53,67 @@ namespace CofD_Sheet
 			switch (type)
 			{
 				case SheetType.Mortal:
-					components.Add(new AttributesComponent("Mental_Attributes", new List<string>{"Intelligence", "Wits", "Resolve"}));
-					components.Add(new AttributesComponent("Physical_Attributes", new List<string>{"Strength", "Dexterity", "Stamina"}));
-					components.Add(new AttributesComponent("Social_Attributes", new List<string>{"Presence", "Manipulation", "Composure"}));
-					components.Add(new SkillsComponent("Mental_Skills", new List<string> { "Academics", "Computer", "Crafts", "Investigation", "Medicine", "Occult", "Politics", "Science" }));
-					components.Add(new SkillsComponent("Physical_Skills", new List<string> { "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry" }));
-					components.Add(new SkillsComponent("Social_Skills", new List<string> { "Animal_Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge" }));
-					components.Add(new HealthComponent("Health"));
-					components.Add(new SimpleComponent("Willpower"));
-					components.Add(new StatComponent("Integrity"));
-					components.Add(new ExperienceComponent("Experience", "Beats"));
-					components.Add(new AspirationsComponent("Aspirations"));
+					components.Add(new AttributesComponent("Mental_Attributes", new List<string>{"Intelligence", "Wits", "Resolve"}, 0));
+					components.Add(new AttributesComponent("Physical_Attributes", new List<string>{"Strength", "Dexterity", "Stamina"}, 1));
+					components.Add(new AttributesComponent("Social_Attributes", new List<string>{"Presence", "Manipulation", "Composure"}, 2));
+
+					components.Add(new SkillsComponent("Mental_Skills", new List<string> { "Academics", "Computer", "Crafts", "Investigation", "Medicine", "Occult", "Politics", "Science" }, 0));
+					components.Add(new SkillsComponent("Physical_Skills", new List<string> { "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry" }, 0));
+					components.Add(new SkillsComponent("Social_Skills", new List<string> { "Animal_Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge" }, 0));
+
+					components.Add(new ExperienceComponent("Experience", "Beats", 1));
+
+					components.Add(new HealthComponent("Health", 2));
+					components.Add(new SimpleComponent("Willpower", 2));
+					components.Add(new StatComponent("Integrity", 2));
+					components.Add(new AspirationsComponent("Aspirations", 3, 2));
 					break;
 				case SheetType.Mage:
-					components.Add(new HealthComponent("Health"));
-					components.Add(new SimpleComponent("Willpower"));
-					components.Add(new SimpleComponent("Mana"));
-					components.Add(new StatComponent("Wisdom"));
-					components.Add(new StatComponent("Gnosis"));
-					components.Add(new ExperienceComponent("Experience", "Beats"));
-					components.Add(new ExperienceComponent("Arcane_Experience", "Arcane_Beats"));
-					components.Add(new AspirationsComponent("Aspirations"));
-					components.Add(new AspirationsComponent("Obsessions", 1));
+					components.Add(new AttributesComponent("Mental_Attributes", new List<string> { "Intelligence", "Wits", "Resolve" }, 0));
+					components.Add(new AttributesComponent("Physical_Attributes", new List<string> { "Strength", "Dexterity", "Stamina" }, 1));
+					components.Add(new AttributesComponent("Social_Attributes", new List<string> { "Presence", "Manipulation", "Composure" }, 2));
+
+					components.Add(new SkillsComponent("Mental_Skills", new List<string> { "Academics", "Computer", "Crafts", "Investigation", "Medicine", "Occult", "Politics", "Science" }, 0));
+					components.Add(new SkillsComponent("Physical_Skills", new List<string> { "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry" }, 0));
+					components.Add(new SkillsComponent("Social_Skills", new List<string> { "Animal_Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge" }, 0));
+
+					components.Add(new ExperienceComponent("Experience", "Beats", 1));
+					components.Add(new ExperienceComponent("Arcane_Experience", "Arcane_Beats", 1));
+
+					components.Add(new HealthComponent("Health", 2));
+					components.Add(new SimpleComponent("Willpower", 2));
+					components.Add(new StatComponent("Gnosis", 2));
+					components.Add(new SimpleComponent("Mana", 2));
+					components.Add(new StatComponent("Wisdom", 2));
+					components.Add(new AspirationsComponent("Aspirations", 3, 2));
+					components.Add(new AspirationsComponent("Obsessions", 1, 2));
 					break;
 				case SheetType.Werewolf:
-					components.Add(new HealthComponent("Health"));
-					components.Add(new SimpleComponent("Willpower"));
-					components.Add(new SimpleComponent("Essence"));
-					components.Add(new StatComponent("Harmony"));
-					components.Add(new StatComponent("Primal_Urge"));
-					components.Add(new ExperienceComponent("Experience", "Beats"));
-					components.Add(new AspirationsComponent("Aspirations"));
+					components.Add(new AttributesComponent("Mental_Attributes", new List<string> { "Intelligence", "Wits", "Resolve" }, 0));
+					components.Add(new AttributesComponent("Physical_Attributes", new List<string> { "Strength", "Dexterity", "Stamina" }, 1));
+					components.Add(new AttributesComponent("Social_Attributes", new List<string> { "Presence", "Manipulation", "Composure" }, 2));
+
+					components.Add(new SkillsComponent("Mental_Skills", new List<string> { "Academics", "Computer", "Crafts", "Investigation", "Medicine", "Occult", "Politics", "Science" }, 0));
+					components.Add(new SkillsComponent("Physical_Skills", new List<string> { "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry" }, 0));
+					components.Add(new SkillsComponent("Social_Skills", new List<string> { "Animal_Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge" }, 0));
+
+					components.Add(new AspirationsComponent("Aspirations", 3, 1));
+
+					components.Add(new HealthComponent("Health", 2));
+					components.Add(new SimpleComponent("Willpower", 2));
+					components.Add(new StatComponent("Primal_Urge", 2));
+					components.Add(new SimpleComponent("Essence", 2));
+					components.Add(new StatComponent("Harmony", 2));
+					components.Add(new ExperienceComponent("Experience", "Beats", 2));
 					break;
 				case SheetType.Spirit:
-					components.Add(new HealthComponent("Corpus"));
-					components.Add(new SimpleComponent("Willpower"));
-					components.Add(new SimpleComponent("Essence"));
-					components.Add(new StatComponent("Rank"));
-					components.Add(new AspirationsComponent("Aspirations"));
+					components.Add(new AttributesComponent("Attributes", new List<string> { "Power", "Finesse", "Resistance" }, 0));
+
+					components.Add(new HealthComponent("Corpus", 2));
+					components.Add(new SimpleComponent("Willpower", 2));
+					components.Add(new StatComponent("Rank", 2));
+					components.Add(new SimpleComponent("Essence", 2));
+					components.Add(new AspirationsComponent("Aspirations", 3, 2));
 					break;
 			}
 		}

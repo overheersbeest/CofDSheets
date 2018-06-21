@@ -25,10 +25,10 @@ namespace CofD_Sheet.Sheet_Components
 		[XmlIgnore]
 		List<CheckBox> checkBoxes = new List<CheckBox>();
 
-		public SimpleComponent() : base("SimpleComponent")
+		public SimpleComponent() : base("SimpleComponent", -1)
 		{ }
 
-		public SimpleComponent(string componentName) : base(componentName)
+		public SimpleComponent(string componentName, int componentColumnIndex) : base(componentName, componentColumnIndex)
 		{ }
 		
 		override public Control getUIElement()
@@ -43,11 +43,11 @@ namespace CofD_Sheet.Sheet_Components
 			uiElement.ColumnCount = columnAmount;
 			uiElement.Dock = DockStyle.Fill;
 			uiElement.Name = "tableLayout" + name + "values";
-			uiElement.Size = new Size(292, 60);
+			uiElement.Size = new Size(componentWidth, 20 * rowAmount);
 			uiElement.TabIndex = 0;
 			checkBoxes.Clear();
-
-			float separatorWidth = 100F / (checkBoxRows * separatorProportion + columnSeparatorCount);
+			
+			float separatorWidth = uiElement.Size.Width / (checkBoxRows * separatorProportion + columnSeparatorCount);
 
 			for (int r = 0; r < rowAmount; r++)
 			{
@@ -57,23 +57,33 @@ namespace CofD_Sheet.Sheet_Components
 					if ((c + 1) % 6 == 0)
 					{
 						//break, to separate groups of 5
-						uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, separatorWidth));
+						if (r == 0)
+						{
+							uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, separatorWidth));
+						}
 					}
 					else
 					{
 						int checkBoxNr = checkBoxes.Count;
-						uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, separatorWidth * separatorProportion));
-						CheckBox checkBox = new CheckBox();
-						checkBox.Anchor = System.Windows.Forms.AnchorStyles.None;
-						checkBox.AutoSize = true;
-						checkBox.Name = "checkbox" + name + "_" + checkBoxNr;
-						checkBox.Size = new System.Drawing.Size(15, 14);
-						checkBox.TabIndex = 0;
-						checkBox.UseVisualStyleBackColor = true;
-						checkBox.Checked = checkBoxNr < currentValue;
-						checkBox.Click += new EventHandler(valueChanged);
-						checkBoxes.Add(checkBox);
-						uiElement.Controls.Add(checkBox, c, r);
+						if (r == 0)
+						{
+							uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, separatorWidth * separatorProportion));
+						}
+						if (checkBoxNr < maxValue)
+						{
+							CheckBox checkBox = new CheckBox();
+							checkBox.Anchor = System.Windows.Forms.AnchorStyles.None;
+							checkBox.AutoSize = true;
+							checkBox.Name = "checkbox" + name + "_" + checkBoxNr;
+							checkBox.Size = new System.Drawing.Size(13, 13);
+							checkBox.Dock = DockStyle.Fill;
+							checkBox.TabIndex = 0;
+							checkBox.UseVisualStyleBackColor = true;
+							checkBox.Checked = checkBoxNr < currentValue;
+							checkBox.Click += new EventHandler(valueChanged);
+							checkBoxes.Add(checkBox);
+							uiElement.Controls.Add(checkBox, c, r);
+						}
 					}
 				}
 			}
@@ -83,23 +93,29 @@ namespace CofD_Sheet.Sheet_Components
 
 		void valueChanged(object sender, EventArgs e)
 		{
+			for (int i = 0; i < checkBoxes.Count; i++)
+			{
+				if (sender == checkBoxes[i])
+				{
+					if (currentValue == i + 1)
+					{
+						//when clicking the last pip, reduce value by 1
+						currentValue = i;
+					}
+					else
+					{
+						currentValue = i + 1;
+					}
+				}
+			}
 			onValueChanged();
 		}
 
 		void onValueChanged()
 		{
-			int counter = 0;
 			for (int i = checkBoxes.Count - 1; i >= 0; i--)
 			{
-				if (checkBoxes[i].Checked)
-				{
-					counter++;
-				}
-			}
-			currentValue = counter;
-			for (int i = checkBoxes.Count - 1; i >= 0; i--)
-			{
-				checkBoxes[i].Checked = i < counter;
+				checkBoxes[i].Checked = i < currentValue;
 			}
 
 			onComponentChanged();

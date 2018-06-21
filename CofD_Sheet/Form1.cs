@@ -222,6 +222,7 @@ namespace CofD_Sheet
 				componentUIElement.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 				componentUIElement.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 				componentUIElement.TabIndex = 0;
+				componentUIElement.Size = new Size(292, 26);
 
 				Label nameLabel = new Label();
 				nameLabel.Anchor = AnchorStyles.None;
@@ -237,14 +238,15 @@ namespace CofD_Sheet
 				Control componentValueElement = component.getUIElement();
 				componentUIElement.Controls.Add(componentValueElement, 0, 1);
 				componentRequiredHeight += componentValueElement.Size.Height;
+				componentRequiredHeight += 10;
 				componentUIElement.Size = new Size(292, componentRequiredHeight);
 
-				if (i % 3 == 0)
+				if (component.columnIndex == 0)
 				{
 					LeftComponentTable.RowStyles.Add(new RowStyle(SizeType.Absolute, componentRequiredHeight));
 					LeftComponentTable.Controls.Add(componentUIElement);
 				}
-				else if (i % 3 == 1)
+				else if (component.columnIndex == 1)
 				{
 					MiddleComponentTable.RowStyles.Add(new RowStyle(SizeType.Absolute, componentRequiredHeight));
 					MiddleComponentTable.Controls.Add(componentUIElement);

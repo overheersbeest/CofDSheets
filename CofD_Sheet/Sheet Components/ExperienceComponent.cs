@@ -34,10 +34,10 @@ namespace CofD_Sheet.Sheet_Components
 		[XmlIgnore]
 		TextBox experienceCounter = null;
 		
-		public ExperienceComponent() : base("ExperienceComponent")
+		public ExperienceComponent() : base("ExperienceComponent", -1)
 		{ }
 
-		public ExperienceComponent(string majorName, string minorName) : base(majorName)
+		public ExperienceComponent(string majorName, string minorName, int componentColumnIndex) : base(majorName, componentColumnIndex)
 		{
 			beatName = minorName;
 		}
@@ -54,7 +54,7 @@ namespace CofD_Sheet.Sheet_Components
 			uiElement.ColumnCount = 2;
 			uiElement.Dock = DockStyle.Fill;
 			uiElement.Name = "tableLayout" + name + "values";
-			uiElement.Size = new Size(292, 60);
+			uiElement.Size = new Size(292, 23);
 			uiElement.TabIndex = 0;
 
 			//beats element
@@ -64,7 +64,7 @@ namespace CofD_Sheet.Sheet_Components
 			beatElement.ColumnCount = columnAmount;
 			beatElement.Dock = DockStyle.Fill;
 			beatElement.Name = "tableLayout" + name + "beats";
-			beatElement.Size = new Size(292, 60);
+			beatElement.Size = new Size(componentWidth, 20 * rowAmount);
 			beatElement.TabIndex = 0;
 			uiElement.Controls.Add(beatElement, 0, 0);
 			beatBoxes.Clear();

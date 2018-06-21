@@ -25,9 +25,9 @@ namespace CofD_Sheet.Sheet_Components
 		[XmlIgnore]
 		List<RadioButton> pips = new List<RadioButton>();
 
-		public StatComponent() : base("StatComponent") { }
+		public StatComponent() : base("StatComponent", -1) { }
 
-		public StatComponent(string componentName) : base(componentName)
+		public StatComponent(string componentName, int componentColumnIndex) : base(componentName, componentColumnIndex)
 		{ }
 		
 		override public Control getUIElement()
@@ -42,11 +42,11 @@ namespace CofD_Sheet.Sheet_Components
 			uiElement.ColumnCount = columnAmount;
 			uiElement.Dock = DockStyle.Fill;
 			uiElement.Name = "tableLayout" + name + "values";
-			uiElement.Size = new Size(292, 60);
+			uiElement.Size = new Size(componentWidth, 20 * rowAmount);
 			uiElement.TabIndex = 0;
 			pips.Clear();
 
-			float separatorWidth = 100F / (checkBoxRows * separatorProportion + columnSeparatorCount);
+			float separatorWidth = uiElement.Size.Width / (checkBoxRows * separatorProportion + columnSeparatorCount);
 
 			for (int r = 0; r < rowAmount; r++)
 			{
@@ -56,24 +56,34 @@ namespace CofD_Sheet.Sheet_Components
 					if ((c + 1) % 6 == 0)
 					{
 						//break, to separate groups of 5
-						uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, separatorWidth));
+						if (r == 0)
+						{
+							uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, separatorWidth));
+						}
 					}
 					else
 					{
 						int pipNr = pips.Count;
-						uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, separatorWidth * separatorProportion));
-						RadioButton pip = new RadioButton();
-						pip.Anchor = System.Windows.Forms.AnchorStyles.None;
-						pip.AutoSize = true;
-						pip.Name = "pip" + name + "_" + pipNr;
-						pip.Size = new System.Drawing.Size(15, 14);
-						pip.TabIndex = 0;
-						pip.UseVisualStyleBackColor = true;
-						pip.Checked = pipNr < currentValue;
-						pip.Click += new EventHandler(valueChanged);
-						pip.AutoCheck = false;
-						pips.Add(pip);
-						uiElement.Controls.Add(pip, c, r);
+						if (r == 0)
+						{
+							uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, separatorWidth * separatorProportion));
+						}
+						if (pipNr < maxValue)
+						{
+							RadioButton pip = new RadioButton();
+							pip.Anchor = System.Windows.Forms.AnchorStyles.None;
+							pip.AutoSize = true;
+							pip.Name = "pip" + name + "_" + pipNr;
+							pip.Size = new System.Drawing.Size(15, 14);
+							pip.Dock = DockStyle.Fill;
+							pip.TabIndex = 0;
+							pip.UseVisualStyleBackColor = true;
+							pip.Checked = pipNr < currentValue;
+							pip.Click += new EventHandler(valueChanged);
+							pip.AutoCheck = false;
+							pips.Add(pip);
+							uiElement.Controls.Add(pip, c, r);
+						}
 					}
 				}
 			}
@@ -83,18 +93,17 @@ namespace CofD_Sheet.Sheet_Components
 
 		void valueChanged(object sender, EventArgs e)
 		{
-			for (int i = 0; i < pips.Count; i++)
+			for (int i = pips.Count - 1; i >= 0; i--)
 			{
-				if (sender == pips[i])
+				if (pips[i] == sender)
 				{
-					if (currentValue == i + 1)
+					if (pips[i].Checked)
 					{
-						//when clicking the last pip, reduce value by 1
-						currentValue = i;
+						--currentValue;
 					}
 					else
 					{
-						currentValue = i + 1;
+						++currentValue;
 					}
 				}
 			}

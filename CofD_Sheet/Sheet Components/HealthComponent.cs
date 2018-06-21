@@ -32,10 +32,10 @@ namespace CofD_Sheet.Sheet_Components
 		[XmlIgnore]
 		List<TextBox> slots = new List<TextBox>();
 
-		public HealthComponent() : base("HealthComponent")
+		public HealthComponent() : base("HealthComponent", -1)
 		{ }
 
-		public HealthComponent(string componentName) : base(componentName)
+		public HealthComponent(string componentName, int componentColumnIndex) : base(componentName, componentColumnIndex)
 		{ }
 		
 		override public Control getUIElement()
@@ -50,7 +50,7 @@ namespace CofD_Sheet.Sheet_Components
 			uiElement.ColumnCount = columnAmount;
 			uiElement.Dock = DockStyle.Fill;
 			uiElement.Name = "tableLayout" + name + "values";
-			uiElement.Size = new Size(292, 60);
+			uiElement.Size = new Size(componentWidth, 23);
 			uiElement.TabIndex = 0;
 			slots.Clear();
 

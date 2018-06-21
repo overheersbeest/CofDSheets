@@ -13,12 +13,19 @@ namespace CofD_Sheet.Sheet_Components
 	[XmlInclude(typeof(StatComponent))]
 	public abstract class ISheetComponent
 	{
+		[XmlIgnore]
+		public const int componentWidth = 315;
+
 		[XmlAttribute]
 		public string name;
-		
-		public ISheetComponent(string componentName)
+
+		[XmlAttribute]
+		public int columnIndex;
+
+		public ISheetComponent(string componentName, int componentColumnIndex)
 		{
 			name = componentName;
+			columnIndex = componentColumnIndex;
 		}
 
 		abstract public Control getUIElement();

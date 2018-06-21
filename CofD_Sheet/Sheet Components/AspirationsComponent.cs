@@ -19,10 +19,10 @@ namespace CofD_Sheet.Sheet_Components
 		[XmlIgnore]
 		List<TextBox> textBoxes = new List<TextBox>();
 
-		public AspirationsComponent() : base("AspirationsComponent")
+		public AspirationsComponent() : base("AspirationsComponent", -1)
 		{ }
 
-		public AspirationsComponent(string componentName, int amountAllowed = 3) : base(componentName)
+		public AspirationsComponent(string componentName, int amountAllowed, int componentColumnIndex) : base(componentName, componentColumnIndex)
 		{
 			maxAspirations = amountAllowed;
 			aspirations = new List<string>(new string[maxAspirations]);
@@ -35,7 +35,7 @@ namespace CofD_Sheet.Sheet_Components
 			uiElement.ColumnCount = 1;
 			uiElement.Dock = DockStyle.Fill;
 			uiElement.Name = "tableLayout" + name + "values";
-			uiElement.Size = new Size(292, 60);
+			uiElement.Size = new Size(componentWidth, 23 * maxAspirations);
 			uiElement.TabIndex = 0;
 			textBoxes.Clear();
 

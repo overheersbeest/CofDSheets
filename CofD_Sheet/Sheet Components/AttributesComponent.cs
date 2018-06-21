@@ -46,10 +46,10 @@ namespace CofD_Sheet.Sheet_Components
 		[XmlArray]
 		public List<Attribute> attributes = new List<Attribute>();
 
-		public AttributesComponent() : base("AttributesComponent")
+		public AttributesComponent() : base("AttributesComponent", -1)
 		{ }
 
-		public AttributesComponent(string componentName, List<string> attributeNames) : base(componentName)
+		public AttributesComponent(string componentName, List<string> attributeNames, int componentColumnIndex) : base(componentName, componentColumnIndex)
 		{
 			for (int i = 0; i < attributeNames.Count; i++)
 			{
@@ -68,7 +68,7 @@ namespace CofD_Sheet.Sheet_Components
 			uiElement.ColumnCount = columnAmount;
 			uiElement.Dock = DockStyle.Fill;
 			uiElement.Name = "tableLayout" + name + "values";
-			uiElement.Size = new Size(292, 20 * rowAmount);
+			uiElement.Size = new Size(componentWidth, 20 * rowAmount);
 			uiElement.TabIndex = 0;
 
 			//column styles

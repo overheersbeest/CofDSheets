@@ -49,10 +49,10 @@ namespace CofD_Sheet.Sheet_Components
 		[XmlArray]
 		public List<Skill> skills = new List<Skill>();
 
-		public SkillsComponent() : base("SkillsComponent")
+		public SkillsComponent() : base("SkillsComponent", -1)
 		{ }
 
-		public SkillsComponent(string componentName, List<string> skillNames) : base(componentName)
+		public SkillsComponent(string componentName, List<string> skillNames, int componentColumnIndex) : base(componentName, componentColumnIndex)
 		{
 			for (int i = 0; i < skillNames.Count; i++)
 			{
@@ -71,7 +71,7 @@ namespace CofD_Sheet.Sheet_Components
 			uiElement.ColumnCount = columnAmount;
 			uiElement.Dock = DockStyle.Fill;
 			uiElement.Name = "tableLayout" + name + "values";
-			uiElement.Size = new Size(292, 20 * rowAmount);
+			uiElement.Size = new Size(componentWidth, (20 * rowAmount));
 			uiElement.TabIndex = 0;
 
 			//column styles
