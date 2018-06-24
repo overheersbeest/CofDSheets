@@ -243,7 +243,7 @@ namespace CofD_Sheet
 
 				if (component.columnIndex == 0)
 				{
-					LeftComponentTable.RowStyles.Add(new RowStyle(SizeType.Absolute, componentRequiredHeight));
+					LeftComponentTable.RowStyles.Add(new RowStyle(SizeType.AutoSize, componentRequiredHeight));
 					LeftComponentTable.Controls.Add(componentUIElement);
 				}
 				else if (component.columnIndex == 1)
@@ -286,6 +286,27 @@ namespace CofD_Sheet
 			{
 				this.Text += "*";
 			}
+		}
+
+		public static void resizeTableHeight(ref TableLayoutPanel table)
+		{
+			int height = 0;
+			table.RowStyles.Clear();
+			for (int r = 0; r < table.RowCount; ++r)
+			{
+				int cellHeight = 30;
+				for (int c = 0; c < table.ColumnCount; ++c)
+				{
+					Control cell = table.GetControlFromPosition(c, r);
+					if (cell != null)
+					{
+						cellHeight = Math.Max(cell.Size.Height, cellHeight);
+					}
+				}
+				height += cellHeight;
+				table.RowStyles.Add(new RowStyle(SizeType.Absolute, cellHeight));
+			}
+			table.Size = new Size(table.Size.Width, height);
 		}
 
 		private void PlayerChanged(object sender, EventArgs e)

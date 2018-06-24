@@ -61,6 +61,7 @@ namespace CofD_Sheet
 					components.Add(new SkillsComponent("Physical_Skills", new List<string> { "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry" }, 0));
 					components.Add(new SkillsComponent("Social_Skills", new List<string> { "Animal_Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge" }, 0));
 
+					components.Add(new MeritComponent("Merits", "merit", true, new List<string>(), 1));
 					components.Add(new ExperienceComponent("Experience", "Beats", 1));
 
 					components.Add(new HealthComponent("Health", 2));
@@ -77,6 +78,8 @@ namespace CofD_Sheet
 					components.Add(new SkillsComponent("Physical_Skills", new List<string> { "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry" }, 0));
 					components.Add(new SkillsComponent("Social_Skills", new List<string> { "Animal_Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge" }, 0));
 
+					components.Add(new MeritComponent("Merits", "merit", true, new List<string>(), 1));
+					components.Add(new MeritComponent("Arcana", "arcanum", false, new List<string> { "Death", "Fate", "Forces", "Life", "Matter", "Mind", "Prime", "Space", "Spirit", "Time" }, 1));
 					components.Add(new ExperienceComponent("Experience", "Beats", 1));
 					components.Add(new ExperienceComponent("Arcane_Experience", "Arcane_Beats", 1));
 
@@ -97,17 +100,21 @@ namespace CofD_Sheet
 					components.Add(new SkillsComponent("Physical_Skills", new List<string> { "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry" }, 0));
 					components.Add(new SkillsComponent("Social_Skills", new List<string> { "Animal_Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge" }, 0));
 
-					components.Add(new AspirationsComponent("Aspirations", 3, 1));
+					components.Add(new MeritComponent("Merits", "merit", true, new List<string>(), 1));
+					components.Add(new MeritComponent("Renown", "renown", false, new List<string> { "Cunning", "Glory", "Honor", "Purity", "Wisdom"}, 1));
+					components.Add(new ExperienceComponent("Experience", "Beats", 1));
 
 					components.Add(new HealthComponent("Health", 2));
 					components.Add(new SimpleComponent("Willpower", 2));
 					components.Add(new StatComponent("Primal_Urge", 2));
 					components.Add(new SimpleComponent("Essence", 2));
 					components.Add(new StatComponent("Harmony", 2));
-					components.Add(new ExperienceComponent("Experience", "Beats", 2));
+					components.Add(new AspirationsComponent("Aspirations", 3, 2));
 					break;
 				case SheetType.Spirit:
 					components.Add(new AttributesComponent("Attributes", new List<string> { "Power", "Finesse", "Resistance" }, 0));
+
+					components.Add(new MeritComponent("Influences", "influence", true, new List<string>(), 1));
 
 					components.Add(new HealthComponent("Corpus", 2));
 					components.Add(new SimpleComponent("Willpower", 2));

@@ -71,7 +71,7 @@ namespace CofD_Sheet.Sheet_Components
 			uiElement.ColumnCount = columnAmount;
 			uiElement.Dock = DockStyle.Fill;
 			uiElement.Name = "tableLayout" + name + "values";
-			uiElement.Size = new Size(componentWidth, (20 * rowAmount));
+			uiElement.Size = new Size(componentWidth, (21 * rowAmount));
 			uiElement.TabIndex = 0;
 
 			//column styles

@@ -8,6 +8,7 @@ namespace CofD_Sheet.Sheet_Components
 	[XmlInclude(typeof(AttributesComponent))]
 	[XmlInclude(typeof(ExperienceComponent))]
 	[XmlInclude(typeof(HealthComponent))]
+	[XmlInclude(typeof(MeritComponent))]
 	[XmlInclude(typeof(SimpleComponent))]
 	[XmlInclude(typeof(SkillsComponent))]
 	[XmlInclude(typeof(StatComponent))]
