@@ -30,7 +30,6 @@ namespace CofD_Sheet.Sheet_Components
 
 		override public Control getUIElement()
 		{
-			TableLayoutPanel uiElement = new TableLayoutPanel();
 			uiElement.RowCount = maxAspirations;
 			uiElement.ColumnCount = 1;
 			uiElement.Dock = DockStyle.Fill;

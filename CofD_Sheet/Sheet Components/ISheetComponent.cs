@@ -17,6 +17,9 @@ namespace CofD_Sheet.Sheet_Components
 		[XmlIgnore]
 		public const int componentWidth = 315;
 
+		[XmlIgnore]
+		protected TableLayoutPanel uiElement = new TableLayoutPanel();
+
 		[XmlAttribute]
 		public string name;
 

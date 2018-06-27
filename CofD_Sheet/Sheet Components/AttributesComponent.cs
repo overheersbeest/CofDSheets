@@ -62,8 +62,7 @@ namespace CofD_Sheet.Sheet_Components
 			int rowsPerAttribute = Convert.ToInt32(Math.Ceiling(maxValue / Convert.ToSingle(maxDotsPerRow)));
 			int rowAmount = attributes.Count * rowsPerAttribute;
 			int columnAmount = 1 + Math.Min(maxValue, maxDotsPerRow);
-
-			TableLayoutPanel uiElement = new TableLayoutPanel();
+			
 			uiElement.RowCount = rowAmount;
 			uiElement.ColumnCount = columnAmount;
 			uiElement.Dock = DockStyle.Fill;

@@ -44,10 +44,7 @@ namespace CofD_Sheet.Sheet_Components
 
 		[XmlAttribute]
 		public int maxValue = 5;
-
-		[XmlIgnore]
-		TableLayoutPanel uiElement = new TableLayoutPanel();
-
+		
 		[XmlAttribute]
 		string singularName = "merit";
 

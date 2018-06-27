@@ -44,8 +44,7 @@ namespace CofD_Sheet.Sheet_Components
 			int checkBoxRows = Math.Min(maxValue, maxPerRow);
 			int columnSeparatorCount = (checkBoxRows - 1) / 5;
 			int columnAmount = checkBoxRows + columnSeparatorCount;
-
-			TableLayoutPanel uiElement = new TableLayoutPanel();
+			
 			uiElement.RowCount = rowAmount;
 			uiElement.ColumnCount = columnAmount;
 			uiElement.Dock = DockStyle.Fill;
