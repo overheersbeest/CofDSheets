@@ -53,7 +53,6 @@ namespace CofD_Sheet.Sheet_Components
 			uiElement.RowCount = advantages.Count;
 			uiElement.ColumnCount = 1;
 			uiElement.Dock = DockStyle.Fill;
-			uiElement.Name = "tableLayout" + name + "values";
 			uiElement.Size = new Size(componentWidth, 30 * advantages.Count);
 			uiElement.TabIndex = 0;
 			textBoxes.Clear();
@@ -77,7 +76,6 @@ namespace CofD_Sheet.Sheet_Components
 				TextBox textBox = new TextBox();
 				textBox.Anchor = AnchorStyles.None;
 				textBox.AutoSize = true;
-				textBox.Name = "slot" + name + "_" + a;
 				textBox.Size = new Size(15, 14);
 				textBox.Dock = DockStyle.Fill;
 				textBox.TabIndex = 0;

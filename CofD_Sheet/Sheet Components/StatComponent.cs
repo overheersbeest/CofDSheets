@@ -38,7 +38,6 @@ namespace CofD_Sheet.Sheet_Components
 		void init()
 		{
 			uiElement.Dock = DockStyle.Fill;
-			uiElement.Name = "tableLayout" + name + "values";
 			uiElement.TabIndex = 0;
 
 			ContextMenuStrip contextMenu = new ContextMenuStrip();
@@ -143,7 +142,6 @@ namespace CofD_Sheet.Sheet_Components
 								RadioButton pip = new RadioButton();
 								pip.Anchor = System.Windows.Forms.AnchorStyles.None;
 								pip.AutoSize = true;
-								pip.Name = "pip" + name + "_" + pipIter;
 								pip.Size = new System.Drawing.Size(15, 14);
 								pip.Dock = DockStyle.Fill;
 								pip.TabIndex = 0;

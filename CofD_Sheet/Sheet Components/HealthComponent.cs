@@ -48,7 +48,6 @@ namespace CofD_Sheet.Sheet_Components
 			uiElement.RowCount = rowAmount;
 			uiElement.ColumnCount = columnAmount;
 			uiElement.Dock = DockStyle.Fill;
-			uiElement.Name = "tableLayout" + name + "values";
 			uiElement.Size = new Size(componentWidth, 23);
 			uiElement.TabIndex = 0;
 			slots.Clear();
@@ -73,7 +72,6 @@ namespace CofD_Sheet.Sheet_Components
 						slot.Anchor = System.Windows.Forms.AnchorStyles.None;
 						slot.KeyDown += new KeyEventHandler(backSpacePressed);
 						slot.AutoSize = true;
-						slot.Name = "slot" + name + "_" + slotNr;
 						slot.Size = new System.Drawing.Size(15, 14);
 						slot.TabIndex = 0;
 						slot.TextChanged += valueChanged;

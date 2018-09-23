@@ -74,7 +74,6 @@ namespace CofD_Sheet.Sheet_Components
 			
 			uiElement.ColumnCount = columnAmount;
 			uiElement.Dock = DockStyle.Fill;
-			uiElement.Name = "tableLayout" + name + "values";
 			uiElement.TabIndex = 0;
 
 			//column styles
@@ -190,7 +189,6 @@ namespace CofD_Sheet.Sheet_Components
 					RadioButton pip = new RadioButton();
 					pip.Anchor = AnchorStyles.None;
 					pip.AutoSize = true;
-					pip.Name = "pip" + name + "_" + 0;
 					pip.Size = new Size(22, 22);
 					pip.Dock = DockStyle.Fill;
 					pip.TabIndex = 0;

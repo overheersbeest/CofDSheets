@@ -52,7 +52,6 @@ namespace CofD_Sheet.Sheet_Components
 			uiElement.RowCount = 1;
 			uiElement.ColumnCount = 2;
 			uiElement.Dock = DockStyle.Fill;
-			uiElement.Name = "tableLayout" + name + "values";
 			uiElement.Size = new Size(292, 23);
 			uiElement.TabIndex = 0;
 
@@ -62,7 +61,6 @@ namespace CofD_Sheet.Sheet_Components
 			beatElement.RowCount = rowAmount;
 			beatElement.ColumnCount = columnAmount;
 			beatElement.Dock = DockStyle.Fill;
-			beatElement.Name = "tableLayout" + name + "beats";
 			beatElement.Size = new Size(componentWidth, 20 * rowAmount);
 			beatElement.TabIndex = 0;
 			uiElement.Controls.Add(beatElement, 0, 0);
@@ -86,7 +84,6 @@ namespace CofD_Sheet.Sheet_Components
 						CheckBox checkBox = new CheckBox();
 						checkBox.Anchor = System.Windows.Forms.AnchorStyles.None;
 						checkBox.AutoSize = true;
-						checkBox.Name = "beatbox" + name + "_" + checkBoxNr;
 						checkBox.Size = new System.Drawing.Size(15, 14);
 						checkBox.TabIndex = 0;
 						checkBox.UseVisualStyleBackColor = true;
@@ -103,7 +100,6 @@ namespace CofD_Sheet.Sheet_Components
 			experienceCounter = new TextBox();
 			experienceCounter.Anchor = System.Windows.Forms.AnchorStyles.None;
 			experienceCounter.AutoSize = true;
-			experienceCounter.Name = "slot" + name + "_exp";
 			experienceCounter.Size = new System.Drawing.Size(100, 14);
 			experienceCounter.TabIndex = 0;
 			experienceCounter.Text = experience.ToString();

@@ -38,7 +38,6 @@ namespace CofD_Sheet.Sheet_Components
 		void init()
 		{
 			uiElement.Dock = DockStyle.Fill;
-			uiElement.Name = "tableLayout" + name + "values";
 			uiElement.TabIndex = 0;
 
 			ContextMenuStrip contextMenu = new ContextMenuStrip();
@@ -144,7 +143,6 @@ namespace CofD_Sheet.Sheet_Components
 								CheckBox checkBox = new CheckBox();
 								checkBox.Anchor = System.Windows.Forms.AnchorStyles.None;
 								checkBox.AutoSize = true;
-								checkBox.Name = "pip" + name + "_" + checkBoxIter;
 								checkBox.Size = new System.Drawing.Size(15, 14);
 								checkBox.Dock = DockStyle.Fill;
 								checkBox.TabIndex = 0;

@@ -217,7 +217,6 @@ namespace CofD_Sheet
 				componentUIElement.ColumnCount = 1;
 				componentUIElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
 				componentUIElement.Dock = DockStyle.Fill;
-				componentUIElement.Name = "tableLayout" + component.name;
 				componentUIElement.RowCount = 2;
 				componentUIElement.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 				componentUIElement.RowStyles.Add(new RowStyle(SizeType.AutoSize));
@@ -227,7 +226,6 @@ namespace CofD_Sheet
 				Label nameLabel = new Label();
 				nameLabel.Anchor = AnchorStyles.None;
 				nameLabel.AutoSize = true;
-				nameLabel.Name = "nameLabel" + component.name;
 				nameLabel.Size = new Size(35, 13);
 				nameLabel.TabIndex = 0;
 				nameLabel.Font = new Font(nameLabel.Font, FontStyle.Bold);
