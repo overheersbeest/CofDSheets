@@ -19,10 +19,10 @@ namespace CofD_Sheet.Sheet_Components
 		[XmlIgnore]
 		List<TextBox> textBoxes = new List<TextBox>();
 
-		public AspirationsComponent() : base("AspirationsComponent", -1)
+		public AspirationsComponent() : base("AspirationsComponent", ColumnId.Undefined)
 		{ }
 
-		public AspirationsComponent(string componentName, int amountAllowed, int componentColumnIndex) : base(componentName, componentColumnIndex)
+		public AspirationsComponent(string componentName, int amountAllowed, ColumnId _column) : base(componentName, _column)
 		{
 			maxAspirations = amountAllowed;
 			aspirations = new List<string>(new string[maxAspirations]);

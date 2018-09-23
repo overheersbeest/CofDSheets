@@ -34,10 +34,10 @@ namespace CofD_Sheet.Sheet_Components
 		[XmlIgnore]
 		TextBox experienceCounter = null;
 		
-		public ExperienceComponent() : base("ExperienceComponent", -1)
+		public ExperienceComponent() : base("ExperienceComponent", ColumnId.Undefined)
 		{ }
 
-		public ExperienceComponent(string majorName, string minorName, int componentColumnIndex) : base(majorName, componentColumnIndex)
+		public ExperienceComponent(string majorName, string minorName, ColumnId _column) : base(majorName, _column)
 		{
 			beatName = minorName;
 		}

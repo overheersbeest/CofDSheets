@@ -46,21 +46,22 @@ namespace CofD_Sheet.Sheet_Components
 		public int maxValue = 5;
 		
 		[XmlAttribute]
-		string singularName = "merit";
+		public string singularName = "merit";
 
 		[XmlAttribute]
-		bool mutable = true;
+		public bool mutable = true;
 
 		[XmlArray]
 		public List<Merit> merits = new List<Merit>();
 
-		public MeritComponent() : base("SkillsComponent", -1)
+		public MeritComponent() : base("SkillsComponent", ColumnId.Undefined)
 		{ }
 
-		public MeritComponent(string componentName, string _singularName, bool _mutable, List<string> meritNames, int componentColumnIndex) : base(componentName, componentColumnIndex)
+		public MeritComponent(string componentName, string _singularName, bool _mutable, List<string> meritNames, int _maxValue, ColumnId _column) : base(componentName, _column)
 		{
 			this.singularName = _singularName;
 			this.mutable = _mutable;
+			this.maxValue = _maxValue;
 			foreach (string meritName in meritNames)
 			{
 				merits.Add(new Merit(meritName));
@@ -147,7 +148,7 @@ namespace CofD_Sheet.Sheet_Components
 
 		void onMeritsChanged()
 		{
-			int rowsPerMerit = Convert.ToInt32(Math.Ceiling(maxValue / Convert.ToSingle(maxDotsPerRow)));
+			int rowsPerMerit = Math.Max(1, Convert.ToInt32(Math.Ceiling(maxValue / Convert.ToSingle(maxDotsPerRow))));
 			int rowAmount = merits.Count * rowsPerMerit;
 
 			uiElement.Controls.Clear();
@@ -194,7 +195,7 @@ namespace CofD_Sheet.Sheet_Components
 					pip.Dock = DockStyle.Fill;
 					pip.TabIndex = 0;
 					pip.UseVisualStyleBackColor = true;
-					pip.Checked = 0 < merit.currentValue;
+					pip.Checked = p < merit.currentValue;
 					pip.Click += new EventHandler(pipClicked);
 					pip.AutoCheck = false;
 					merit.pips.Add(pip);

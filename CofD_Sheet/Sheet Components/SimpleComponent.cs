@@ -25,12 +25,12 @@ namespace CofD_Sheet.Sheet_Components
 		[XmlIgnore]
 		List<CheckBox> checkBoxes = new List<CheckBox>();
 
-		public SimpleComponent() : base("SimpleComponent", -1)
+		public SimpleComponent() : base("SimpleComponent", ColumnId.Undefined)
 		{
 			init();
 		}
 
-		public SimpleComponent(string componentName, int componentColumnIndex) : base(componentName, componentColumnIndex)
+		public SimpleComponent(string componentName, ColumnId _column) : base(componentName, _column)
 		{
 			init();
 		}

@@ -46,10 +46,10 @@ namespace CofD_Sheet.Sheet_Components
 		[XmlArray]
 		public List<Attribute> attributes = new List<Attribute>();
 
-		public AttributesComponent() : base("AttributesComponent", -1)
+		public AttributesComponent() : base("AttributesComponent", ColumnId.Undefined)
 		{ }
 
-		public AttributesComponent(string componentName, List<string> attributeNames, int componentColumnIndex) : base(componentName, componentColumnIndex)
+		public AttributesComponent(string componentName, List<string> attributeNames, ColumnId _column) : base(componentName, _column)
 		{
 			for (int i = 0; i < attributeNames.Count; i++)
 			{

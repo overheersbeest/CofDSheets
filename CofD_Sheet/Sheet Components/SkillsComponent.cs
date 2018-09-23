@@ -49,10 +49,10 @@ namespace CofD_Sheet.Sheet_Components
 		[XmlArray]
 		public List<Skill> skills = new List<Skill>();
 
-		public SkillsComponent() : base("SkillsComponent", -1)
+		public SkillsComponent() : base("SkillsComponent", ColumnId.Undefined)
 		{ }
 
-		public SkillsComponent(string componentName, List<string> skillNames, int componentColumnIndex) : base(componentName, componentColumnIndex)
+		public SkillsComponent(string componentName, List<string> skillNames, ColumnId _column) : base(componentName, _column)
 		{
 			for (int i = 0; i < skillNames.Count; i++)
 			{

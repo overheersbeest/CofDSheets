@@ -230,7 +230,8 @@ namespace CofD_Sheet
 				nameLabel.Name = "nameLabel" + component.name;
 				nameLabel.Size = new Size(35, 13);
 				nameLabel.TabIndex = 0;
-				nameLabel.Text = component.name;
+				nameLabel.Font = new Font(nameLabel.Font, FontStyle.Bold);
+				nameLabel.Text = component.name.Replace('_', ' ');
 
 				int componentRequiredHeight = 0;
 				componentUIElement.Controls.Add(nameLabel, 0, 0);
@@ -241,12 +242,12 @@ namespace CofD_Sheet
 				componentRequiredHeight += 10;
 				componentUIElement.Size = new Size(292, componentRequiredHeight);
 
-				if (component.columnIndex == 0)
+				if (component.column == ColumnId.Left)
 				{
 					LeftComponentTable.RowStyles.Add(new RowStyle(SizeType.AutoSize, componentRequiredHeight));
 					LeftComponentTable.Controls.Add(componentUIElement);
 				}
-				else if (component.columnIndex == 1)
+				else if (component.column == ColumnId.Middle)
 				{
 					MiddleComponentTable.RowStyles.Add(new RowStyle(SizeType.Absolute, componentRequiredHeight));
 					MiddleComponentTable.Controls.Add(componentUIElement);

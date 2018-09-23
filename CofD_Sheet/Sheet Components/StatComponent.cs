@@ -25,12 +25,12 @@ namespace CofD_Sheet.Sheet_Components
 		[XmlIgnore]
 		List<RadioButton> pips = new List<RadioButton>();
 
-		public StatComponent() : base("StatComponent", -1)
+		public StatComponent() : base("StatComponent", ColumnId.Undefined)
 		{
 			init();
 		}
 
-		public StatComponent(string componentName, int componentColumnIndex) : base(componentName, componentColumnIndex)
+		public StatComponent(string componentName, ColumnId _column) : base(componentName, _column)
 		{
 			init();
 		}

@@ -32,10 +32,10 @@ namespace CofD_Sheet.Sheet_Components
 		[XmlIgnore]
 		List<TextBox> slots = new List<TextBox>();
 
-		public HealthComponent() : base("HealthComponent", -1)
+		public HealthComponent() : base("HealthComponent", ColumnId.Undefined)
 		{ }
 
-		public HealthComponent(string componentName, int componentColumnIndex) : base(componentName, componentColumnIndex)
+		public HealthComponent(string componentName, ColumnId _column) : base(componentName, _column)
 		{ }
 		
 		override public Control getUIElement()

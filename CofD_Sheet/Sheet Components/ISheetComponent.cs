@@ -4,6 +4,18 @@ using System.Xml.Serialization;
 
 namespace CofD_Sheet.Sheet_Components
 {
+	public enum ColumnId
+	{
+		[XmlEnum(Name = "Left")]
+		Left,
+		[XmlEnum(Name = "Middle")]
+		Middle,
+		[XmlEnum(Name = "Right")]
+		Right,
+		[XmlEnum(Name = "Undefined")]
+		Undefined
+	}
+	[XmlInclude(typeof(AdvantagesComponent))]
 	[XmlInclude(typeof(AspirationsComponent))]
 	[XmlInclude(typeof(AttributesComponent))]
 	[XmlInclude(typeof(ExperienceComponent))]
@@ -24,12 +36,12 @@ namespace CofD_Sheet.Sheet_Components
 		public string name;
 
 		[XmlAttribute]
-		public int columnIndex;
+		public ColumnId column = ColumnId.Undefined;
 
-		public ISheetComponent(string componentName, int componentColumnIndex)
+		public ISheetComponent(string componentName, ColumnId _column)
 		{
 			name = componentName;
-			columnIndex = componentColumnIndex;
+			column = _column;
 		}
 
 		abstract public Control getUIElement();
