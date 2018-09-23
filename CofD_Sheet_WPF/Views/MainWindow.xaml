@@ -1,0 +1,50 @@
+﻿<Window x:Class="CofD_Sheet_WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CofD_Sheet_WPF"
+		xmlns:Models="clr-namespace:CofD_Sheet_WPF.Models"
+        mc:Ignorable="d"
+        Title="{Binding windowTitle}" Height="350" Width="525">
+	<Window.DataContext>
+		<Models:Program/>
+	</Window.DataContext>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+		<DockPanel Grid.Row="0">
+			<Menu Name="NewMenu" Width="auto">
+				<MenuItem Header="New" ItemsSource="{Binding newSheetButtons}">
+					<MenuItem.ItemTemplate>
+						<DataTemplate>
+							<MenuItem Header="{Binding Converter={Models:SheetTypeStringConverter}}"/>
+						</DataTemplate>
+					</MenuItem.ItemTemplate>
+				</MenuItem>
+				<MenuItem Header="Load" Name="LoadButton"/>
+				<MenuItem Header="Save" Name="SaveButton"/>
+			</Menu>
+			<TextBox AcceptsReturn="True" />
+		</DockPanel>
+		<Grid Name="HeaderGrid" Grid.Row="1">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+		</Grid>
+		<Grid Name="ComponentGrid" Grid.Row="2">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+			<Grid Name="LeftComponentGrid" Grid.Column="0"/>
+			<Grid Name="MiddleComponentGrid" Grid.Column="1"/>
+			<Grid Name="RightComponentGrid" Grid.Column="2"/>
+		</Grid>
+	</Grid>
+</Window>
