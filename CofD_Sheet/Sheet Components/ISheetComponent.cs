@@ -21,7 +21,7 @@ namespace CofD_Sheet.Sheet_Components
 	[XmlInclude(typeof(ExperienceComponent))]
 	[XmlInclude(typeof(HealthComponent))]
 	[XmlInclude(typeof(MeritsComponent))]
-	[XmlInclude(typeof(SimpleComponent))]
+	[XmlInclude(typeof(ResourceComponent))]
 	[XmlInclude(typeof(SkillsComponent))]
 	[XmlInclude(typeof(StatComponent))]
 	public abstract class ISheetComponent
