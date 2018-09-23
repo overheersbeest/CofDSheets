@@ -10,7 +10,7 @@ using System.Xml.Serialization;
 namespace CofD_Sheet.Sheet_Components
 {
 	[Serializable]
-	public class MeritComponent : ISheetComponent
+	public class MeritsComponent : ISheetComponent
 	{
 		public class Merit
 		{
@@ -54,10 +54,10 @@ namespace CofD_Sheet.Sheet_Components
 		[XmlArray]
 		public List<Merit> merits = new List<Merit>();
 
-		public MeritComponent() : base("SkillsComponent", ColumnId.Undefined)
+		public MeritsComponent() : base("SkillsComponent", ColumnId.Undefined)
 		{ }
 
-		public MeritComponent(string componentName, string _singularName, bool _mutable, List<string> meritNames, int _maxValue, ColumnId _column) : base(componentName, _column)
+		public MeritsComponent(string componentName, string _singularName, bool _mutable, List<string> meritNames, int _maxValue, ColumnId _column) : base(componentName, _column)
 		{
 			this.singularName = _singularName;
 			this.mutable = _mutable;
