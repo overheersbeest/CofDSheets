@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 namespace CofD_Sheet.Sheet_Components
 {
 	[Serializable]
-	public class SimpleComponent : ISheetComponent
+	public class ResourceComponent : ISheetComponent
 	{
 		[XmlIgnore]
 		const int maxPerRow = 15;
@@ -25,12 +25,12 @@ namespace CofD_Sheet.Sheet_Components
 		[XmlIgnore]
 		List<CheckBox> checkBoxes = new List<CheckBox>();
 
-		public SimpleComponent() : base("SimpleComponent", ColumnId.Undefined)
+		public ResourceComponent() : base("SimpleComponent", ColumnId.Undefined)
 		{
 			init();
 		}
 
-		public SimpleComponent(string componentName, ColumnId _column) : base(componentName, _column)
+		public ResourceComponent(string componentName, ColumnId _column) : base(componentName, _column)
 		{
 			init();
 		}
