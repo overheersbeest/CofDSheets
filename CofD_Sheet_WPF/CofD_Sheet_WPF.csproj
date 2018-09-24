@@ -75,10 +75,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Views\Components\SimpleComponentView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\FieldView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -105,9 +101,6 @@
     <Compile Include="Models\Program.cs" />
     <Compile Include="Models\Sheet.cs" />
     <Compile Include="Models\Field.cs" />
-    <Compile Include="Views\Components\SimpleComponentView.xaml.cs">
-      <DependentUpon>SimpleComponentView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\FieldView.xaml.cs">
       <DependentUpon>FieldView.xaml</DependentUpon>
     </Compile>
@@ -145,7 +138,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ViewModels\" />
+    <Folder Include="ViewModels\Components\" />
+    <Folder Include="Views\Components\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
