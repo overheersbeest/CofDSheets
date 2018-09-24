@@ -99,6 +99,9 @@
     <Compile Include="Models\Components\Health.cs" />
     <Compile Include="Models\Components\IComponent.cs" />
     <Compile Include="Models\Components\Merits.cs" />
+    <Compile Include="Models\Components\Resource.cs" />
+    <Compile Include="Models\Components\Skills.cs" />
+    <Compile Include="Models\Components\Stat.cs" />
     <Compile Include="Models\Program.cs" />
     <Compile Include="Models\Sheet.cs" />
     <Compile Include="Models\Field.cs" />
