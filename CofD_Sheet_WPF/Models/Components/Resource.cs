@@ -13,10 +13,10 @@ namespace CofD_Sheet_WPF.Models.Components
 		const float separatorProportion = 2F;
 
 		[XmlAttribute]
-		public int maxValue = 10;
+		public int maxValue { get; set; } = 10;
 
 		[XmlAttribute]
-		public int currentValue = 0;
+		public int currentValue { get; set; } = 0;
 		
 		public Resource() : base("SimpleComponent", ColumnId.Undefined)
 		{

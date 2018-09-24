@@ -87,7 +87,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Commands\FieldValueChangedCommand.cs" />
     <Compile Include="Models\Components\Advantages.cs" />
     <Compile Include="Models\Components\Aspirations.cs" />
     <Compile Include="Models\Components\Attributes.cs" />
@@ -98,7 +97,7 @@
     <Compile Include="Models\Components\Resource.cs" />
     <Compile Include="Models\Components\Skills.cs" />
     <Compile Include="Models\Components\Stat.cs" />
-    <Compile Include="Models\Program.cs" />
+    <Compile Include="ViewModels\Program.cs" />
     <Compile Include="Models\Sheet.cs" />
     <Compile Include="Models\Field.cs" />
     <Compile Include="Views\FieldView.xaml.cs">

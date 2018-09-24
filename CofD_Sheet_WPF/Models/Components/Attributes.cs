@@ -22,10 +22,10 @@ namespace CofD_Sheet_WPF.Models.Components
 			}
 
 			[XmlAttribute]
-			public string name = "Attribute";
+			public string name { get; set; } = "Attribute";
 
 			[XmlAttribute]
-			public int currentValue = 1;
+			public int currentValue { get; set; } = 1;
 		}
 
 		[XmlIgnore]
@@ -35,10 +35,10 @@ namespace CofD_Sheet_WPF.Models.Components
 		const int nameLabelWidth = 100;
 
 		[XmlAttribute]
-		public int maxValue = 5;
+		public int maxValue { get; set; } = 5;
 
 		[XmlArray]
-		public List<Attribute> attributes = new List<Attribute>();
+		public List<Attribute> attributes { get; set; } = new List<Attribute>();
 
 		public Attributes() : base("AttributesComponent", ColumnId.Undefined)
 		{ }

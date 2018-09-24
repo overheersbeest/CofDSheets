@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using GalaSoft.MvvmLight;
+using System.Xml.Serialization;
 
 namespace CofD_Sheet_WPF.Models.Components
 {
@@ -14,36 +15,46 @@ namespace CofD_Sheet_WPF.Models.Components
 		Undefined
 	}
 	[XmlInclude(typeof(Advantages))]
-	public class BaseComponent
+	public class BaseComponent : ObservableObject
 	{
+		[XmlAttribute]
+		public string _name = "BaseComponent";
+
 		[XmlIgnore]
-		public const int componentWidth = 315;
+		public string name
+		{
+			get
+			{
+				return _name;
+			}
+			set
+			{
+				_name = value;
+				RaisePropertyChanged("name");
+			}
+		}
 
 		[XmlAttribute]
-		public string name;
+		public ColumnId _column = ColumnId.Undefined;
 
-		[XmlAttribute]
-		public ColumnId column = ColumnId.Undefined;
+		[XmlIgnore]
+		public ColumnId column
+		{
+			get
+			{
+				return _column;
+			}
+			set
+			{
+				_column = value;
+				RaisePropertyChanged("column");
+			}
+		}
 
 		public BaseComponent(string componentName, ColumnId _column)
 		{
 			name = componentName;
 			column = _column;
-		}
-
-		protected void onComponentChanged()
-		{
-			if (Program.instance.autoSave)
-			{
-				if (Program.instance.assosiatedFile.Length != 0)
-				{
-					Program.instance.saveAgain();
-				}
-			}
-			else
-			{
-				Program.instance.sheet.changedSinceSave = true;
-			}
 		}
 	}
 }

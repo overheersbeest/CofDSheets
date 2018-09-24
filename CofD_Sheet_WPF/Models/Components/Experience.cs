@@ -8,21 +8,18 @@ namespace CofD_Sheet_WPF.Models.Components
 	{
 		[XmlIgnore]
 		const int maxPerRow = 10;
-
-		[XmlIgnore]
-		const float separatorProportion = 2F;
+		
+		[XmlAttribute]
+		public string beatName { get; set; } = "Beats";
 
 		[XmlAttribute]
-		public string beatName = "Beats";
+		public int maxBeats { get; set; } = 5;
 
 		[XmlAttribute]
-		public int maxBeats = 5;
+		public int beats { get; set; } = 0;
 
 		[XmlAttribute]
-		public int beats = 0;
-
-		[XmlAttribute]
-		public int experience = 0;
+		public int experience { get; set; } = 0;
 		
 		public Experience() : base("ExperienceComponent", ColumnId.Undefined)
 		{ }

@@ -22,26 +22,23 @@ namespace CofD_Sheet_WPF.Models.Components
 			}
 
 			[XmlAttribute]
-			public string name = "Skill";
+			public string name { get; set; } = "Skill";
 
 			[XmlAttribute]
-			public int currentValue = 0;
+			public int currentValue { get; set; } = 0;
 
 			[XmlElement]
-			public List<String> specialties = new List<String>();
+			public List<String> specialties { get; set; } = new List<String>();
 		}
 
 		[XmlIgnore]
 		const int maxDotsPerRow = 10;
-
-		[XmlIgnore]
-		const int nameLabelWidth = 180;
-
+		
 		[XmlAttribute]
-		public int maxValue = 5;
+		public int maxValue { get; set; } = 5;
 
 		[XmlArray]
-		public List<Skill> skills = new List<Skill>();
+		public List<Skill> skills { get; set; } = new List<Skill>();
 
 		public Skills() : base("SkillsComponent", ColumnId.Undefined)
 		{ }

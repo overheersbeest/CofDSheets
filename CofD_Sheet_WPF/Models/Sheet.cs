@@ -1,6 +1,7 @@
 ﻿using CofD_Sheet_WPF.Models.Components;
 using GalaSoft.MvvmLight;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace CofD_Sheet_WPF.Models
@@ -15,22 +16,22 @@ namespace CofD_Sheet_WPF.Models
 	}
 
 	[XmlRoot]
-	public class Sheet : ViewModelBase
+	public class Sheet : ObservableObject
 	{
 		public Sheet()
 		{ }
 
 		public Sheet(SheetType type)
 		{
-			fields.Add(new Field("Name", ""));
-			fields.Add(new Field("Player", ""));
-			fields.Add(new Field("Chronicle", ""));
-			fields.Add(new Field("Concept", ""));
+			leftFields.Add(new Field("Name", ""));
+			leftFields.Add(new Field("Player", ""));
+			rightFields.Add(new Field("Chronicle", ""));
+			rightFields.Add(new Field("Concept", ""));
 			switch (type)
 			{
 				case SheetType.Mortal:
-					fields.Add(new Field("Vice", ""));
-					fields.Add(new Field("Virtue", ""));
+					middleFields.Add(new Field("Vice", ""));
+					middleFields.Add(new Field("Virtue", ""));
 					//components.Add(new AttributesComponent("Mental_Attributes", new List<string> { "Intelligence", "Wits", "Resolve" }, 0));
 					//components.Add(new AttributesComponent("Physical_Attributes", new List<string> { "Strength", "Dexterity", "Stamina" }, 1));
 					//components.Add(new AttributesComponent("Social_Attributes", new List<string> { "Presence", "Manipulation", "Composure" }, 2));
@@ -104,35 +105,16 @@ namespace CofD_Sheet_WPF.Models
 		}
 
 		[XmlArray]
-		List<Field> fields = new List<Field>();
-
-		[XmlIgnore]
-		public List<Field> Fields
-		{
-			get
-			{
-				return fields;
-			}
-			set
-			{
-				fields = value;
-				//OnPropertyChanged("fields");
-			}
-		}
+		public ObservableCollection<Field> leftFields { get; set; } = new ObservableCollection<Field>();
 
 		[XmlArray]
-		public List<BaseComponent> components = new List<BaseComponent>();
+		public ObservableCollection<Field> middleFields { get; set; } = new ObservableCollection<Field>();
+		
+		[XmlArray]
+		public ObservableCollection<Field> rightFields { get; set; } = new ObservableCollection<Field>();
 
-		[XmlIgnore]
-		public bool _changedSinceSave = false;
-		[XmlIgnore]
-		public bool changedSinceSave
-		{
-			get { return this._changedSinceSave; }
-			set
-			{
-				this._changedSinceSave = value;
-			}
-		}
+
+		[XmlArray]
+		private ObservableCollection<BaseComponent> components { get; set; } = new ObservableCollection<BaseComponent>();
 	}
 }

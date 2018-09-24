@@ -22,14 +22,14 @@ namespace CofD_Sheet_WPF.Models.Components
 			}
 
 			[XmlAttribute]
-			public string name = "Advantage";
+			public string name { get; set; } = "Advantage";
 
 			[XmlAttribute]
-			public string value = "";
+			public string value { get; set; } = "";
 		}
 
 		[XmlArray]
-		public List<Advantage> advantages = new List<Advantage>();
+		public List<Advantage> advantages { get; set; } = new List<Advantage>();
 		
 		public Advantages() : base("AdvantagesComponent", ColumnId.Undefined)
 		{ }

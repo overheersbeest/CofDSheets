@@ -1,91 +1,53 @@
-﻿using CofD_Sheet_WPF.Commands;
+﻿using GalaSoft.MvvmLight;
 using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Windows.Input;
 using System.Xml.Serialization;
 
 namespace CofD_Sheet_WPF.Models
 {
 	[Serializable]
-	public class Field : INotifyPropertyChanged
+	public class Field : ObservableObject
 	{
 		public Field()
-		{
-			valueChangedEvent = new FieldValueChangedCommand(this);
-		}
+		{}
 
 		public Field(string inLabel, string inValue)
 		{
-			this.label = inLabel;
-			this.value = inValue;
-			valueChangedEvent = new FieldValueChangedCommand(this);
-		}
-
-		public bool CanChangeValue
-		{
-			get;
-			set;
+			this._label = inLabel;
+			this._value = inValue;
 		}
 
 		[XmlAttribute]
-		private string label = "<>: ";
+		private string _label = "<>: ";
+
+		[XmlIgnore]
+		public String label
+		{
+			get
+			{
+				return _label;
+			}
+			set
+			{
+				_label = value;
+				RaisePropertyChanged("label");
+			}
+		}
 
 		[XmlAttribute]
-		private string value = "";
+		private string _value = "";
 
 		[XmlIgnore]
-		public String Label
+		public String value
 		{
 			get
 			{
-				return label;
+				return _value;
 			}
 			set
 			{
-				label = value;
-				OnPropertyChanged("label");
+				this._value = value;
+				RaisePropertyChanged("value");
 			}
 		}
-
-		[XmlIgnore]
-		public String Value
-		{
-			get
-			{
-				return value;
-			}
-			set
-			{
-				this.value = value;
-				OnPropertyChanged("value");
-			}
-		}
-
-		public ICommand valueChangedEvent
-		{
-			get;
-			private set;
-		}
-
-		public void SaveChanges()
-		{
-			Debug.Assert(false, "field is in");
-		}
-
-		#region INotifyPropertyChanged Members
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		private void OnPropertyChanged(string propertyName)
-		{
-			PropertyChangedEventHandler handler = PropertyChanged;
-
-			if (handler != null)
-			{
-				handler(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		#endregion
 	}
 }

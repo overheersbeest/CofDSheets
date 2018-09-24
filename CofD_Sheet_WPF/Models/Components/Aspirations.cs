@@ -8,10 +8,10 @@ namespace CofD_Sheet_WPF.Models.Components
 	public class Aspirations : BaseComponent
 	{
 		[XmlAttribute]
-		public int maxAspirations = 3;
+		public int maxAspirations { get; set; } = 3;
 
 		[XmlArray]
-		public List<string> aspirations = new List<string>();
+		public List<string> aspirations { get; set; } = new List<string>();
 		
 		public Aspirations() : base("AspirationsComponent", ColumnId.Undefined)
 		{ }

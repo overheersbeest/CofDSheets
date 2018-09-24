@@ -22,26 +22,23 @@ namespace CofD_Sheet_WPF.Models.Components
 			}
 
 			[XmlAttribute]
-			public string name = "Merit";
+			public string name { get; set; } = "Merit";
 
 			[XmlAttribute]
-			public int currentValue = 0;
+			public int currentValue { get; set; } = 0;
 		}
 
 		[XmlIgnore]
 		const int maxDotsPerRow = 10;
-
-		[XmlIgnore]
-		const int nameLabelWidth = 180;
+		
+		[XmlAttribute]
+		public int maxValue { get; set; } = 5;
 
 		[XmlAttribute]
-		public int maxValue = 5;
-
-		[XmlAttribute]
-		public string singularName = "merit";
+		public string singularName { get; set; } = "merit";
 		
 		[XmlArray]
-		public List<Merit> merits = new List<Merit>();
+		public List<Merit> merits { get; set; } = new List<Merit>();
 
 		public Merits() : base("SkillsComponent", ColumnId.Undefined)
 		{ }

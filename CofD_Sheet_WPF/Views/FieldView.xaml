@@ -13,5 +13,6 @@
 		</Grid.ColumnDefinitions>
 		<Label Name="Label" Content="{Binding Field.Label}" Grid.Column="0"/>
 		<TextBox Name="Value" Text="{Binding Field.Value, UpdateSourceTrigger=PropertyChanged}" TextChanged="{Binding valueChangedEvent}" Grid.Column="1"/>
+		<RadioButton />
 	</Grid>
 </UserControl>
