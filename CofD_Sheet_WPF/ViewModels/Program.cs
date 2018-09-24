@@ -18,6 +18,11 @@ namespace CofD_Sheet_WPF.ViewModels
 			{
 				return _sheet;
 			}
+			set
+			{
+				_sheet = value;
+				RaisePropertyChanged("sheet");
+			}
 		}
 
 		public ObservableCollection<SheetType> newSheetButtons { get; set; } = new ObservableCollection<SheetType>();
@@ -35,14 +40,41 @@ namespace CofD_Sheet_WPF.ViewModels
 			get
 			{
 				string title = "CofD Sheet";
-				//foreach (Field field in sheet.Fields)
-				//{
-				//	if (field.label == "Name")
-				//	{
-				//		title += " - " + field.value;
-				//	}
-				//}
-				//
+				bool foundName = false;
+				foreach (Field field in sheet.leftFields)
+				{
+					if (field.label == "Name")
+					{
+						title += " - " + field.value;
+						foundName = true;
+						break;
+					}
+				}
+				if (!foundName)
+				{
+					foreach (Field field in sheet.middleFields)
+					{
+						if (field.label == "Name")
+						{
+							title += " - " + field.value;
+							foundName = true;
+							break;
+						}
+					}
+				}
+				if (!foundName)
+				{
+					foreach (Field field in sheet.rightFields)
+					{
+						if (field.label == "Name")
+						{
+							title += " - " + field.value;
+							foundName = true;
+							break;
+						}
+					}
+				}
+
 				//if (sheet.changedSinceSave)
 				//{
 				//	title += "*";
@@ -54,7 +86,7 @@ namespace CofD_Sheet_WPF.ViewModels
 		
 		private void createNewSheet(SheetType type)
 		{
-			_sheet = new Sheet(type);
+			sheet = new Sheet(type);
 		}
 
 		public RelayCommand<SheetType> onNewSheetButtonPressed => new RelayCommand<SheetType>(createNewSheet);

@@ -12,8 +12,8 @@ namespace CofD_Sheet_WPF.Models
 
 		public Field(string inLabel, string inValue)
 		{
-			this._label = inLabel;
-			this._value = inValue;
+			this.label = inLabel;
+			this.value = inValue;
 		}
 
 		[XmlAttribute]

@@ -23,8 +23,8 @@ namespace CofD_Sheet_WPF.Models
 
 		public Sheet(SheetType type)
 		{
-			leftFields.Add(new Field("Name", ""));
-			leftFields.Add(new Field("Player", ""));
+			leftFields.Add(new Field("Name", "De Geweldige simon"));
+			leftFields.Add(new Field("Player", "Alex"));
 			rightFields.Add(new Field("Chronicle", ""));
 			rightFields.Add(new Field("Concept", ""));
 			switch (type)

@@ -4,13 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CofD_Sheet_WPF"
-		xmlns:Models="clr-namespace:CofD_Sheet_WPF.ViewModels"
+		xmlns:ViewModels="clr-namespace:CofD_Sheet_WPF.ViewModels"
         xmlns:Views="clr-namespace:CofD_Sheet_WPF.Views" x:Class="CofD_Sheet_WPF.MainWindow"
         mc:Ignorable="d"
         Title="{Binding windowTitle}" Height="350" Width="525"
 		x:Name="SheetWindow">
 	<Window.DataContext>
-		<Models:Program/>
+		<ViewModels:Program/>
 	</Window.DataContext>
 	<Grid>
 		<Grid.RowDefinitions>
@@ -21,11 +21,13 @@
 		<DockPanel x:Name="MenuBar" Grid.Row="0">
 			<Menu x:Name="NewMenu" Width="auto">
 				<MenuItem Header="New" ItemsSource="{Binding newSheetButtons}">
-					<MenuItem.ItemTemplate>
-						<DataTemplate>
-							<MenuItem Header="{Binding Converter={Models:SheetTypeStringConverter}}" Command="{Binding DataContext.onNewSheetButtonPressed, ElementName=SheetWindow}" CommandParameter="{Binding}"/>
-						</DataTemplate>
-					</MenuItem.ItemTemplate>
+					<MenuItem.ItemContainerStyle>
+						<Style TargetType="{x:Type MenuItem}">
+							<Setter Property="Header" Value="{Binding Converter={ViewModels:SheetTypeStringConverter}}"/>
+							<Setter Property="Command" Value="{Binding DataContext.onNewSheetButtonPressed, ElementName=SheetWindow}"/>
+							<Setter Property="CommandParameter" Value="{Binding}"/>
+						</Style>
+					</MenuItem.ItemContainerStyle>
 				</MenuItem>
 				<MenuItem Header="Load" x:Name="LoadButton"/>
 				<MenuItem Header="Save" x:Name="SaveButton"/>
@@ -41,7 +43,7 @@
 			<ItemsControl x:Name="LeftFieldsGrid" Grid.Column="0" ItemsSource="{Binding sheet.leftFields}">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
-						<Views:FieldView/>
+						<Views:FieldView Value="{Binding}"/>
 					</DataTemplate>
 				</ItemsControl.ItemTemplate>
 			</ItemsControl>

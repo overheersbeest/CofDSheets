@@ -17,13 +17,22 @@ using System.Windows.Shapes;
 namespace CofD_Sheet_WPF.Views
 {
 	/// <summary>
-	/// Interaction logic for LabeledTextField.xaml
+	/// Interaction logic for FieldView.xaml
 	/// </summary>
 	public partial class FieldView : UserControl
 	{
 		public FieldView()
 		{
-			DataContext = new Field();
+			InitializeComponent();
+		}
+
+		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
+			"Value", typeof(Field), typeof(FieldView), new PropertyMetadata(new Field()));
+
+		public Field Value
+		{
+			get { return (Field)GetValue(ValueProperty); }
+			set { SetValue(ValueProperty, value); }
 		}
 	}
 }
