@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace CofD_Sheet_WPF.Models.Components
 {
 	[Serializable]
-	public class Aspirations : IComponent
+	public class Aspirations : BaseComponent
 	{
 		[XmlAttribute]
 		public int maxAspirations = 3;

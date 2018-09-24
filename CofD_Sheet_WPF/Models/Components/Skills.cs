@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace CofD_Sheet_WPF.Models.Components
 {
 	[Serializable]
-	public class Skills : IComponent
+	public class Skills : BaseComponent
 	{
 		public class Skill
 		{

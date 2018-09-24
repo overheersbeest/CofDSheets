@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace CofD_Sheet_WPF.Models.Components
 {
 	[Serializable]
-	public class Attributes : IComponent
+	public class Attributes : BaseComponent
 	{
 		public class Attribute
 		{

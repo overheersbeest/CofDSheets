@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace CofD_Sheet_WPF.Models.Components
 {
 	[Serializable]
-	public class Experience : IComponent
+	public class Experience : BaseComponent
 	{
 		[XmlIgnore]
 		const int maxPerRow = 10;

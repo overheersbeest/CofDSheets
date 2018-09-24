@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace CofD_Sheet_WPF.Models.Components
 {
 	[Serializable]
-	public class Merits : IComponent
+	public class Merits : BaseComponent
 	{
 		public class Merit
 		{

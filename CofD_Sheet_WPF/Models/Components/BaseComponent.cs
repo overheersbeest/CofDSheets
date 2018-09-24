@@ -14,7 +14,7 @@ namespace CofD_Sheet_WPF.Models.Components
 		Undefined
 	}
 	[XmlInclude(typeof(Advantages))]
-	public class IComponent
+	public class BaseComponent
 	{
 		[XmlIgnore]
 		public const int componentWidth = 315;
@@ -25,7 +25,7 @@ namespace CofD_Sheet_WPF.Models.Components
 		[XmlAttribute]
 		public ColumnId column = ColumnId.Undefined;
 
-		public IComponent(string componentName, ColumnId _column)
+		public BaseComponent(string componentName, ColumnId _column)
 		{
 			name = componentName;
 			column = _column;

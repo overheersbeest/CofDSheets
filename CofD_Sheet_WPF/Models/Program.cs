@@ -1,16 +1,10 @@
 ﻿using GalaSoft.MvvmLight;
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
+using System.Windows;
 using System.Windows.Data;
-using System.Windows.Input;
 using System.Windows.Markup;
 using System.Xml.Serialization;
 
@@ -109,7 +103,7 @@ namespace CofD_Sheet_WPF.Models
 			}
 			catch (Exception e)
 			{
-				//MessageBox.Show("Error: Could not save file to disk. " + e.Message);
+				MessageBox.Show("Error: Could not save file to disk. " + e.Message);
 				return false;
 			}
 		}
@@ -127,7 +121,7 @@ namespace CofD_Sheet_WPF.Models
 			}
 			catch (Exception e)
 			{
-				//MessageBox.Show("Error: Could not load file from disk. " + e.Message);
+				MessageBox.Show("Error: Could not load file from disk. " + e.Message);
 				return false;
 			}
 		}
@@ -156,7 +150,7 @@ namespace CofD_Sheet_WPF.Models
 				}
 				catch (Exception ex)
 				{
-					//MessageBox.Show("Error: Could not reload file from disk. Original error: " + ex.Message);
+					MessageBox.Show("Error: Could not reload file from disk. Original error: " + ex.Message);
 				}
 			}
 		}

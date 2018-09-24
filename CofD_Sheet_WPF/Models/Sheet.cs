@@ -1,11 +1,6 @@
-﻿using GalaSoft.MvvmLight;
-using System;
+﻿using CofD_Sheet_WPF.Models.Components;
+using GalaSoft.MvvmLight;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
 using System.Xml.Serialization;
 
 namespace CofD_Sheet_WPF.Models
@@ -15,6 +10,7 @@ namespace CofD_Sheet_WPF.Models
 		Mortal,
 		Mage,
 		Werewolf,
+		WolfBlooded,
 		Spirit
 	}
 
@@ -125,7 +121,7 @@ namespace CofD_Sheet_WPF.Models
 		}
 
 		[XmlArray]
-		public List<ISheetComponent> components = new List<ISheetComponent>();
+		public List<BaseComponent> components = new List<BaseComponent>();
 
 		[XmlIgnore]
 		public bool _changedSinceSave = false;
