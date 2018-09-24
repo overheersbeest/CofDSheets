@@ -92,15 +92,13 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Commands\FieldValueChangedCommand.cs" />
-    <Compile Include="Models\Components\AspirationsComponent.cs" />
-    <Compile Include="Models\Components\AttributesComponent.cs" />
-    <Compile Include="Models\Components\ExperienceComponent.cs" />
-    <Compile Include="Models\Components\HealthComponent.cs" />
-    <Compile Include="Models\Components\ISheetComponent.cs" />
-    <Compile Include="Models\Components\MeritComponent.cs" />
-    <Compile Include="Models\Components\SimpleComponent.cs" />
-    <Compile Include="Models\Components\SkillsComponent.cs" />
-    <Compile Include="Models\Components\StatComponent.cs" />
+    <Compile Include="Models\Components\Advantages.cs" />
+    <Compile Include="Models\Components\Aspirations.cs" />
+    <Compile Include="Models\Components\Attributes.cs" />
+    <Compile Include="Models\Components\Experience.cs" />
+    <Compile Include="Models\Components\Health.cs" />
+    <Compile Include="Models\Components\IComponent.cs" />
+    <Compile Include="Models\Components\Merits.cs" />
     <Compile Include="Models\Program.cs" />
     <Compile Include="Models\Sheet.cs" />
     <Compile Include="Models\Field.cs" />
