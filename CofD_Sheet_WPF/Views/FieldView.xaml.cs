@@ -26,8 +26,7 @@ namespace CofD_Sheet_WPF.Views
 			InitializeComponent();
 		}
 
-		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
-			"Value", typeof(Field), typeof(FieldView), new PropertyMetadata(new Field()));
+		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(Field), typeof(FieldView), new PropertyMetadata(new Field()));
 
 		public Field Value
 		{

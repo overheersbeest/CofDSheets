@@ -23,85 +23,48 @@ namespace CofD_Sheet_WPF.Models
 
 		public Sheet(SheetType type)
 		{
-			leftFields.Add(new Field("Name", "De Geweldige simon"));
-			leftFields.Add(new Field("Player", "Alex"));
-			rightFields.Add(new Field("Chronicle", ""));
-			rightFields.Add(new Field("Concept", ""));
+			leftFields.Add(new Field("Name", ""));
+			leftFields.Add(new Field("Player", ""));
+			leftFields.Add(new Field("Chronicle", ""));
 			switch (type)
 			{
 				case SheetType.Mortal:
 					middleFields.Add(new Field("Vice", ""));
 					middleFields.Add(new Field("Virtue", ""));
-					//components.Add(new AttributesComponent("Mental_Attributes", new List<string> { "Intelligence", "Wits", "Resolve" }, 0));
-					//components.Add(new AttributesComponent("Physical_Attributes", new List<string> { "Strength", "Dexterity", "Stamina" }, 1));
-					//components.Add(new AttributesComponent("Social_Attributes", new List<string> { "Presence", "Manipulation", "Composure" }, 2));
-					//
-					//components.Add(new SkillsComponent("Mental_Skills", new List<string> { "Academics", "Computer", "Crafts", "Investigation", "Medicine", "Occult", "Politics", "Science" }, 0));
-					//components.Add(new SkillsComponent("Physical_Skills", new List<string> { "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry" }, 0));
-					//components.Add(new SkillsComponent("Social_Skills", new List<string> { "Animal_Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge" }, 0));
-					//
-					//components.Add(new MeritComponent("Merits", "merit", true, new List<string>(), 1));
-					//components.Add(new ExperienceComponent("Experience", "Beats", 1));
-					//
-					//components.Add(new HealthComponent("Health", 2));
-					//components.Add(new SimpleComponent("Willpower", 2));
-					//components.Add(new StatComponent("Integrity", 2));
-					//components.Add(new AspirationsComponent("Aspirations", 3, 2));
+					rightFields.Add(new Field("Faction", ""));
+					rightFields.Add(new Field("Group Name", ""));
+					rightFields.Add(new Field("Age", ""));
 					break;
 				case SheetType.Mage:
-					//components.Add(new AttributesComponent("Mental_Attributes", new List<string> { "Intelligence", "Wits", "Resolve" }, 0));
-					//components.Add(new AttributesComponent("Physical_Attributes", new List<string> { "Strength", "Dexterity", "Stamina" }, 1));
-					//components.Add(new AttributesComponent("Social_Attributes", new List<string> { "Presence", "Manipulation", "Composure" }, 2));
-					//
-					//components.Add(new SkillsComponent("Mental_Skills", new List<string> { "Academics", "Computer", "Crafts", "Investigation", "Medicine", "Occult", "Politics", "Science" }, 0));
-					//components.Add(new SkillsComponent("Physical_Skills", new List<string> { "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry" }, 0));
-					//components.Add(new SkillsComponent("Social_Skills", new List<string> { "Animal_Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge" }, 0));
-					//
-					//components.Add(new MeritComponent("Merits", "merit", true, new List<string>(), 1));
-					//components.Add(new MeritComponent("Arcana", "arcanum", false, new List<string> { "Death", "Fate", "Forces", "Life", "Matter", "Mind", "Prime", "Space", "Spirit", "Time" }, 1));
-					//components.Add(new ExperienceComponent("Experience", "Beats", 1));
-					//components.Add(new ExperienceComponent("Arcane_Experience", "Arcane_Beats", 1));
-					//
-					//components.Add(new HealthComponent("Health", 2));
-					//components.Add(new SimpleComponent("Willpower", 2));
-					//components.Add(new StatComponent("Gnosis", 2));
-					//components.Add(new SimpleComponent("Mana", 2));
-					//components.Add(new StatComponent("Wisdom", 2));
-					//components.Add(new AspirationsComponent("Aspirations", 3, 2));
-					//components.Add(new AspirationsComponent("Obsessions", 1, 2));
+					middleFields.Add(new Field("Vice", ""));
+					middleFields.Add(new Field("Virtue", ""));
+					rightFields.Add(new Field("Path", ""));
+					rightFields.Add(new Field("Order", ""));
+					rightFields.Add(new Field("Legacy", ""));
 					break;
 				case SheetType.Werewolf:
-					//components.Add(new AttributesComponent("Mental_Attributes", new List<string> { "Intelligence", "Wits", "Resolve" }, 0));
-					//components.Add(new AttributesComponent("Physical_Attributes", new List<string> { "Strength", "Dexterity", "Stamina" }, 1));
-					//components.Add(new AttributesComponent("Social_Attributes", new List<string> { "Presence", "Manipulation", "Composure" }, 2));
-					//
-					//components.Add(new SkillsComponent("Mental_Skills", new List<string> { "Academics", "Computer", "Crafts", "Investigation", "Medicine", "Occult", "Politics", "Science" }, 0));
-					//components.Add(new SkillsComponent("Physical_Skills", new List<string> { "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry" }, 0));
-					//components.Add(new SkillsComponent("Social_Skills", new List<string> { "Animal_Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge" }, 0));
-					//
-					//components.Add(new MeritComponent("Merits", "merit", true, new List<string>(), 1));
-					//components.Add(new MeritComponent("Renown", "renown", false, new List<string> { "Cunning", "Glory", "Honor", "Purity", "Wisdom" }, 1));
-					//components.Add(new ExperienceComponent("Experience", "Beats", 1));
-					//
-					//components.Add(new HealthComponent("Health", 2));
-					//components.Add(new SimpleComponent("Willpower", 2));
-					//components.Add(new StatComponent("Primal_Urge", 2));
-					//components.Add(new SimpleComponent("Essence", 2));
-					//components.Add(new StatComponent("Harmony", 2));
-					//components.Add(new AspirationsComponent("Aspirations", 3, 2));
+					middleFields.Add(new Field("Vice", ""));
+					middleFields.Add(new Field("Virtue", ""));
+					rightFields.Add(new Field("Age", ""));
+					rightFields.Add(new Field("Faction", ""));
+					rightFields.Add(new Field("Group Name", ""));
+					break;
+				case SheetType.WolfBlooded:
+					middleFields.Add(new Field("Vice", ""));
+					middleFields.Add(new Field("Virtue", ""));
+					rightFields.Add(new Field("Tribe", ""));
+					rightFields.Add(new Field("Pack", ""));
+					rightFields.Add(new Field("Age", ""));
 					break;
 				case SheetType.Spirit:
-					//components.Add(new AttributesComponent("Attributes", new List<string> { "Power", "Finesse", "Resistance" }, 0));
-					//
-					//components.Add(new MeritComponent("Influences", "influence", true, new List<string>(), 1));
-					//
-					//components.Add(new HealthComponent("Corpus", 2));
-					//components.Add(new SimpleComponent("Willpower", 2));
-					//components.Add(new StatComponent("Rank", 2));
-					//components.Add(new SimpleComponent("Essence", 2));
-					//components.Add(new AspirationsComponent("Aspirations", 3, 2));
+					middleFields.Add(new Field("Ban", ""));
+					middleFields.Add(new Field("Bane", ""));
+					rightFields.Add(new Field("Court", ""));
+					rightFields.Add(new Field("Brood", ""));
+					rightFields.Add(new Field("Rank", ""));
 					break;
 			}
+			middleFields.Add(new Field("Concept", ""));
 		}
 
 		[XmlArray]
@@ -115,6 +78,12 @@ namespace CofD_Sheet_WPF.Models
 
 
 		[XmlArray]
-		private ObservableCollection<BaseComponent> components { get; set; } = new ObservableCollection<BaseComponent>();
+		public ObservableCollection<BaseComponent> leftComponents { get; set; } = new ObservableCollection<BaseComponent>();
+
+		[XmlArray]
+		public ObservableCollection<BaseComponent> middleComponents { get; set; } = new ObservableCollection<BaseComponent>();
+
+		[XmlArray]
+		public ObservableCollection<BaseComponent> rightComponents { get; set; } = new ObservableCollection<BaseComponent>();
 	}
 }

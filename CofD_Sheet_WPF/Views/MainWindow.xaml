@@ -32,13 +32,12 @@
 				<MenuItem Header="Load" x:Name="LoadButton"/>
 				<MenuItem Header="Save" x:Name="SaveButton"/>
 			</Menu>
-			<TextBox AcceptsReturn="True" />
 		</DockPanel>
 		<Grid x:Name="FieldsGrid" Grid.Row="1">
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="auto"/>
-				<ColumnDefinition Width="auto"/>
-				<ColumnDefinition Width="auto"/>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="*"/>
 			</Grid.ColumnDefinitions>
 			<ItemsControl x:Name="LeftFieldsGrid" Grid.Column="0" ItemsSource="{Binding sheet.leftFields}">
 				<ItemsControl.ItemTemplate>
@@ -47,8 +46,20 @@
 					</DataTemplate>
 				</ItemsControl.ItemTemplate>
 			</ItemsControl>
-			<ItemsControl x:Name="MiddleFieldsGrid" Grid.Column="1"/>
-			<ItemsControl x:Name="RightFieldsGrid" Grid.Column="2"/>
+			<ItemsControl x:Name="MiddleFieldsGrid" Grid.Column="1" ItemsSource="{Binding sheet.middleFields}">
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<Views:FieldView Value="{Binding}"/>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+			<ItemsControl x:Name="RightFieldsGrid" Grid.Column="2" ItemsSource="{Binding sheet.rightFields}">
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<Views:FieldView Value="{Binding}"/>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
 		</Grid>
 		<Grid x:Name="ComponentGrid" Grid.Row="2">
 			<Grid.ColumnDefinitions>

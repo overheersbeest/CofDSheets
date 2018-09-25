@@ -6,16 +6,14 @@
              xmlns:local="clr-namespace:CofD_Sheet_WPF.Views"
 			 xmlns:Models="clr-namespace:CofD_Sheet_WPF.Models"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-	<UserControl.DataContext>
-		<Models:Field/>
-	</UserControl.DataContext>
+             d:DesignHeight="300" d:DesignWidth="300"
+			 Name="FieldViewInstance">
 	<Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="auto"/>
 			<ColumnDefinition Width="*"/>
 		</Grid.ColumnDefinitions>
-		<Label Content="{Binding Path=Field.label}" Grid.Column="0"/>
-		<TextBox Text="{Binding Path=value}" Grid.Column="1"/>
+		<Label Content="{Binding Path=Value.label, ElementName=FieldViewInstance}" Grid.Column="0" VerticalAlignment="Center" Margin="1" />
+		<TextBox Text="{Binding Path=Value.value, ElementName=FieldViewInstance}" Grid.Column="1" VerticalAlignment="Center" Margin="1" />
 	</Grid>
 </UserControl>
