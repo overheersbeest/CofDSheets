@@ -40,10 +40,10 @@ namespace CofD_Sheet_WPF.Models.Components
 		[XmlArray]
 		public List<Attribute> attributes { get; set; } = new List<Attribute>();
 
-		public Attributes() : base("AttributesComponent", ColumnId.Undefined)
+		public Attributes() : base("AttributesComponent")
 		{ }
 
-		public Attributes(string componentName, List<string> attributeNames, ColumnId _column) : base(componentName, _column)
+		public Attributes(string componentName, List<string> attributeNames) : base(componentName)
 		{
 			for (int i = 0; i < attributeNames.Count; i++)
 			{

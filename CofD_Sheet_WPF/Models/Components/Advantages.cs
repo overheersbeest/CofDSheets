@@ -31,10 +31,10 @@ namespace CofD_Sheet_WPF.Models.Components
 		[XmlArray]
 		public List<Advantage> advantages { get; set; } = new List<Advantage>();
 		
-		public Advantages() : base("AdvantagesComponent", ColumnId.Undefined)
+		public Advantages() : base("AdvantagesComponent")
 		{ }
 
-		public Advantages(string componentName, List<string> advantageNames, ColumnId _column) : base(componentName, _column)
+		public Advantages(string componentName, List<string> advantageNames) : base(componentName)
 		{
 			foreach (string advantageName in advantageNames)
 			{

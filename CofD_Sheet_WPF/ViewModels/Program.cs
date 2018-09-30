@@ -1,10 +1,15 @@
 ﻿using CofD_Sheet_WPF.Models;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
+using System.Xml.Serialization;
 
 namespace CofD_Sheet_WPF.ViewModels
 {
@@ -25,14 +30,15 @@ namespace CofD_Sheet_WPF.ViewModels
 			}
 		}
 
-		public ObservableCollection<SheetType> newSheetButtons { get; set; } = new ObservableCollection<SheetType>();
-
 		public Program()
 		{
 			foreach (SheetType type in Enum.GetValues(typeof(SheetType)))
 			{
 				newSheetButtons.Add(type);
 			}
+
+			watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+			watcher.Changed += new FileSystemEventHandler(reload);
 		}
 		
 		public string windowTitle
@@ -40,38 +46,18 @@ namespace CofD_Sheet_WPF.ViewModels
 			get
 			{
 				string title = "CofD Sheet";
-				bool foundName = false;
-				foreach (Field field in sheet.leftFields)
+				List<Field> allFields = new List<Field>();
+				allFields.AddRange(sheet.leftFields);
+				allFields.AddRange(sheet.middleFields);
+				allFields.AddRange(sheet.rightFields);
+
+				foreach (Field field in allFields)
 				{
-					if (field.label == "Name")
+					if (field.label == "Name"
+						&& field.value.Length > 0)
 					{
 						title += " - " + field.value;
-						foundName = true;
 						break;
-					}
-				}
-				if (!foundName)
-				{
-					foreach (Field field in sheet.middleFields)
-					{
-						if (field.label == "Name")
-						{
-							title += " - " + field.value;
-							foundName = true;
-							break;
-						}
-					}
-				}
-				if (!foundName)
-				{
-					foreach (Field field in sheet.rightFields)
-					{
-						if (field.label == "Name")
-						{
-							title += " - " + field.value;
-							foundName = true;
-							break;
-						}
 					}
 				}
 
@@ -83,16 +69,129 @@ namespace CofD_Sheet_WPF.ViewModels
 				return title;
 			}
 		}
-		
+
+		#region IO
+		FileSystemWatcher watcher = new FileSystemWatcher();
+
+		private string assosiatedFile = "";
+
+		public RelayCommand onSaveSheetButtonPressed => new RelayCommand(saveSheetClicked);
+
+		public RelayCommand onLoadSheetButtonPressed => new RelayCommand(loadSheetClicked);
+
+		private void saveSheetClicked()
+		{
+			SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+			saveFileDialog1.Filter = "CofD Sheet files (*.cofds)|*.cofds|XML files (*.xml)|*.xml|All files (*.*)|*.*";
+			saveFileDialog1.FilterIndex = 0;
+			watcher.EnableRaisingEvents = false;
+
+			bool? dialogResult = saveFileDialog1.ShowDialog();
+			if (dialogResult.HasValue
+				&& dialogResult.Value == true)
+			{
+				string path = saveFileDialog1.FileName;
+				watcher.Path = path.Substring(0, path.LastIndexOf('\\'));
+				saveSheet(path);
+				//sheet.changedSinceSave = false;
+			}
+		}
+
+		private void loadSheetClicked()
+		{
+			OpenFileDialog openFileDialog1 = new OpenFileDialog();
+			openFileDialog1.Filter = "CofD Sheet files (*.cofds)|*.cofds|XML files (*.xml)|*.xml|All files (*.*)|*.*";
+			openFileDialog1.FilterIndex = 0;
+
+			//autoSaveDisabled = true;
+			bool? dialogResult = openFileDialog1.ShowDialog();
+			if (dialogResult.HasValue
+				&& dialogResult.Value == true)
+			{
+				string path = openFileDialog1.FileName;
+				watcher.Path = path.Substring(0, path.LastIndexOf('\\'));
+				loadSheet(path);
+				//sheet.changedSinceSave = false;
+			}
+
+			//autoSaveDisabled = false;
+		}
+
+		public void saveSheet(string path)
+		{
+			try
+			{
+				XmlSerializer serializer = new XmlSerializer(typeof(Sheet));
+				TextWriter writer = new StreamWriter(path);
+				serializer.Serialize(writer, sheet);
+				writer.Close();
+				assosiatedFile = path;
+			}
+			catch (Exception e)
+			{
+				MessageBox.Show("Error: Could not save file to disk. " + e.Message);
+			}
+		}
+
+		public bool loadSheet(string path)
+		{
+			try
+			{
+				XmlSerializer serializer = new XmlSerializer(typeof(Sheet));
+				StreamReader reader = new StreamReader(path);
+				sheet = (Sheet)serializer.Deserialize(reader);
+				reader.Close();
+				assosiatedFile = path;
+				return true;
+			}
+			catch (Exception e)
+			{
+				MessageBox.Show("Error: Could not load file from disk. " + e.Message);
+				return false;
+			}
+		}
+
+		public void resave()
+		{
+			if (assosiatedFile.Length > 0)
+			{
+				watcher.EnableRaisingEvents = false;
+				saveSheet(assosiatedFile);
+				//sheet.changedSinceSave = false;
+			}
+		}
+
+		public void reload(object sender, FileSystemEventArgs e)
+		{
+			if (e.FullPath == assosiatedFile)
+			{
+				try
+				{
+					bool fileRead = false;
+					while (!fileRead)
+					{
+						fileRead = loadSheet(assosiatedFile);
+					}
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show("Error: Could not reload file from disk. Original error: " + ex.Message);
+				}
+			}
+		}
+		#endregion
+
+		#region NewSheetButtons
+		public ObservableCollection<SheetType> newSheetButtons { get; set; } = new ObservableCollection<SheetType>();
+
+		public RelayCommand<SheetType> onNewSheetButtonPressed => new RelayCommand<SheetType>(createNewSheet);
+
 		private void createNewSheet(SheetType type)
 		{
 			sheet = new Sheet(type);
 		}
-
-		public RelayCommand<SheetType> onNewSheetButtonPressed => new RelayCommand<SheetType>(createNewSheet);
+		#endregion
 	}
-
-
 
 	[ValueConversion(typeof(SheetType), typeof(string))]
 	public class SheetTypeStringConverter : MarkupExtension, IValueConverter

@@ -29,29 +29,29 @@ namespace CofD_Sheet_WPF.Models
 			switch (type)
 			{
 				case SheetType.Mortal:
-					middleFields.Add(new Field("Vice", ""));
 					middleFields.Add(new Field("Virtue", ""));
+					middleFields.Add(new Field("Vice", ""));
 					rightFields.Add(new Field("Faction", ""));
 					rightFields.Add(new Field("Group Name", ""));
 					rightFields.Add(new Field("Age", ""));
 					break;
 				case SheetType.Mage:
-					middleFields.Add(new Field("Vice", ""));
 					middleFields.Add(new Field("Virtue", ""));
+					middleFields.Add(new Field("Vice", ""));
 					rightFields.Add(new Field("Path", ""));
 					rightFields.Add(new Field("Order", ""));
 					rightFields.Add(new Field("Legacy", ""));
 					break;
 				case SheetType.Werewolf:
-					middleFields.Add(new Field("Vice", ""));
-					middleFields.Add(new Field("Virtue", ""));
-					rightFields.Add(new Field("Age", ""));
-					rightFields.Add(new Field("Faction", ""));
-					rightFields.Add(new Field("Group Name", ""));
+					middleFields.Add(new Field("Blood", ""));
+					middleFields.Add(new Field("Bone", ""));
+					rightFields.Add(new Field("Auspice", ""));
+					rightFields.Add(new Field("Tribe", ""));
+					rightFields.Add(new Field("Lodge", ""));
 					break;
 				case SheetType.WolfBlooded:
-					middleFields.Add(new Field("Vice", ""));
 					middleFields.Add(new Field("Virtue", ""));
+					middleFields.Add(new Field("Vice", ""));
 					rightFields.Add(new Field("Tribe", ""));
 					rightFields.Add(new Field("Pack", ""));
 					rightFields.Add(new Field("Age", ""));

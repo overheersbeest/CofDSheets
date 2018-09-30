@@ -16,10 +16,10 @@ namespace CofD_Sheet_WPF.Models
 			this.value = inValue;
 		}
 
-		[XmlAttribute]
+		[XmlIgnore]
 		private string _label = "<>: ";
 
-		[XmlIgnore]
+		[XmlAttribute]
 		public String label
 		{
 			get
@@ -33,10 +33,10 @@ namespace CofD_Sheet_WPF.Models
 			}
 		}
 
-		[XmlAttribute]
+		[XmlIgnore]
 		private string _value = "";
 
-		[XmlIgnore]
+		[XmlAttribute]
 		public String value
 		{
 			get

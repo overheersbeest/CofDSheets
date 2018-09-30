@@ -13,10 +13,10 @@ namespace CofD_Sheet_WPF.Models.Components
 		[XmlArray]
 		public List<string> aspirations { get; set; } = new List<string>();
 		
-		public Aspirations() : base("AspirationsComponent", ColumnId.Undefined)
+		public Aspirations() : base("AspirationsComponent")
 		{ }
 
-		public Aspirations(string componentName, int amountAllowed, ColumnId _column) : base(componentName, _column)
+		public Aspirations(string componentName, int amountAllowed) : base(componentName)
 		{
 			maxAspirations = amountAllowed;
 			aspirations = new List<string>(new string[maxAspirations]);

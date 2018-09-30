@@ -21,10 +21,10 @@ namespace CofD_Sheet_WPF.Models.Components
 		[XmlAttribute]
 		public int bashing { get; set; } = 0;
 		
-		public Health() : base("HealthComponent", ColumnId.Undefined)
+		public Health() : base("HealthComponent")
 		{ }
 
-		public Health(string componentName, ColumnId _column) : base(componentName, _column)
+		public Health(string componentName) : base(componentName)
 		{ }
 	}
 }

@@ -18,10 +18,10 @@ namespace CofD_Sheet_WPF.Models.Components
 		[XmlAttribute]
 		public int currentValue { get; set; } = 0;
 		
-		public Stat() : base("StatComponent", ColumnId.Undefined)
+		public Stat() : base("StatComponent")
 		{ }
 
-		public Stat(string componentName, ColumnId _column) : base(componentName, _column)
+		public Stat(string componentName) : base(componentName)
 		{ }
 	}
 }

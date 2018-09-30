@@ -18,12 +18,12 @@ namespace CofD_Sheet_WPF.Models.Components
 		[XmlAttribute]
 		public int currentValue { get; set; } = 0;
 		
-		public Resource() : base("SimpleComponent", ColumnId.Undefined)
+		public Resource() : base("SimpleComponent")
 		{
 			currentValue = maxValue;
 		}
 
-		public Resource(string componentName, ColumnId _column) : base(componentName, _column)
+		public Resource(string componentName) : base(componentName)
 		{
 			currentValue = maxValue;
 		}

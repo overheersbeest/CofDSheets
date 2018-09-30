@@ -40,10 +40,10 @@ namespace CofD_Sheet_WPF.Models.Components
 		[XmlArray]
 		public List<Merit> merits { get; set; } = new List<Merit>();
 
-		public Merits() : base("SkillsComponent", ColumnId.Undefined)
+		public Merits() : base("SkillsComponent")
 		{ }
 
-		public Merits(string componentName, string _singularName, List<string> meritNames, int _maxValue, ColumnId _column) : base(componentName, _column)
+		public Merits(string componentName, string _singularName, List<string> meritNames, int _maxValue) : base(componentName)
 		{
 			this.singularName = _singularName;
 			this.maxValue = _maxValue;

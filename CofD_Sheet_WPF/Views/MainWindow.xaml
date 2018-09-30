@@ -29,8 +29,8 @@
 						</Style>
 					</MenuItem.ItemContainerStyle>
 				</MenuItem>
-				<MenuItem Header="Load" x:Name="LoadButton"/>
-				<MenuItem Header="Save" x:Name="SaveButton"/>
+				<MenuItem Header="Load" x:Name="LoadButton" Command="{Binding onLoadSheetButtonPressed}"/>
+				<MenuItem Header="Save" x:Name="SaveButton" Command="{Binding onSaveSheetButtonPressed}"/>
 			</Menu>
 		</DockPanel>
 		<Grid x:Name="FieldsGrid" Grid.Row="1">

@@ -40,10 +40,10 @@ namespace CofD_Sheet_WPF.Models.Components
 		[XmlArray]
 		public List<Skill> skills { get; set; } = new List<Skill>();
 
-		public Skills() : base("SkillsComponent", ColumnId.Undefined)
+		public Skills() : base("SkillsComponent")
 		{ }
 
-		public Skills(string componentName, List<string> skillNames, ColumnId _column) : base(componentName, _column)
+		public Skills(string componentName, List<string> skillNames) : base(componentName)
 		{
 			for (int i = 0; i < skillNames.Count; i++)
 			{

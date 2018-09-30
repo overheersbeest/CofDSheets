@@ -21,10 +21,10 @@ namespace CofD_Sheet_WPF.Models.Components
 		[XmlAttribute]
 		public int experience { get; set; } = 0;
 		
-		public Experience() : base("ExperienceComponent", ColumnId.Undefined)
+		public Experience() : base("ExperienceComponent")
 		{ }
 
-		public Experience(string majorName, string minorName, ColumnId _column) : base(majorName, _column)
+		public Experience(string majorName, string minorName) : base(majorName)
 		{
 			beatName = minorName;
 		}
