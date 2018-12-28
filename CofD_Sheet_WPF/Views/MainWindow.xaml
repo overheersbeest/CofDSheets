@@ -4,8 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CofD_Sheet_WPF"
+		xmlns:Models="clr-namespace:CofD_Sheet_WPF.Models"
+		xmlns:ComponentModels="clr-namespace:CofD_Sheet_WPF.Models.Components"
 		xmlns:ViewModels="clr-namespace:CofD_Sheet_WPF.ViewModels"
-        xmlns:Views="clr-namespace:CofD_Sheet_WPF.Views" x:Class="CofD_Sheet_WPF.MainWindow"
+        xmlns:Views="clr-namespace:CofD_Sheet_WPF.Views"
+        xmlns:ComponentViews="clr-namespace:CofD_Sheet_WPF.Views.Components"
+		x:Class="CofD_Sheet_WPF.MainWindow"
         mc:Ignorable="d"
         Title="{Binding windowTitle}" Height="350" Width="525"
 		x:Name="SheetWindow">
@@ -67,9 +71,35 @@
 				<ColumnDefinition Width="*"/>
 				<ColumnDefinition Width="*"/>
 			</Grid.ColumnDefinitions>
-			<Grid x:Name="LeftComponentGrid" Grid.Column="0"/>
-			<Grid x:Name="MiddleComponentGrid" Grid.Column="1"/>
-			<Grid x:Name="RightComponentGrid" Grid.Column="2"/>
+			<ItemsControl x:Name="LeftComponentGrid" Grid.Column="0" ItemsSource="{Binding sheet.leftComponents}">
+				<ItemsControl.ItemsPanel>
+					<ItemsPanelTemplate>
+						<VirtualizingStackPanel/>
+					</ItemsPanelTemplate>
+				</ItemsControl.ItemsPanel>
+				<ItemsControl.Resources>
+					<DataTemplate DataType="{x:Type ComponentModels:Attributes}">
+						<ComponentViews:AttributesView Value="{Binding}"/>
+					</DataTemplate>
+					<DataTemplate DataType="{x:Type ComponentModels:BaseComponent}">
+						<ComponentViews:BaseComponentView Value="{Binding}"/>
+					</DataTemplate>
+				</ItemsControl.Resources>
+			</ItemsControl>
+			<ItemsControl x:Name="MiddleComponentGrid" Grid.Column="1" ItemsSource="{Binding sheet.middleComponents}">
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<ComponentViews:BaseComponentView Value="{Binding}"/>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+			<ItemsControl x:Name="RightComponentGrid" Grid.Column="2" ItemsSource="{Binding sheet.rightComponents}">
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<ComponentViews:BaseComponentView Value="{Binding}"/>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
 		</Grid>
 	</Grid>
 </Window>

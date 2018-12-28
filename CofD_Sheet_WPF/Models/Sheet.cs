@@ -34,6 +34,9 @@ namespace CofD_Sheet_WPF.Models
 					rightFields.Add(new Field("Faction", ""));
 					rightFields.Add(new Field("Group Name", ""));
 					rightFields.Add(new Field("Age", ""));
+
+					leftComponents.Add(new Attributes("Mental Attributes", new List<string> { "Intelligence", "Wits", "Resolve" }));
+					leftComponents.Add(new Skills("Mental Skills", new List<string> { "Academics", "Computer", "Crafts", "Investigation", "Medicine", "Occult", "Politics", "Science" }));
 					break;
 				case SheetType.Mage:
 					middleFields.Add(new Field("Virtue", ""));
