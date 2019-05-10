@@ -11,6 +11,7 @@ namespace CofD_Sheet_WPF.Models
 		Mortal,
 		Mage,
 		Werewolf,
+		Vampire,
 		WolfBlooded,
 		Spirit
 	}
@@ -51,6 +52,13 @@ namespace CofD_Sheet_WPF.Models
 					rightFields.Add(new Field("Auspice", ""));
 					rightFields.Add(new Field("Tribe", ""));
 					rightFields.Add(new Field("Lodge", ""));
+					break;
+				case SheetType.Vampire:
+					middleFields.Add(new Field("Mask", ""));
+					middleFields.Add(new Field("Dirge", ""));
+					rightFields.Add(new Field("Clan", ""));
+					rightFields.Add(new Field("Bloodline", ""));
+					rightFields.Add(new Field("Covenant", ""));
 					break;
 				case SheetType.WolfBlooded:
 					middleFields.Add(new Field("Virtue", ""));

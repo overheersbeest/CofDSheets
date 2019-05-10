@@ -10,6 +10,7 @@ namespace CofD_Sheet
 		Mortal,
 		Mage,
 		Werewolf,
+		Vampire,
 		WolfBlooded,
 		Spirit
 	}
@@ -115,6 +116,29 @@ namespace CofD_Sheet
 					components.Add(new StatComponent("Primal_Urge", ColumnId.Right));
 					components.Add(new ResourceComponent("Essence", ColumnId.Right));
 					components.Add(new StatComponent("Harmony", ColumnId.Right));
+					components.Add(new MeritsComponent("Conditions", "condition", true, new List<string>(), 0, ColumnId.Right));
+					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
+					break;
+				case SheetType.Vampire:
+					components.Add(new AttributesComponent("Mental_Attributes", new List<string> { "Intelligence", "Wits", "Resolve" }, ColumnId.Left));
+					components.Add(new AttributesComponent("Physical_Attributes", new List<string> { "Strength", "Dexterity", "Stamina" }, ColumnId.Middle));
+					components.Add(new AttributesComponent("Social_Attributes", new List<string> { "Presence", "Manipulation", "Composure" }, ColumnId.Right));
+
+					components.Add(new SkillsComponent("Mental_Skills", new List<string> { "Academics", "Computer", "Crafts", "Investigation", "Medicine", "Occult", "Politics", "Science" }, ColumnId.Left));
+					components.Add(new SkillsComponent("Physical_Skills", new List<string> { "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry" }, ColumnId.Left));
+					components.Add(new SkillsComponent("Social_Skills", new List<string> { "Animal_Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge" }, ColumnId.Left));
+
+					components.Add(new MeritsComponent("Merits", "merit", true, new List<string>(), 5, ColumnId.Middle));
+					components.Add(new MeritsComponent("Disciplines", "discipline", true, new List<string>(), 5, ColumnId.Middle));
+					components.Add(new AdvantagesComponent("Advantages", new List<string> { "Mask", "Dirge", "Size", "Speed", "Defense", "Armor", "Initiative Mod" }, ColumnId.Middle));
+					components.Add(new MeritsComponent("Banes", "bane", true, new List<string>(), 0, ColumnId.Middle));
+					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
+
+					components.Add(new HealthComponent("Health", ColumnId.Right));
+					components.Add(new ResourceComponent("Willpower", ColumnId.Right));
+					components.Add(new StatComponent("Blood Potency", ColumnId.Right));
+					components.Add(new ResourceComponent("Vitae", ColumnId.Right));
+					components.Add(new StatComponent("Humanity", ColumnId.Right));
 					components.Add(new MeritsComponent("Conditions", "condition", true, new List<string>(), 0, ColumnId.Right));
 					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
 					break;
