@@ -87,12 +87,14 @@ namespace CofD_Sheet.Sheet_Components
 					uiElement.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / rowAmount));
 					if (ar == 0)
 					{
-						Label skillNameLabel = new Label();
-						skillNameLabel.Anchor = AnchorStyles.None;
-						skillNameLabel.AutoSize = true;
-						skillNameLabel.Name = "skillNameLabel" + skill.name;
-						skillNameLabel.Size = new Size(nameLabelWidth, 20);
-						skillNameLabel.TabIndex = 0;
+						Label skillNameLabel = new Label
+						{
+							Anchor = AnchorStyles.None,
+							AutoSize = true,
+							Name = "skillNameLabel" + skill.name,
+							Size = new Size(nameLabelWidth, 20),
+							TabIndex = 0
+						};
 						onSpecialtiesChanged(skillNameLabel, skill);
 						uiElement.Controls.Add(skillNameLabel, 0, a * rowsPerSkill);
 					}
@@ -102,13 +104,15 @@ namespace CofD_Sheet.Sheet_Components
 				skill.pips.Clear();
 				for (int p = 0; p < maxValue; p++)
 				{
-					RadioButton pip = new RadioButton();
-					pip.Anchor = System.Windows.Forms.AnchorStyles.None;
-					pip.AutoSize = true;
-					pip.Size = new System.Drawing.Size(20, 20);
-					pip.TabIndex = 0;
-					pip.UseVisualStyleBackColor = true;
-					pip.Checked = 0 < skill.currentValue;
+					RadioButton pip = new RadioButton
+					{
+						Anchor = System.Windows.Forms.AnchorStyles.None,
+						AutoSize = true,
+						Size = new System.Drawing.Size(20, 20),
+						TabIndex = 0,
+						UseVisualStyleBackColor = true,
+						Checked = 0 < skill.currentValue
+					};
 					pip.Click += new EventHandler(valueChanged);
 					pip.AutoCheck = false;
 					skill.pips.Add(pip);
@@ -134,10 +138,12 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				return;
 			}
-			Form prompt = new Form();
-			prompt.Width = 325;
-			prompt.Height = 100;
-			prompt.Text = "Add Specialty";
+			Form prompt = new Form
+			{
+				Width = 325,
+				Height = 100,
+				Text = "Add Specialty"
+			};
 			TextBox inputBox = new TextBox() { Left = 5, Top = 5, Width = 300 };
 			Button confirmation = new Button() { Text = "Add", Left = 205, Width = 100, Top = 30 };
 			confirmation.Click += (sender2, e2) => { prompt.Close(); };
@@ -163,10 +169,12 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				return;
 			}
-			Form prompt = new Form();
-			prompt.Width = 325;
-			prompt.Height = 100;
-			prompt.Text = "Remove Specialty";
+			Form prompt = new Form
+			{
+				Width = 325,
+				Height = 100,
+				Text = "Remove Specialty"
+			};
 			ComboBox inputBox = new ComboBox() { Left = 5, Top = 5, Width = 300 };
 			foreach (string specialty in skill.specialties)
 			{
@@ -208,6 +216,8 @@ namespace CofD_Sheet.Sheet_Components
 			}
 
 			label.ContextMenuStrip = contextMenu;
+
+			onComponentChanged();
 		}
 
 		void valueChanged(object sender, EventArgs e)

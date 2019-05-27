@@ -84,13 +84,15 @@ namespace CofD_Sheet.Sheet_Components
 					uiElement.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / rowAmount));
 					if (ar == 0)
 					{
-						Label attributeNameLabel = new Label();
-						attributeNameLabel.Anchor = AnchorStyles.None;
-						attributeNameLabel.AutoSize = true;
-						attributeNameLabel.Name = "attributeNameLabel" + attribute.name;
-						attributeNameLabel.Size = new Size(nameLabelWidth, 20);
-						attributeNameLabel.TabIndex = 0;
-						attributeNameLabel.Text = attribute.name;
+						Label attributeNameLabel = new Label
+						{
+							Anchor = AnchorStyles.None,
+							AutoSize = true,
+							Name = "attributeNameLabel" + attribute.name,
+							Size = new Size(nameLabelWidth, 20),
+							TabIndex = 0,
+							Text = attribute.name
+						};
 						uiElement.Controls.Add(attributeNameLabel, 0, a * rowsPerAttribute);
 					}
 				}
@@ -99,13 +101,15 @@ namespace CofD_Sheet.Sheet_Components
 				attribute.pips.Clear();
 				for (int p = 0; p < maxValue; p++)
 				{
-					RadioButton pip = new RadioButton();
-					pip.Anchor = System.Windows.Forms.AnchorStyles.None;
-					pip.AutoSize = true;
-					pip.Size = new System.Drawing.Size(20, 20);
-					pip.TabIndex = 0;
-					pip.UseVisualStyleBackColor = true;
-					pip.Checked = 0 < attribute.currentValue;
+					RadioButton pip = new RadioButton
+					{
+						Anchor = System.Windows.Forms.AnchorStyles.None,
+						AutoSize = true,
+						Size = new System.Drawing.Size(20, 20),
+						TabIndex = 0,
+						UseVisualStyleBackColor = true,
+						Checked = 0 < attribute.currentValue
+					};
 					pip.Click += new EventHandler(valueChanged);
 					pip.AutoCheck = false;
 					attribute.pips.Add(pip);

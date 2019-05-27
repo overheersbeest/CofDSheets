@@ -101,10 +101,12 @@ namespace CofD_Sheet.Sheet_Components
 			ContextMenuStrip owner = (sender as ToolStripItem).Owner as ContextMenuStrip;
 			TableLayoutPanel uiElement = owner.SourceControl as TableLayoutPanel;
 
-			Form prompt = new Form();
-			prompt.Width = 325;
-			prompt.Height = 100;
-			prompt.Text = "Add " + singularName;
+			Form prompt = new Form
+			{
+				Width = 325,
+				Height = 100,
+				Text = "Add " + singularName
+			};
 			TextBox inputBox = new TextBox() { Left = 5, Top = 5, Width = 300 };
 			Button confirmation = new Button() { Text = "Add", Left = 205, Width = 100, Top = 30 };
 			confirmation.Click += (sender2, e2) => { prompt.Close(); };
@@ -127,10 +129,12 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				return;
 			}
-			Form prompt = new Form();
-			prompt.Width = 325;
-			prompt.Height = 100;
-			prompt.Text = "Remove " +singularName;
+			Form prompt = new Form
+			{
+				Width = 325,
+				Height = 100,
+				Text = "Remove " + singularName
+			};
 			Label question = new Label() { Left = 5, Top = 5, Width = 300 };
 			question.Text = "Are you sure you want to remove the \"" + merit.name +"\" " + singularName + "?";
 			Button confirmation = new Button() { Text = "Yes", Left = 205, Width = 100, Top = 30 };
@@ -150,6 +154,7 @@ namespace CofD_Sheet.Sheet_Components
 			int rowsPerMerit = Math.Max(1, Convert.ToInt32(Math.Ceiling(maxValue / Convert.ToSingle(maxDotsPerRow))));
 			int rowAmount = merits.Count * rowsPerMerit;
 
+			uiElement.RowStyles.Clear();
 			uiElement.Controls.Clear();
 			uiElement.RowStyles.Clear();
 			uiElement.RowCount = rowAmount;
@@ -162,13 +167,15 @@ namespace CofD_Sheet.Sheet_Components
 					uiElement.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / rowAmount));
 					if (mr == 0)
 					{
-						Label meritNameLabel = new Label();
-						meritNameLabel.Anchor = AnchorStyles.None;
-						meritNameLabel.AutoSize = true;
-						meritNameLabel.Name = "meritNameLabel" + merit.name;
-						meritNameLabel.Size = new Size(nameLabelWidth, 20);
-						meritNameLabel.TabIndex = 0;
-						meritNameLabel.Text = merit.name;
+						Label meritNameLabel = new Label
+						{
+							Anchor = AnchorStyles.None,
+							AutoSize = true,
+							Name = "meritNameLabel" + merit.name,
+							Size = new Size(nameLabelWidth, 20),
+							TabIndex = 0,
+							Text = merit.name
+						};
 
 						if (mutable)
 						{
@@ -186,14 +193,16 @@ namespace CofD_Sheet.Sheet_Components
 				merit.pips.Clear();
 				for (int p = 0; p < maxValue; p++)
 				{
-					RadioButton pip = new RadioButton();
-					pip.Anchor = AnchorStyles.None;
-					pip.AutoSize = true;
-					pip.Size = new Size(22, 22);
-					pip.Dock = DockStyle.Fill;
-					pip.TabIndex = 0;
-					pip.UseVisualStyleBackColor = true;
-					pip.Checked = p < merit.currentValue;
+					RadioButton pip = new RadioButton
+					{
+						Anchor = AnchorStyles.None,
+						AutoSize = true,
+						Size = new Size(22, 22),
+						Dock = DockStyle.Fill,
+						TabIndex = 0,
+						UseVisualStyleBackColor = true,
+						Checked = p < merit.currentValue
+					};
 					pip.Click += new EventHandler(pipClicked);
 					pip.AutoCheck = false;
 					merit.pips.Add(pip);
@@ -206,15 +215,10 @@ namespace CofD_Sheet.Sheet_Components
 				}
 			}
 
-			uiElement.Size = new Size(componentWidth, (21 * Math.Max(3, rowAmount)));
-			TableLayoutPanel cell = uiElement.Parent as TableLayoutPanel;
-			if (cell != null)
-			{
-				cell.Size = new Size(cell.Size.Width, uiElement.Size.Height);
-				Form1.resizeTableHeight(ref cell);
-				TableLayoutPanel column = cell.Parent as TableLayoutPanel;
-				Form1.resizeTableHeight(ref column);
-			}
+			uiElement.Size = new Size(componentWidth, (23 * Math.Max(3, rowAmount)));
+			resizeParentColumn();
+
+			onComponentChanged();
 		}
 
 		void pipClicked(object sender, EventArgs e)

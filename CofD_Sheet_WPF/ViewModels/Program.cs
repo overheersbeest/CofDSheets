@@ -81,9 +81,11 @@ namespace CofD_Sheet_WPF.ViewModels
 
 		private void saveSheetClicked()
 		{
-			SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-			saveFileDialog1.Filter = "CofD Sheet files (*.cofds)|*.cofds|XML files (*.xml)|*.xml|All files (*.*)|*.*";
-			saveFileDialog1.FilterIndex = 0;
+			SaveFileDialog saveFileDialog1 = new SaveFileDialog
+			{
+				Filter = "CofD Sheet files (*.cofds)|*.cofds|XML files (*.xml)|*.xml|All files (*.*)|*.*",
+				FilterIndex = 0
+			};
 			watcher.EnableRaisingEvents = false;
 
 			bool? dialogResult = saveFileDialog1.ShowDialog();
@@ -99,9 +101,11 @@ namespace CofD_Sheet_WPF.ViewModels
 
 		private void loadSheetClicked()
 		{
-			OpenFileDialog openFileDialog1 = new OpenFileDialog();
-			openFileDialog1.Filter = "CofD Sheet files (*.cofds)|*.cofds|XML files (*.xml)|*.xml|All files (*.*)|*.*";
-			openFileDialog1.FilterIndex = 0;
+			OpenFileDialog openFileDialog1 = new OpenFileDialog
+			{
+				Filter = "CofD Sheet files (*.cofds)|*.cofds|XML files (*.xml)|*.xml|All files (*.*)|*.*",
+				FilterIndex = 0
+			};
 
 			//autoSaveDisabled = true;
 			bool? dialogResult = openFileDialog1.ShowDialog();

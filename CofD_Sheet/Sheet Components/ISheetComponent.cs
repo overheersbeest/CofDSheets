@@ -46,6 +46,11 @@ namespace CofD_Sheet.Sheet_Components
 
 		abstract public Control getUIElement();
 		
+		protected void resizeParentColumn()
+		{
+			Form1.resizeComponentColumn(uiElement);
+		}
+
 		protected void onComponentChanged()
 		{
 			if (Form1.instance.autoSave)

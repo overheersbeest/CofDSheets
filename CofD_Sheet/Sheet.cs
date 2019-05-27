@@ -72,6 +72,7 @@ namespace CofD_Sheet
 					components.Add(new StatComponent("Integrity", ColumnId.Right));
 					components.Add(new MeritsComponent("Conditions", "condition", true, new List<string>(), 0, ColumnId.Right));
 					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
+					components.Add(new MeritsComponent("Equipment", "equipment", true, new List<string>(), 0, ColumnId.Right));
 					break;
 				case SheetType.Mage:
 					components.Add(new AttributesComponent("Mental_Attributes", new List<string> { "Intelligence", "Wits", "Resolve" }, ColumnId.Left));
@@ -96,6 +97,7 @@ namespace CofD_Sheet
 					components.Add(new MeritsComponent("Conditions", "condition", true, new List<string>(), 0, ColumnId.Right));
 					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
 					components.Add(new AspirationsComponent("Obsessions", 1, ColumnId.Right));
+					components.Add(new MeritsComponent("Equipment", "equipment", true, new List<string>(), 0, ColumnId.Right));
 					break;
 				case SheetType.Werewolf:
 					components.Add(new AttributesComponent("Mental_Attributes", new List<string> { "Intelligence", "Wits", "Resolve" }, ColumnId.Left));
@@ -118,6 +120,7 @@ namespace CofD_Sheet
 					components.Add(new StatComponent("Harmony", ColumnId.Right));
 					components.Add(new MeritsComponent("Conditions", "condition", true, new List<string>(), 0, ColumnId.Right));
 					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
+					components.Add(new MeritsComponent("Equipment", "equipment", true, new List<string>(), 0, ColumnId.Right));
 					break;
 				case SheetType.Vampire:
 					components.Add(new AttributesComponent("Mental_Attributes", new List<string> { "Intelligence", "Wits", "Resolve" }, ColumnId.Left));
@@ -141,6 +144,7 @@ namespace CofD_Sheet
 					components.Add(new StatComponent("Humanity", ColumnId.Right));
 					components.Add(new MeritsComponent("Conditions", "condition", true, new List<string>(), 0, ColumnId.Right));
 					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
+					components.Add(new MeritsComponent("Equipment", "equipment", true, new List<string>(), 0, ColumnId.Right));
 					break;
 				case SheetType.WolfBlooded:
 					components.Add(new AttributesComponent("Mental_Attributes", new List<string> { "Intelligence", "Wits", "Resolve" }, ColumnId.Left));
@@ -161,6 +165,7 @@ namespace CofD_Sheet
 					components.Add(new StatComponent("Integrity", ColumnId.Right));
 					components.Add(new MeritsComponent("Conditions", "condition", true, new List<string>(), 0, ColumnId.Right));
 					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
+					components.Add(new MeritsComponent("Equipment", "equipment", true, new List<string>(), 0, ColumnId.Right));
 					break;
 				case SheetType.Spirit:
 					components.Add(new AttributesComponent("Attributes", new List<string> { "Power", "Finesse", "Resistance" }, ColumnId.Left));

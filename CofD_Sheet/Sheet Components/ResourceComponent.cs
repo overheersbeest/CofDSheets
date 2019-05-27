@@ -58,10 +58,12 @@ namespace CofD_Sheet.Sheet_Components
 			ContextMenuStrip owner = (sender as ToolStripItem).Owner as ContextMenuStrip;
 			TableLayoutPanel uiElement = owner.SourceControl as TableLayoutPanel;
 
-			Form prompt = new Form();
-			prompt.Width = 325;
-			prompt.Height = 100;
-			prompt.Text = "Change maximum value";
+			Form prompt = new Form
+			{
+				Width = 325,
+				Height = 100,
+				Text = "Change maximum value"
+			};
 			NumericUpDown inputBox = new NumericUpDown() { Left = 5, Top = 5, Width = 300 };
 			inputBox.Value = maxValue;
 			Button confirmation = new Button() { Text = "Confirm", Left = 205, Width = 100, Top = 30 };
@@ -105,7 +107,8 @@ namespace CofD_Sheet.Sheet_Components
 			int columnAmount = checkBoxRows + columnSeparatorCount;
 			uiElement.RowCount = rowAmount;
 			uiElement.ColumnCount = columnAmount;
-			uiElement.Size = new Size(componentWidth, 20 * rowAmount);
+			uiElement.Size = new Size(componentWidth, 23 * rowAmount);
+			resizeParentColumn();
 			uiElement.RowStyles.Clear();
 			uiElement.ColumnStyles.Clear();
 
@@ -140,14 +143,16 @@ namespace CofD_Sheet.Sheet_Components
 						{
 							if (checkBoxIter >= checkBoxes.Count)
 							{
-								CheckBox checkBox = new CheckBox();
-								checkBox.Anchor = System.Windows.Forms.AnchorStyles.None;
-								checkBox.AutoSize = true;
-								checkBox.Size = new System.Drawing.Size(15, 14);
-								checkBox.Dock = DockStyle.Fill;
-								checkBox.TabIndex = 0;
-								checkBox.UseVisualStyleBackColor = true;
-								checkBox.Checked = checkBoxIter < currentValue;
+								CheckBox checkBox = new CheckBox
+								{
+									Anchor = System.Windows.Forms.AnchorStyles.None,
+									AutoSize = true,
+									Size = new System.Drawing.Size(15, 14),
+									Dock = DockStyle.Fill,
+									TabIndex = 0,
+									UseVisualStyleBackColor = true,
+									Checked = checkBoxIter < currentValue
+								};
 								checkBox.Click += new EventHandler(valueChanged);
 								checkBox.AutoCheck = false;
 								checkBoxes.Add(checkBox);

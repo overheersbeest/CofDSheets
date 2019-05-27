@@ -33,24 +33,73 @@ namespace CofD_Sheet.Sheet_Components
 		List<TextBox> slots = new List<TextBox>();
 
 		public HealthComponent() : base("HealthComponent", ColumnId.Undefined)
-		{ }
+		{
+			init();
+		}
 
 		public HealthComponent(string componentName, ColumnId _column) : base(componentName, _column)
-		{ }
-		
+		{
+			init();
+		}
+
+		void init()
+		{
+			uiElement.Dock = DockStyle.Fill;
+			uiElement.TabIndex = 0;
+
+			ContextMenuStrip contextMenu = new ContextMenuStrip();
+			ToolStripItem addMeritItem = contextMenu.Items.Add("Change maximum value");
+			addMeritItem.Click += new EventHandler(changeMaxValue);
+			uiElement.ContextMenuStrip = contextMenu;
+		}
+
 		override public Control getUIElement()
+		{
+			onMaxValueChanged();
+			return uiElement;
+		}
+		void changeMaxValue(object sender, EventArgs e)
+		{
+			ContextMenuStrip owner = (sender as ToolStripItem).Owner as ContextMenuStrip;
+			TableLayoutPanel uiElement = owner.SourceControl as TableLayoutPanel;
+
+			Form prompt = new Form();
+			prompt.Width = 325;
+			prompt.Height = 100;
+			prompt.Text = "Change maximum value";
+			NumericUpDown inputBox = new NumericUpDown() { Left = 5, Top = 5, Width = 300 };
+			inputBox.Value = maxValue;
+			Button confirmation = new Button() { Text = "Confirm", Left = 205, Width = 100, Top = 30 };
+			confirmation.Click += (sender2, e2) => { prompt.Close(); };
+			Button cancel = new Button() { Text = "Cancel", Left = 100, Width = 100, Top = 30 };
+			cancel.Click += (sender2, e2) => { inputBox.Value = maxValue; prompt.Close(); };
+			prompt.Controls.Add(inputBox);
+			prompt.Controls.Add(confirmation);
+			prompt.Controls.Add(cancel);
+			prompt.ShowDialog();
+
+			maxValue = (int)inputBox.Value;
+			onMaxValueChanged();
+		}
+
+		void onMaxValueChanged()
 		{
 			int rowAmount = Convert.ToInt32(Math.Ceiling(maxValue / Convert.ToSingle(maxPerRow)));
 			int checkBoxRows = Math.Min(maxValue, maxPerRow);
 			int columnSeparatorCount = (checkBoxRows - 1) / 5;
 			int columnAmount = checkBoxRows + columnSeparatorCount;
-			
+
+			foreach (TextBox slot in slots)
+			{
+				slot.Dispose();
+			}
+			slots.Clear();
+			uiElement.RowStyles.Clear();
+			uiElement.ColumnStyles.Clear();
 			uiElement.RowCount = rowAmount;
 			uiElement.ColumnCount = columnAmount;
-			uiElement.Dock = DockStyle.Fill;
-			uiElement.Size = new Size(componentWidth, 23);
-			uiElement.TabIndex = 0;
-			slots.Clear();
+			uiElement.Size = new Size(componentWidth, rowAmount * 35);
+			resizeParentColumn();
 
 			float separatorWidth = 100F / (checkBoxRows * separatorProportion + columnSeparatorCount);
 
@@ -62,26 +111,30 @@ namespace CofD_Sheet.Sheet_Components
 					if ((c + 1) % 6 == 0)
 					{
 						//break, to separate groups of 5
-						uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, separatorWidth));
+						if (r == 0)
+							uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, separatorWidth));
 					}
 					else
 					{
+						if (r == 0)
+							uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, separatorWidth * separatorProportion));
 						int slotNr = slots.Count;
-						uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, separatorWidth * separatorProportion));
-						TextBox slot = new TextBox();
-						slot.Anchor = System.Windows.Forms.AnchorStyles.None;
-						slot.KeyDown += new KeyEventHandler(backSpacePressed);
-						slot.AutoSize = true;
-						slot.Size = new System.Drawing.Size(15, 14);
-						slot.TabIndex = 0;
-						slot.TextChanged += valueChanged;
-						slots.Add(slot);
-						uiElement.Controls.Add(slot, c, r);
+						if (slotNr < maxValue)
+						{
+							TextBox slot = new TextBox();
+							slot.Anchor = System.Windows.Forms.AnchorStyles.None;
+							slot.KeyDown += new KeyEventHandler(onKeyDown);
+							slot.AutoSize = true;
+							slot.Size = new System.Drawing.Size(15, 14);
+							slot.TabIndex = 0;
+							slot.TextChanged += valueChanged;
+							slots.Add(slot);
+							uiElement.Controls.Add(slot, c, r);
+						}
 					}
 				}
 			}
 			onValueChanged();
-			return uiElement;
 		}
 
 		void valueChanged(object sender, EventArgs e)
@@ -164,7 +217,7 @@ namespace CofD_Sheet.Sheet_Components
 			onComponentChanged();
 		}
 
-		void backSpacePressed(object sender, KeyEventArgs e)
+		void onKeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.KeyData == Keys.Back)
 			{

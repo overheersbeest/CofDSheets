@@ -63,23 +63,29 @@ namespace CofD_Sheet.Sheet_Components
 				Advantage advantage = advantages[a];
 				uiElement.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / advantages.Count));
 
-				TableLayoutPanel advantageElement = new TableLayoutPanel();
-				advantageElement.Name = "advantageTable" + advantage.name;
-				advantageElement.Size = new Size(componentWidth, 23);
+				TableLayoutPanel advantageElement = new TableLayoutPanel
+				{
+					Name = "advantageTable" + advantage.name,
+					Size = new Size(componentWidth, 23)
+				};
 
-				Label label = new Label();
-				label.Anchor = AnchorStyles.Left;
-				label.Text = advantage.name + ": ";
+				Label label = new Label
+				{
+					Anchor = AnchorStyles.Left,
+					Text = advantage.name + ": "
+				};
 				advantageElement.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize, label.Width));
 				advantageElement.Controls.Add(label, 0, 0);
 
-				TextBox textBox = new TextBox();
-				textBox.Anchor = AnchorStyles.None;
-				textBox.AutoSize = true;
-				textBox.Size = new Size(15, 14);
-				textBox.Dock = DockStyle.Fill;
-				textBox.TabIndex = 0;
-				textBox.Text = advantage.value;
+				TextBox textBox = new TextBox
+				{
+					Anchor = AnchorStyles.None,
+					AutoSize = true,
+					Size = new Size(15, 14),
+					Dock = DockStyle.Fill,
+					TabIndex = 0,
+					Text = advantage.value
+				};
 				textBox.TextChanged += onValueChanged;
 				textBoxes.Add(textBox);
 				advantageElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));

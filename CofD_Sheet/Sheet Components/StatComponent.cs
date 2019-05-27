@@ -58,10 +58,12 @@ namespace CofD_Sheet.Sheet_Components
 			ContextMenuStrip owner = (sender as ToolStripItem).Owner as ContextMenuStrip;
 			TableLayoutPanel uiElement = owner.SourceControl as TableLayoutPanel;
 
-			Form prompt = new Form();
-			prompt.Width = 325;
-			prompt.Height = 100;
-			prompt.Text = "Change maximum value";
+			Form prompt = new Form
+			{
+				Width = 325,
+				Height = 100,
+				Text = "Change maximum value"
+			};
 			NumericUpDown inputBox = new NumericUpDown() { Left = 5, Top = 5, Width = 300 };
 			inputBox.Value = maxValue;
 			Button confirmation = new Button() { Text = "Confirm", Left = 205, Width = 100, Top = 30 };
@@ -104,7 +106,8 @@ namespace CofD_Sheet.Sheet_Components
 			int columnAmount = checkBoxRows + columnSeparatorCount;
 			uiElement.RowCount = rowAmount;
 			uiElement.ColumnCount = columnAmount;
-			uiElement.Size = new Size(componentWidth, 20 * rowAmount);
+			uiElement.Size = new Size(componentWidth, 23 * rowAmount);
+			resizeParentColumn();
 			uiElement.RowStyles.Clear();
 			uiElement.ColumnStyles.Clear();
 
@@ -139,14 +142,16 @@ namespace CofD_Sheet.Sheet_Components
 						{
 							if (pipIter >= pips.Count)
 							{
-								RadioButton pip = new RadioButton();
-								pip.Anchor = System.Windows.Forms.AnchorStyles.None;
-								pip.AutoSize = true;
-								pip.Size = new System.Drawing.Size(15, 14);
-								pip.Dock = DockStyle.Fill;
-								pip.TabIndex = 0;
-								pip.UseVisualStyleBackColor = true;
-								pip.Checked = pipIter < currentValue;
+								RadioButton pip = new RadioButton
+								{
+									Anchor = System.Windows.Forms.AnchorStyles.None,
+									AutoSize = true,
+									Size = new System.Drawing.Size(15, 14),
+									Dock = DockStyle.Fill,
+									TabIndex = 0,
+									UseVisualStyleBackColor = true,
+									Checked = pipIter < currentValue
+								};
 								pip.Click += new EventHandler(valueChanged);
 								pip.AutoCheck = false;
 								pips.Add(pip);

@@ -69,10 +69,12 @@ namespace CofD_Sheet
 
 			foreach (SheetType type in Enum.GetValues(typeof(SheetType)))
 			{
-				System.Windows.Forms.ToolStripMenuItem newButton = new ToolStripMenuItem();
-				newButton.Name = "New" + type.ToString() + "Button";
-				newButton.Size = new System.Drawing.Size(152, 22);
-				newButton.Text = type.ToString();
+				System.Windows.Forms.ToolStripMenuItem newButton = new ToolStripMenuItem
+				{
+					Name = "New" + type.ToString() + "Button",
+					Size = new System.Drawing.Size(152, 22),
+					Text = type.ToString()
+				};
 				newButton.Click += new System.EventHandler(this.NewSheetButtonClicked);
 				this.newToolStripMenuItem.DropDownItems.Add(newButton);
 			}
@@ -85,10 +87,12 @@ namespace CofD_Sheet
 
 		private void loadToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			OpenFileDialog openFileDialog1 = new OpenFileDialog();
-			openFileDialog1.Filter = "CofD Sheet files (*.cofds)|*.cofds|XML files (*.xml)|*.xml|All files (*.*)|*.*";
-			openFileDialog1.FilterIndex = 0;
-			
+			OpenFileDialog openFileDialog1 = new OpenFileDialog
+			{
+				Filter = "CofD Sheet files (*.cofds)|*.cofds|XML files (*.xml)|*.xml|All files (*.*)|*.*",
+				FilterIndex = 0
+			};
+
 			autoSaveDisabled = true;
 			if (openFileDialog1.ShowDialog() == DialogResult.OK)
 			{
@@ -103,9 +107,11 @@ namespace CofD_Sheet
 
 		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-			saveFileDialog1.Filter = "CofD Sheet files (*.cofds)|*.cofds|XML files (*.xml)|*.xml|All files (*.*)|*.*";
-			saveFileDialog1.FilterIndex = 0;
+			SaveFileDialog saveFileDialog1 = new SaveFileDialog
+			{
+				Filter = "CofD Sheet files (*.cofds)|*.cofds|XML files (*.xml)|*.xml|All files (*.*)|*.*",
+				FilterIndex = 0
+			};
 			watcher.EnableRaisingEvents = false;
 
 			if (saveFileDialog1.ShowDialog() == DialogResult.OK)
@@ -213,8 +219,10 @@ namespace CofD_Sheet
 			{
 				ISheetComponent component = sheet.components[i];
 
-				TableLayoutPanel componentUIElement = new TableLayoutPanel();
-				componentUIElement.ColumnCount = 1;
+				TableLayoutPanel componentUIElement = new TableLayoutPanel
+				{
+					ColumnCount = 1
+				};
 				componentUIElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
 				componentUIElement.Dock = DockStyle.Fill;
 				componentUIElement.RowCount = 2;
@@ -223,11 +231,13 @@ namespace CofD_Sheet
 				componentUIElement.TabIndex = 0;
 				componentUIElement.Size = new Size(292, 26);
 
-				Label nameLabel = new Label();
-				nameLabel.Anchor = AnchorStyles.None;
-				nameLabel.AutoSize = true;
-				nameLabel.Size = new Size(35, 13);
-				nameLabel.TabIndex = 0;
+				Label nameLabel = new Label
+				{
+					Anchor = AnchorStyles.None,
+					AutoSize = true,
+					Size = new Size(35, 13),
+					TabIndex = 0
+				};
 				nameLabel.Font = new Font(nameLabel.Font, FontStyle.Bold);
 				nameLabel.Text = component.name.Replace('_', ' ');
 
@@ -287,7 +297,19 @@ namespace CofD_Sheet
 			}
 		}
 
-		public static void resizeTableHeight(ref TableLayoutPanel table)
+		public static void resizeComponentColumn(Control component)
+		{
+			TableLayoutPanel cell = component.Parent as TableLayoutPanel;
+			if (cell != null)
+			{
+				cell.Size = new Size(cell.Size.Width, component.Size.Height);
+				Form1.resizeTableHeight(ref cell);
+				TableLayoutPanel column = cell.Parent as TableLayoutPanel;
+				Form1.resizeTableHeight(ref column);
+			}
+		}
+
+		private static void resizeTableHeight(ref TableLayoutPanel table)
 		{
 			int height = 0;
 			table.RowStyles.Clear();

@@ -42,13 +42,15 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				uiElement.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / maxAspirations));
 
-				TextBox textBox = new TextBox();
-				textBox.Anchor = System.Windows.Forms.AnchorStyles.None;
-				textBox.AutoSize = true;
-				textBox.Size = new System.Drawing.Size(15, 14);
-				textBox.Dock = DockStyle.Fill;
-				textBox.TabIndex = 0;
-				textBox.Text = aspirations[r];
+				TextBox textBox = new TextBox
+				{
+					Anchor = System.Windows.Forms.AnchorStyles.None,
+					AutoSize = true,
+					Size = new System.Drawing.Size(15, 14),
+					Dock = DockStyle.Fill,
+					TabIndex = 0,
+					Text = aspirations[r]
+				};
 				textBox.TextChanged += onValueChanged;
 				textBoxes.Add(textBox);
 				uiElement.Controls.Add(textBox, 0, r);

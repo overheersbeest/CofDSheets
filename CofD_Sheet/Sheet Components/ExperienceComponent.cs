@@ -57,12 +57,14 @@ namespace CofD_Sheet.Sheet_Components
 
 			//beats element
 			uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-			TableLayoutPanel beatElement = new TableLayoutPanel();
-			beatElement.RowCount = rowAmount;
-			beatElement.ColumnCount = columnAmount;
-			beatElement.Dock = DockStyle.Fill;
-			beatElement.Size = new Size(componentWidth, 20 * rowAmount);
-			beatElement.TabIndex = 0;
+			TableLayoutPanel beatElement = new TableLayoutPanel
+			{
+				RowCount = rowAmount,
+				ColumnCount = columnAmount,
+				Dock = DockStyle.Fill,
+				Size = new Size(componentWidth, 20 * rowAmount),
+				TabIndex = 0
+			};
 			uiElement.Controls.Add(beatElement, 0, 0);
 			beatBoxes.Clear();
 			float separatorWidth = 100F / (checkBoxRows * separatorProportion + columnSeparatorCount);
@@ -81,13 +83,15 @@ namespace CofD_Sheet.Sheet_Components
 					{
 						int checkBoxNr = beatBoxes.Count;
 						beatElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, separatorWidth * separatorProportion));
-						CheckBox checkBox = new CheckBox();
-						checkBox.Anchor = System.Windows.Forms.AnchorStyles.None;
-						checkBox.AutoSize = true;
-						checkBox.Size = new System.Drawing.Size(15, 14);
-						checkBox.TabIndex = 0;
-						checkBox.UseVisualStyleBackColor = true;
-						checkBox.Checked = checkBoxNr < beats;
+						CheckBox checkBox = new CheckBox
+						{
+							Anchor = System.Windows.Forms.AnchorStyles.None,
+							AutoSize = true,
+							Size = new System.Drawing.Size(15, 14),
+							TabIndex = 0,
+							UseVisualStyleBackColor = true,
+							Checked = checkBoxNr < beats
+						};
 						checkBox.Click += onValueChanged;
 						beatBoxes.Add(checkBox);
 						beatElement.Controls.Add(checkBox, c, r);
@@ -97,12 +101,14 @@ namespace CofD_Sheet.Sheet_Components
 
 			//experience element
 			uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-			experienceCounter = new TextBox();
-			experienceCounter.Anchor = System.Windows.Forms.AnchorStyles.None;
-			experienceCounter.AutoSize = true;
-			experienceCounter.Size = new System.Drawing.Size(100, 14);
-			experienceCounter.TabIndex = 0;
-			experienceCounter.Text = experience.ToString();
+			experienceCounter = new TextBox
+			{
+				Anchor = System.Windows.Forms.AnchorStyles.None,
+				AutoSize = true,
+				Size = new System.Drawing.Size(100, 14),
+				TabIndex = 0,
+				Text = experience.ToString()
+			};
 			experienceCounter.TextChanged += onValueChanged;
 			uiElement.Controls.Add(experienceCounter, 1, 0);
 			
@@ -112,12 +118,20 @@ namespace CofD_Sheet.Sheet_Components
 		
 		void onValueChanged(object sender = null, EventArgs e = null)
 		{
-			try
+			bool emptyText = experienceCounter.Text.Length == 0;
+			if (emptyText)
 			{
-				experience = Convert.ToInt32(experienceCounter.Text);
+				experience = 0;
 			}
-			catch (Exception)
-			{}
+			else
+			{
+				try
+				{
+					experience = Convert.ToInt32(experienceCounter.Text);
+				}
+				catch (Exception)
+				{ }
+			}
 
 			beats = 0;
 			for (int i = beatBoxes.Count - 1; i >= 0; i--)
@@ -127,18 +141,21 @@ namespace CofD_Sheet.Sheet_Components
 					beats++;
 				}
 			}
-			if (beats >= maxBeats)
-			{
-				beats = 0;
-				experience++;
-			}
+
+			int xpEarned = beats / maxBeats;
+			experience += xpEarned;
+			beats %= maxBeats;
+
 			for (int i = beatBoxes.Count - 1; i >= 0; i--)
 			{
 				beatBoxes[i].Checked = i < beats;
 			}
-			experienceCounter.TextChanged -= onValueChanged;
-			experienceCounter.Text = experience.ToString();
-			experienceCounter.TextChanged += onValueChanged;
+			if (!emptyText)
+			{
+				experienceCounter.TextChanged -= onValueChanged;
+				experienceCounter.Text = experience.ToString();
+				experienceCounter.TextChanged += onValueChanged;
+			}
 
 			onComponentChanged();
 		}
