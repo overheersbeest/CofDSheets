@@ -116,6 +116,10 @@ namespace CofD_Sheet.Sheet_Components
 
 			if (checkBoxes.Count > maxValue)
 			{
+				for (int i = maxValue; i < checkBoxes.Count; ++i)
+				{
+					checkBoxes[i].Dispose();
+				}
 				checkBoxes.RemoveRange(maxValue, checkBoxes.Count - maxValue);
 			}
 

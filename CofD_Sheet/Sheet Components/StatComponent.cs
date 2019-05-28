@@ -115,6 +115,10 @@ namespace CofD_Sheet.Sheet_Components
 
 			if (pips.Count > maxValue)
 			{
+				for (int i = maxValue; i < pips.Count; ++i)
+				{
+					pips[i].Dispose();
+				}
 				pips.RemoveRange(maxValue, pips.Count - maxValue);
 			}
 
