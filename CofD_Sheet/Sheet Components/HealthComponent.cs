@@ -34,55 +34,62 @@ namespace CofD_Sheet.Sheet_Components
 
 		public HealthComponent() : base("HealthComponent", ColumnId.Undefined)
 		{
-			init();
+			Init();
 		}
 
 		public HealthComponent(string componentName, ColumnId _column) : base(componentName, _column)
 		{
-			init();
+			Init();
 		}
 
-		void init()
+		void Init()
 		{
 			uiElement.Dock = DockStyle.Fill;
 			uiElement.TabIndex = 0;
 
 			ContextMenuStrip contextMenu = new ContextMenuStrip();
 			ToolStripItem addMeritItem = contextMenu.Items.Add("Change maximum value");
-			addMeritItem.Click += new EventHandler(changeMaxValue);
+			addMeritItem.Click += new EventHandler(ChangeMaxValue);
 			uiElement.ContextMenuStrip = contextMenu;
 		}
 
-		override public Control getUIElement()
+		override public Control GetUIElement()
 		{
-			onMaxValueChanged();
+			OnMaxValueChanged();
 			return uiElement;
 		}
-		void changeMaxValue(object sender, EventArgs e)
+		void ChangeMaxValue(object sender, EventArgs e)
 		{
 			ContextMenuStrip owner = (sender as ToolStripItem).Owner as ContextMenuStrip;
 			TableLayoutPanel uiElement = owner.SourceControl as TableLayoutPanel;
 
-			Form prompt = new Form();
-			prompt.Width = 325;
-			prompt.Height = 100;
-			prompt.Text = "Change maximum value";
-			NumericUpDown inputBox = new NumericUpDown() { Left = 5, Top = 5, Width = 300 };
+            Form prompt = new Form
+            {
+                StartPosition = FormStartPosition.CenterParent,
+                Width = 325,
+                Height = 100,
+                Text = "Change maximum value"
+            };
+            NumericUpDown inputBox = new NumericUpDown() { Left = 5, Top = 5, Width = 300 };
 			inputBox.Value = maxValue;
-			Button confirmation = new Button() { Text = "Confirm", Left = 205, Width = 100, Top = 30 };
-			confirmation.Click += (sender2, e2) => { prompt.Close(); };
+            inputBox.TabIndex = 0;
+            inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { prompt.Close(); } };
+            Button confirmation = new Button() { Text = "Confirm", Left = 205, Width = 100, Top = 30 };
+			confirmation.TabIndex = 1;
+            confirmation.Click += (sender2, e2) => { prompt.Close(); };
 			Button cancel = new Button() { Text = "Cancel", Left = 100, Width = 100, Top = 30 };
-			cancel.Click += (sender2, e2) => { inputBox.Value = maxValue; prompt.Close(); };
+			cancel.TabIndex = 2;
+            cancel.Click += (sender2, e2) => { inputBox.Value = maxValue; prompt.Close(); };
 			prompt.Controls.Add(inputBox);
 			prompt.Controls.Add(confirmation);
 			prompt.Controls.Add(cancel);
 			prompt.ShowDialog();
 
 			maxValue = (int)inputBox.Value;
-			onMaxValueChanged();
+			OnMaxValueChanged();
 		}
 
-		void onMaxValueChanged()
+		void OnMaxValueChanged()
 		{
 			int rowAmount = Convert.ToInt32(Math.Ceiling(maxValue / Convert.ToSingle(maxPerRow)));
 			int checkBoxRows = Math.Min(maxValue, maxPerRow);
@@ -99,7 +106,7 @@ namespace CofD_Sheet.Sheet_Components
 			uiElement.RowCount = rowAmount;
 			uiElement.ColumnCount = columnAmount;
 			uiElement.Size = new Size(componentWidth, rowAmount * 35);
-			resizeParentColumn();
+			ResizeParentColumn();
 
 			float separatorWidth = 100F / (checkBoxRows * separatorProportion + columnSeparatorCount);
 
@@ -123,21 +130,21 @@ namespace CofD_Sheet.Sheet_Components
 						{
 							TextBox slot = new TextBox();
 							slot.Anchor = System.Windows.Forms.AnchorStyles.None;
-							slot.KeyDown += new KeyEventHandler(onKeyDown);
+							slot.KeyDown += new KeyEventHandler(OnKeyDown);
 							slot.AutoSize = true;
 							slot.Size = new System.Drawing.Size(15, 14);
 							slot.TabIndex = 0;
-							slot.TextChanged += valueChanged;
+							slot.TextChanged += ValueChanged;
 							slots.Add(slot);
 							uiElement.Controls.Add(slot, c, r);
 						}
 					}
 				}
 			}
-			onValueChanged();
+			OnValueChanged();
 		}
 
-		void valueChanged(object sender, EventArgs e)
+		void ValueChanged(object sender, EventArgs e)
 		{
 			aggrivated = 0;
 			lethal = 0;
@@ -187,14 +194,14 @@ namespace CofD_Sheet.Sheet_Components
 					bashing = 0;
 				}
 			}
-			onValueChanged();
+			OnValueChanged();
 		}
 
-		void onValueChanged()
+		void OnValueChanged()
 		{
 			for (int i = 0; i < slots.Count; i++)
 			{
-				slots[i].TextChanged -= valueChanged;
+				slots[i].TextChanged -= ValueChanged;
 				if (i < aggrivated)
 				{
 					slots[i].Text = "*";
@@ -211,18 +218,18 @@ namespace CofD_Sheet.Sheet_Components
 				{
 					slots[i].Text = "";
 				}
-				slots[i].TextChanged += valueChanged;
+				slots[i].TextChanged += ValueChanged;
 			}
 
-			onComponentChanged();
+			OnComponentChanged();
 		}
 
-		void onKeyDown(object sender, KeyEventArgs e)
+		void OnKeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.KeyData == Keys.Back)
 			{
 				((TextBox)sender).Text = "";
-				valueChanged(sender, null);
+				ValueChanged(sender, null);
 			}
 			else if (e.KeyData == Keys.Left
 					 || e.KeyData == Keys.Right)

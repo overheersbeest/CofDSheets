@@ -68,7 +68,7 @@ namespace CofD_Sheet.Sheet_Components
 			}
 		}
 
-		override public Control getUIElement()
+		override public Control GetUIElement()
 		{
 			int columnAmount = 1 + Math.Min(maxValue, maxDotsPerRow);
 			
@@ -87,29 +87,33 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				ContextMenuStrip contextMenu = new ContextMenuStrip();
 				ToolStripItem addMeritItem = contextMenu.Items.Add("Add " + singularName);
-				addMeritItem.Click += new EventHandler(addMerit);
+				addMeritItem.Click += new EventHandler(AddMerit);
 				uiElement.ContextMenuStrip = contextMenu;
 			}
 
-			onMeritsChanged();
+			OnMeritsChanged();
 
 			return uiElement;
 		}
 
-		void addMerit(object sender, EventArgs e)
+		void AddMerit(object sender, EventArgs e)
 		{
 			ContextMenuStrip owner = (sender as ToolStripItem).Owner as ContextMenuStrip;
 			TableLayoutPanel uiElement = owner.SourceControl as TableLayoutPanel;
 
 			Form prompt = new Form
 			{
+				StartPosition = FormStartPosition.CenterParent,
 				Width = 325,
 				Height = 100,
 				Text = "Add " + singularName
 			};
 			TextBox inputBox = new TextBox() { Left = 5, Top = 5, Width = 300 };
+			inputBox.TabIndex = 0;
+			inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { prompt.Close(); } };
 			Button confirmation = new Button() { Text = "Add", Left = 205, Width = 100, Top = 30 };
-			confirmation.Click += (sender2, e2) => { prompt.Close(); };
+			confirmation.TabIndex = 1;
+            confirmation.Click += (sender2, e2) => { prompt.Close(); };
 			prompt.Controls.Add(confirmation);
 			prompt.Controls.Add(inputBox);
 			prompt.ShowDialog();
@@ -117,10 +121,10 @@ namespace CofD_Sheet.Sheet_Components
 			string newMerit = inputBox.Text;
 			merits.Add(new Merit(newMerit));
 			
-			onMeritsChanged();
+			OnMeritsChanged();
 		}
 
-		void removeMerit(object sender, EventArgs e)
+		void RemoveMerit(object sender, EventArgs e)
 		{
 			ContextMenuStrip owner = (sender as ToolStripItem).Owner as ContextMenuStrip;
 			Label skillLabel = owner.SourceControl as Label;
@@ -130,8 +134,9 @@ namespace CofD_Sheet.Sheet_Components
 				return;
 			}
 			Form prompt = new Form
-			{
-				Width = 325,
+            {
+                StartPosition = FormStartPosition.CenterParent,
+                Width = 325,
 				Height = 100,
 				Text = "Remove " + singularName
 			};
@@ -146,10 +151,10 @@ namespace CofD_Sheet.Sheet_Components
 			prompt.Controls.Add(cancel);
 			prompt.ShowDialog();
 
-			onMeritsChanged();
+			OnMeritsChanged();
 		}
 
-		void onMeritsChanged()
+		void OnMeritsChanged()
 		{
 			int rowsPerMerit = Math.Max(1, Convert.ToInt32(Math.Ceiling(maxValue / Convert.ToSingle(maxDotsPerRow))));
 			int rowAmount = merits.Count * rowsPerMerit;
@@ -181,7 +186,7 @@ namespace CofD_Sheet.Sheet_Components
 						{
 							ContextMenuStrip contextMenu = new ContextMenuStrip();
 							ToolStripItem addMeritItem = contextMenu.Items.Add("Remove " + singularName);
-							addMeritItem.Click += new EventHandler(removeMerit);
+							addMeritItem.Click += new EventHandler(RemoveMerit);
 							meritNameLabel.ContextMenuStrip = contextMenu;
 						}
 
@@ -203,7 +208,7 @@ namespace CofD_Sheet.Sheet_Components
 						UseVisualStyleBackColor = true,
 						Checked = p < merit.currentValue
 					};
-					pip.Click += new EventHandler(pipClicked);
+					pip.Click += new EventHandler(PipClicked);
 					pip.AutoCheck = false;
 					merit.pips.Add(pip);
 
@@ -216,12 +221,12 @@ namespace CofD_Sheet.Sheet_Components
 			}
 
 			uiElement.Size = new Size(componentWidth, (23 * Math.Max(3, rowAmount)));
-			resizeParentColumn();
+			ResizeParentColumn();
 
-			onComponentChanged();
+			OnComponentChanged();
 		}
 
-		void pipClicked(object sender, EventArgs e)
+		void PipClicked(object sender, EventArgs e)
 		{
 			foreach (Merit merit in merits)
 			{
@@ -241,10 +246,10 @@ namespace CofD_Sheet.Sheet_Components
 					}
 				}
 			}
-			onMeritValuesChanged();
+			OnMeritValuesChanged();
 		}
 
-		void onMeritValuesChanged()
+		void OnMeritValuesChanged()
 		{
 			foreach (Merit merit in merits)
 			{
@@ -254,7 +259,7 @@ namespace CofD_Sheet.Sheet_Components
 				}
 			}
 
-			onComponentChanged();
+			OnComponentChanged();
 		}
 	}
 }

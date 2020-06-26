@@ -60,7 +60,7 @@ namespace CofD_Sheet.Sheet_Components
 			}
 		}
 		
-		override public Control getUIElement()
+		override public Control GetUIElement()
 		{
 			int rowsPerSkill = Convert.ToInt32(Math.Ceiling(maxValue / Convert.ToSingle(maxDotsPerRow)));
 			int rowAmount = skills.Count * rowsPerSkill;
@@ -95,7 +95,7 @@ namespace CofD_Sheet.Sheet_Components
 							Size = new Size(nameLabelWidth, 20),
 							TabIndex = 0
 						};
-						onSpecialtiesChanged(skillNameLabel, skill);
+						OnSpecialtiesChanged(skillNameLabel, skill);
 						uiElement.Controls.Add(skillNameLabel, 0, a * rowsPerSkill);
 					}
 				}
@@ -113,7 +113,7 @@ namespace CofD_Sheet.Sheet_Components
 						UseVisualStyleBackColor = true,
 						Checked = 0 < skill.currentValue
 					};
-					pip.Click += new EventHandler(valueChanged);
+					pip.Click += new EventHandler(ValueChanged);
 					pip.AutoCheck = false;
 					skill.pips.Add(pip);
 
@@ -124,12 +124,12 @@ namespace CofD_Sheet.Sheet_Components
 					uiElement.Controls.Add(pip, column, row);
 				}
 			}
-			onValueChanged();
+			OnValueChanged();
 
 			return uiElement;
 		}
 
-		void addSpecialty(object sender, EventArgs e)
+		void AddSpecialty(object sender, EventArgs e)
 		{
 			ContextMenuStrip owner = (sender as ToolStripItem).Owner as ContextMenuStrip;
 			Label skillLabel = owner.SourceControl as Label;
@@ -139,14 +139,18 @@ namespace CofD_Sheet.Sheet_Components
 				return;
 			}
 			Form prompt = new Form
-			{
-				Width = 325,
+            {
+                StartPosition = FormStartPosition.CenterParent,
+                Width = 325,
 				Height = 100,
 				Text = "Add Specialty"
 			};
 			TextBox inputBox = new TextBox() { Left = 5, Top = 5, Width = 300 };
-			Button confirmation = new Button() { Text = "Add", Left = 205, Width = 100, Top = 30 };
-			confirmation.Click += (sender2, e2) => { prompt.Close(); };
+            inputBox.TabIndex = 0;
+            inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { prompt.Close(); } };
+            Button confirmation = new Button() { Text = "Add", Left = 205, Width = 100, Top = 30 };
+			confirmation.TabIndex = 1;
+            confirmation.Click += (sender2, e2) => { prompt.Close(); };
 			prompt.Controls.Add(confirmation);
 			prompt.Controls.Add(inputBox);
 			prompt.ShowDialog();
@@ -157,10 +161,10 @@ namespace CofD_Sheet.Sheet_Components
 				skill.specialties.Add(newSpecialty);
 			}
 
-			onSpecialtiesChanged(skillLabel, skill);
+			OnSpecialtiesChanged(skillLabel, skill);
 		}
 
-		void removeSpecialty(object sender, EventArgs e)
+		void RemoveSpecialty(object sender, EventArgs e)
 		{
 			ContextMenuStrip owner = (sender as ToolStripItem).Owner as ContextMenuStrip;
 			Label skillLabel = owner.SourceControl as Label;
@@ -170,8 +174,9 @@ namespace CofD_Sheet.Sheet_Components
 				return;
 			}
 			Form prompt = new Form
-			{
-				Width = 325,
+            {
+                StartPosition = FormStartPosition.CenterParent,
+                Width = 325,
 				Height = 100,
 				Text = "Remove Specialty"
 			};
@@ -179,9 +184,12 @@ namespace CofD_Sheet.Sheet_Components
 			foreach (string specialty in skill.specialties)
 			{
 				inputBox.Items.Add(specialty);
-			}
-			Button confirmation = new Button() { Text = "Remove", Left = 205, Width = 100, Top = 30 };
-			confirmation.Click += (sender2, e2) => { prompt.Close(); };
+            }
+            inputBox.TabIndex = 0;
+            inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { prompt.Close(); } };
+            Button confirmation = new Button() { Text = "Remove", Left = 205, Width = 100, Top = 30 };
+			confirmation.TabIndex = 1;
+            confirmation.Click += (sender2, e2) => { prompt.Close(); };
 			prompt.Controls.Add(confirmation);
 			prompt.Controls.Add(inputBox);
 			prompt.ShowDialog();
@@ -192,10 +200,10 @@ namespace CofD_Sheet.Sheet_Components
 				skill.specialties.Remove(specialtytoRemove);
 			}
 
-			onSpecialtiesChanged(skillLabel, skill);
+			OnSpecialtiesChanged(skillLabel, skill);
 		}
 
-		void onSpecialtiesChanged(Label label, Skill skill)
+		void OnSpecialtiesChanged(Label label, Skill skill)
 		{
 			if (skill.specialties.Count > 0)
 			{
@@ -208,19 +216,19 @@ namespace CofD_Sheet.Sheet_Components
 
 			ContextMenuStrip contextMenu = new ContextMenuStrip();
 			ToolStripItem addSpecialtyItem = contextMenu.Items.Add("Add Specialty");
-			addSpecialtyItem.Click += new EventHandler(addSpecialty);
+			addSpecialtyItem.Click += new EventHandler(AddSpecialty);
 			if (skill.specialties.Count > 0)
 			{
 				ToolStripItem removeSpecialtyItem = contextMenu.Items.Add("Remove Specialty");
-				removeSpecialtyItem.Click += new EventHandler(removeSpecialty);
+				removeSpecialtyItem.Click += new EventHandler(RemoveSpecialty);
 			}
 
 			label.ContextMenuStrip = contextMenu;
 
-			onComponentChanged();
+			OnComponentChanged();
 		}
 
-		void valueChanged(object sender, EventArgs e)
+		void ValueChanged(object sender, EventArgs e)
 		{
 			foreach (Skill skill in skills)
 			{
@@ -240,10 +248,10 @@ namespace CofD_Sheet.Sheet_Components
 					}
 				}
 			}
-			onValueChanged();
+			OnValueChanged();
 		}
 
-		void onValueChanged()
+		void OnValueChanged()
 		{
 			foreach (Skill skill in skills)
 			{
@@ -253,7 +261,7 @@ namespace CofD_Sheet.Sheet_Components
 				}
 			}
 
-			onComponentChanged();
+			OnComponentChanged();
 		}
 	}
 }

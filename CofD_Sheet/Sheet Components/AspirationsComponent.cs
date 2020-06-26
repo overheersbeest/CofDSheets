@@ -28,7 +28,7 @@ namespace CofD_Sheet.Sheet_Components
 			aspirations = new List<string>(new string[maxAspirations]);
 		}
 
-		override public Control getUIElement()
+		override public Control GetUIElement()
 		{
 			uiElement.RowCount = maxAspirations;
 			uiElement.ColumnCount = 1;
@@ -51,22 +51,22 @@ namespace CofD_Sheet.Sheet_Components
 					TabIndex = 0,
 					Text = aspirations[r]
 				};
-				textBox.TextChanged += onValueChanged;
+				textBox.TextChanged += OnValueChanged;
 				textBoxes.Add(textBox);
 				uiElement.Controls.Add(textBox, 0, r);
 			}
-			onValueChanged();
+			OnValueChanged();
 			return uiElement;
 		}
 
-		void onValueChanged(object sender = null, EventArgs e = null)
+		void OnValueChanged(object sender = null, EventArgs e = null)
 		{
 			for (int i = 0; i < textBoxes.Count; i++)
 			{
 				aspirations[i] = textBoxes[i].Text;
 			}
 
-			onComponentChanged();
+			OnComponentChanged();
 		}
 	}
 }

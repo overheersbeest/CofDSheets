@@ -42,7 +42,7 @@ namespace CofD_Sheet.Sheet_Components
 			beatName = minorName;
 		}
 		
-		override public Control getUIElement()
+		override public Control GetUIElement()
 		{
 			int rowAmount = Convert.ToInt32(Math.Ceiling(maxBeats / Convert.ToSingle(maxPerRow)));
 			int checkBoxRows = Math.Min(maxBeats, maxPerRow);
@@ -92,7 +92,7 @@ namespace CofD_Sheet.Sheet_Components
 							UseVisualStyleBackColor = true,
 							Checked = checkBoxNr < beats
 						};
-						checkBox.Click += onValueChanged;
+						checkBox.Click += OnValueChanged;
 						beatBoxes.Add(checkBox);
 						beatElement.Controls.Add(checkBox, c, r);
 					}
@@ -109,14 +109,14 @@ namespace CofD_Sheet.Sheet_Components
 				TabIndex = 0,
 				Text = experience.ToString()
 			};
-			experienceCounter.TextChanged += onValueChanged;
+			experienceCounter.TextChanged += OnValueChanged;
 			uiElement.Controls.Add(experienceCounter, 1, 0);
 			
-			onValueChanged();
+			OnValueChanged();
 			return uiElement;
 		}
 		
-		void onValueChanged(object sender = null, EventArgs e = null)
+		void OnValueChanged(object sender = null, EventArgs e = null)
 		{
 			bool emptyText = experienceCounter.Text.Length == 0;
 			if (emptyText)
@@ -152,12 +152,12 @@ namespace CofD_Sheet.Sheet_Components
 			}
 			if (!emptyText)
 			{
-				experienceCounter.TextChanged -= onValueChanged;
+				experienceCounter.TextChanged -= OnValueChanged;
 				experienceCounter.Text = experience.ToString();
-				experienceCounter.TextChanged += onValueChanged;
+				experienceCounter.TextChanged += OnValueChanged;
 			}
 
-			onComponentChanged();
+			OnComponentChanged();
 		}
 	}
 }

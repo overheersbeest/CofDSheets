@@ -44,14 +44,14 @@ namespace CofD_Sheet.Sheet_Components
 			column = _column;
 		}
 
-		abstract public Control getUIElement();
+		abstract public Control GetUIElement();
 		
-		protected void resizeParentColumn()
+		protected void ResizeParentColumn()
 		{
 			Form1.resizeComponentColumn(uiElement);
 		}
 
-		protected void onComponentChanged()
+		protected void OnComponentChanged()
 		{
 			if (Form1.instance.autoSave)
 			{

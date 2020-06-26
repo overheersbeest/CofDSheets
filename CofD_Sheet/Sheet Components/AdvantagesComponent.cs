@@ -48,7 +48,7 @@ namespace CofD_Sheet.Sheet_Components
 			}
 		}
 
-		override public Control getUIElement()
+		override public Control GetUIElement()
 		{
 			uiElement.RowCount = advantages.Count;
 			uiElement.ColumnCount = 1;
@@ -86,25 +86,25 @@ namespace CofD_Sheet.Sheet_Components
 					TabIndex = 0,
 					Text = advantage.value
 				};
-				textBox.TextChanged += onValueChanged;
+				textBox.TextChanged += OnValueChanged;
 				textBoxes.Add(textBox);
 				advantageElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
 				advantageElement.Controls.Add(textBox, 1, 0);
 				
 				uiElement.Controls.Add(advantageElement, 0, a);
 			}
-			onValueChanged();
+			OnValueChanged();
 			return uiElement;
 		}
 
-		void onValueChanged(object sender = null, EventArgs e = null)
+		void OnValueChanged(object sender = null, EventArgs e = null)
 		{
 			for (int i = 0; i < textBoxes.Count; i++)
 			{
 				advantages[i].value = textBoxes[i].Text;
 			}
 
-			onComponentChanged();
+			OnComponentChanged();
 		}
 	}
 }

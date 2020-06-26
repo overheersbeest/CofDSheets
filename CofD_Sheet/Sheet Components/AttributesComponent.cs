@@ -57,7 +57,7 @@ namespace CofD_Sheet.Sheet_Components
 			}
 		}
 		
-		override public Control getUIElement()
+		override public Control GetUIElement()
 		{
 			int rowsPerAttribute = Convert.ToInt32(Math.Ceiling(maxValue / Convert.ToSingle(maxDotsPerRow)));
 			int rowAmount = attributes.Count * rowsPerAttribute;
@@ -110,7 +110,7 @@ namespace CofD_Sheet.Sheet_Components
 						UseVisualStyleBackColor = true,
 						Checked = 0 < attribute.currentValue
 					};
-					pip.Click += new EventHandler(valueChanged);
+					pip.Click += new EventHandler(ValueChanged);
 					pip.AutoCheck = false;
 					attribute.pips.Add(pip);
 
@@ -121,11 +121,11 @@ namespace CofD_Sheet.Sheet_Components
 					uiElement.Controls.Add(pip, column, row);
 				}
 			}
-			onValueChanged();
+			OnValueChanged();
 			return uiElement;
 		}
 
-		void valueChanged(object sender, EventArgs e)
+		void ValueChanged(object sender, EventArgs e)
 		{
 			foreach (Attribute attribute in attributes)
 			{
@@ -145,10 +145,10 @@ namespace CofD_Sheet.Sheet_Components
 					}
 				}
 			}
-			onValueChanged();
+			OnValueChanged();
 		}
 
-		void onValueChanged()
+		void OnValueChanged()
 		{
 			foreach (Attribute attribute in attributes)
 			{
@@ -158,7 +158,7 @@ namespace CofD_Sheet.Sheet_Components
 				}
 			}
 
-			onComponentChanged();
+			OnComponentChanged();
 		}
 	}
 }

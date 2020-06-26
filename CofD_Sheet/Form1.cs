@@ -244,7 +244,7 @@ namespace CofD_Sheet
 				int componentRequiredHeight = 0;
 				componentUIElement.Controls.Add(nameLabel, 0, 0);
 				componentRequiredHeight += nameLabel.Size.Height;
-				Control componentValueElement = component.getUIElement();
+				Control componentValueElement = component.GetUIElement();
 				componentUIElement.Controls.Add(componentValueElement, 0, 1);
 				componentRequiredHeight += componentValueElement.Size.Height;
 				componentRequiredHeight += 10;
