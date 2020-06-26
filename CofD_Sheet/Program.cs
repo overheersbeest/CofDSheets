@@ -17,7 +17,7 @@ namespace CofD_Sheet
 				string fileName = args[0];
 				if (File.Exists(fileName))
 				{
-					form.loadSheet(fileName);
+					form.LoadSheet(fileName);
 				}
 			}
 

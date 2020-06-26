@@ -26,14 +26,14 @@ namespace CofD_Sheet
 
 		[XmlAttribute]
 		public string chronicle = "";
-		
+
 		[XmlArray]
 		public List<ISheetComponent> components = new List<ISheetComponent>();
 
 		[XmlIgnore]
 		public bool _changedSinceSave = false;
 		[XmlIgnore]
-		public bool changedSinceSave
+		public bool ChangedSinceSave
 		{
 			get { return this._changedSinceSave; }
 			set
@@ -55,16 +55,16 @@ namespace CofD_Sheet
 			switch (type)
 			{
 				case SheetType.Mortal:
-					components.Add(new AttributesComponent("Mental_Attributes", new List<string>{"Intelligence", "Wits", "Resolve"}, ColumnId.Left));
-					components.Add(new AttributesComponent("Physical_Attributes", new List<string>{"Strength", "Dexterity", "Stamina"}, ColumnId.Middle));
-					components.Add(new AttributesComponent("Social_Attributes", new List<string>{"Presence", "Manipulation", "Composure"}, ColumnId.Right));
+					components.Add(new AttributesComponent("Mental_Attributes", new List<string> { "Intelligence", "Wits", "Resolve" }, ColumnId.Left));
+					components.Add(new AttributesComponent("Physical_Attributes", new List<string> { "Strength", "Dexterity", "Stamina" }, ColumnId.Middle));
+					components.Add(new AttributesComponent("Social_Attributes", new List<string> { "Presence", "Manipulation", "Composure" }, ColumnId.Right));
 
 					components.Add(new SkillsComponent("Mental_Skills", new List<string> { "Academics", "Computer", "Crafts", "Investigation", "Medicine", "Occult", "Politics", "Science" }, ColumnId.Left));
 					components.Add(new SkillsComponent("Physical_Skills", new List<string> { "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry" }, ColumnId.Left));
 					components.Add(new SkillsComponent("Social_Skills", new List<string> { "Animal_Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge" }, ColumnId.Left));
 
 					components.Add(new MeritsComponent("Merits", "merit", true, new List<string>(), 5, ColumnId.Middle));
-					components.Add(new AdvantagesComponent("Advantages", new List<string> {"Virtue", "Vice", "Size", "Speed", "Defense", "Armor", "Initiative Mod"}, ColumnId.Middle));
+					components.Add(new AdvantagesComponent("Advantages", new List<string> { "Virtue", "Vice", "Size", "Speed", "Defense", "Armor", "Initiative Mod" }, ColumnId.Middle));
 					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
 
 					components.Add(new HealthComponent("Health", ColumnId.Right));
@@ -107,9 +107,10 @@ namespace CofD_Sheet
 					components.Add(new SkillsComponent("Mental_Skills", new List<string> { "Academics", "Computer", "Crafts", "Investigation", "Medicine", "Occult", "Politics", "Science" }, ColumnId.Left));
 					components.Add(new SkillsComponent("Physical_Skills", new List<string> { "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry" }, ColumnId.Left));
 					components.Add(new SkillsComponent("Social_Skills", new List<string> { "Animal_Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge" }, ColumnId.Left));
+					components.Add(GetWerewolfFormModSetComponent());
 
 					components.Add(new MeritsComponent("Merits", "merit", true, new List<string>(), 5, ColumnId.Middle));
-					components.Add(new MeritsComponent("Renown", "renown", false, new List<string> { "Cunning", "Glory", "Honor", "Purity", "Wisdom"}, 5, ColumnId.Middle));
+					components.Add(new MeritsComponent("Renown", "renown", false, new List<string> { "Cunning", "Glory", "Honor", "Purity", "Wisdom" }, 5, ColumnId.Middle));
 					components.Add(new AdvantagesComponent("Advantages", new List<string> { "Bone", "Blood", "Size", "Speed", "Defense", "Armor", "Initiative Mod" }, ColumnId.Middle));
 					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
 
@@ -181,6 +182,32 @@ namespace CofD_Sheet
 					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
 					break;
 			}
+		}
+
+		private ModificationSetComponent GetWerewolfFormModSetComponent()
+		{
+			ModificationSetComponent FormsComponent = new ModificationSetComponent("Forms", new List<string> { "Hishu", "Dalu", "Gauru", "Urshul", "Urhan" }, ColumnId.Left);
+            //hishu
+            //default, no modifications made
+
+            //dalu
+            FormsComponent.sets[1].modifications.Add(new ModificationSetComponent.IntModification("Physical_Attributes:Strength", 1, ModificationSetComponent.IntModificationType.Delta));
+            FormsComponent.sets[1].modifications.Add(new ModificationSetComponent.IntModification("Physical_Attributes:Stamina", 1, ModificationSetComponent.IntModificationType.Delta));
+            FormsComponent.sets[1].modifications.Add(new ModificationSetComponent.IntModification("Social_Attributes:Manipulation", -1, ModificationSetComponent.IntModificationType.Delta));
+            FormsComponent.sets[1].modifications.Add(new ModificationSetComponent.IntModification("Advantages:Size", 1, ModificationSetComponent.IntModificationType.Delta));
+            FormsComponent.sets[1].modifications.Add(new ModificationSetComponent.IntModification("Advantages:Speed", 1, ModificationSetComponent.IntModificationType.Delta));
+            FormsComponent.sets[1].modifications.Add(new ModificationSetComponent.IntModification("Advantages:Perception", 1, ModificationSetComponent.IntModificationType.Delta));
+
+            //gauru
+            //FormsComponent.sets[2].modifications.Add(new ModificationSetComponent.IntModification("dexterity", 2, ModificationSetComponent.IntModificationType.Delta));
+
+            //urshul
+            //FormsComponent.sets[3].modifications.Add(new ModificationSetComponent.IntModification("dexterity", 2, ModificationSetComponent.IntModificationType.Delta));
+
+            //urhan
+            //FormsComponent.sets[4].modifications.Add(new ModificationSetComponent.IntModification("dexterity", 2, ModificationSetComponent.IntModificationType.Delta));
+
+            return FormsComponent;
 		}
 	}
 }

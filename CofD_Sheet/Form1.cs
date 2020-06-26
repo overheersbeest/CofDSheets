@@ -14,40 +14,40 @@ namespace CofD_Sheet
 		public Sheet sheet = new Sheet();
 
 		private bool _autoSave = true;
-		public bool autoSave
+		public bool AutoSave
 		{
 			get { return _autoSave; }
 			set
 			{
 				_autoSave = value;
-				if (sheet.changedSinceSave)
+				if (sheet.ChangedSinceSave)
 				{
-					saveAgain();
+					SaveAgain();
 				}
 			}
 		}
 		public bool autoSaveDisabled = false;
 
 		private bool _autoLoad = false;
-		public bool autoLoad
+		public bool AutoLoad
 		{
 			get { return _autoLoad; }
 			set
 			{
 				_autoLoad = value;
-				if (assosiatedFile.Length != 0)
+				if (AssosiatedFile.Length != 0)
 				{
 					watcher.EnableRaisingEvents = value;
-					int slashIndex = assosiatedFile.LastIndexOf('\\');
-					string dir = assosiatedFile.Substring(0, slashIndex);
-					string name  = assosiatedFile.Substring(slashIndex + 1, assosiatedFile.Length - slashIndex - 1);
-					loadAgain(this, new FileSystemEventArgs(WatcherChangeTypes.Changed, dir, name));
+					int slashIndex = AssosiatedFile.LastIndexOf('\\');
+					string dir = AssosiatedFile.Substring(0, slashIndex);
+					string name  = AssosiatedFile.Substring(slashIndex + 1, AssosiatedFile.Length - slashIndex - 1);
+					LoadAgain(this, new FileSystemEventArgs(WatcherChangeTypes.Changed, dir, name));
 				}
 			}
 		}
 
 		private string _assosiatedFile = "";
-		public string assosiatedFile
+		public string AssosiatedFile
 		{
 			get { return _assosiatedFile; }
 			set
@@ -55,7 +55,7 @@ namespace CofD_Sheet
 				_assosiatedFile = value;
 				if (value.Length > 0)
 				{
-					watcher.EnableRaisingEvents = autoLoad;
+					watcher.EnableRaisingEvents = AutoLoad;
 				}
 			}
 		}
@@ -80,12 +80,12 @@ namespace CofD_Sheet
 			}
 			
 			watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
-			watcher.Changed += new FileSystemEventHandler(loadAgain);
-			autoSaveToolStripMenuItem.Checked = autoSave;
-			autoLoadToolStripMenuItem.Checked = autoLoad;
+			watcher.Changed += new FileSystemEventHandler(LoadAgain);
+			autoSaveToolStripMenuItem.Checked = AutoSave;
+			autoLoadToolStripMenuItem.Checked = AutoLoad;
 		}
 
-		private void loadToolStripMenuItem_Click(object sender, EventArgs e)
+		private void LoadToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			OpenFileDialog openFileDialog1 = new OpenFileDialog
 			{
@@ -98,14 +98,14 @@ namespace CofD_Sheet
 			{
 				string path = openFileDialog1.FileName;
 				watcher.Path = path.Substring(0, path.LastIndexOf('\\'));
-				loadSheet(path);
-				sheet.changedSinceSave = false;
+				LoadSheet(path);
+				sheet.ChangedSinceSave = false;
 			}
 
 			autoSaveDisabled = false;
 		}
 
-		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+		private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			SaveFileDialog saveFileDialog1 = new SaveFileDialog
 			{
@@ -118,31 +118,31 @@ namespace CofD_Sheet
 			{
 				string path = saveFileDialog1.FileName;
 				watcher.Path = path.Substring(0, path.LastIndexOf('\\'));
-				saveSheet(path);
-				sheet.changedSinceSave = false;
+				SaveSheet(path);
+				sheet.ChangedSinceSave = false;
 			}
 		}
 
-		public void saveAgain()
+		public void SaveAgain()
 		{
-			if (assosiatedFile.Length > 0)
+			if (AssosiatedFile.Length > 0)
 			{
 				watcher.EnableRaisingEvents = false;
-				saveSheet(assosiatedFile);
-				sheet.changedSinceSave = false;
+				SaveSheet(AssosiatedFile);
+				sheet.ChangedSinceSave = false;
 			}
 		}
 
-		public void loadAgain(object sender, FileSystemEventArgs e)
+		public void LoadAgain(object sender, FileSystemEventArgs e)
 		{
-			if (e.FullPath == assosiatedFile)
+			if (e.FullPath == AssosiatedFile)
 			{
 				try
 				{
 					bool fileRead = false;
 					while (!fileRead)
 					{
-						fileRead = loadSheet(assosiatedFile);
+						fileRead = LoadSheet(AssosiatedFile);
 					}
 				}
 				catch (Exception ex)
@@ -152,7 +152,7 @@ namespace CofD_Sheet
 			}
 		}
 
-		public bool saveSheet(string path)
+		public bool SaveSheet(string path)
 		{
 			try
 			{
@@ -160,7 +160,7 @@ namespace CofD_Sheet
 				TextWriter writer = new StreamWriter(path);
 				serializer.Serialize(writer, sheet);
 				writer.Close();
-				assosiatedFile = path;
+				AssosiatedFile = path;
 				return true;
 			}
 			catch (Exception e)
@@ -170,7 +170,7 @@ namespace CofD_Sheet
 			}
 		}
 
-		public bool loadSheet(string path)
+		public bool LoadSheet(string path)
 		{
 			try
 			{
@@ -178,8 +178,8 @@ namespace CofD_Sheet
 				StreamReader reader = new StreamReader(path);
 				sheet = (Sheet)serializer.Deserialize(reader);
 				reader.Close();
-				assosiatedFile = path;
-				refreshSheet();
+				AssosiatedFile = path;
+				RefreshSheet();
 				return true;
 			}
 			catch (Exception e)
@@ -191,11 +191,11 @@ namespace CofD_Sheet
 		
 		public delegate void refreshSheetCallback();
 
-		public void refreshSheet()
+		public void RefreshSheet()
 		{
 			if (PlayerTextBox.InvokeRequired)
 			{
-				refreshSheetCallback d = new refreshSheetCallback(refreshSheet);
+				refreshSheetCallback d = new refreshSheetCallback(RefreshSheet);
 				this.Invoke(d, new object[] { });
 				return;
 			}
@@ -291,25 +291,25 @@ namespace CofD_Sheet
 				this.Text = "CofD Sheet - " + sheet.name;
 			}
 
-			if (sheet.changedSinceSave)
+			if (sheet.ChangedSinceSave)
 			{
 				this.Text += "*";
 			}
 		}
 
-		public static void resizeComponentColumn(Control component)
+		public static void ResizeComponentColumn(Control component)
 		{
 			TableLayoutPanel cell = component.Parent as TableLayoutPanel;
 			if (cell != null)
 			{
 				cell.Size = new Size(cell.Size.Width, component.Size.Height);
-				Form1.resizeTableHeight(ref cell);
+				Form1.ResizeTableHeight(ref cell);
 				TableLayoutPanel column = cell.Parent as TableLayoutPanel;
-				Form1.resizeTableHeight(ref column);
+				Form1.ResizeTableHeight(ref column);
 			}
 		}
 
-		private static void resizeTableHeight(ref TableLayoutPanel table)
+		private static void ResizeTableHeight(ref TableLayoutPanel table)
 		{
 			int height = 0;
 			table.RowStyles.Clear();
@@ -342,25 +342,25 @@ namespace CofD_Sheet
 
 		private void NewSheetButtonClicked(object sender, EventArgs e)
 		{
-			assosiatedFile = "";
+			AssosiatedFile = "";
 			sheet = new Sheet((SheetType)Enum.Parse(typeof(SheetType), sender.ToString()));
-			refreshSheet();
+			RefreshSheet();
 		}
 
-		private void autoSaveToolStripMenuItem_Click(object sender, EventArgs e)
+		private void AutoSaveToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			autoSaveToolStripMenuItem.Checked = !autoSaveToolStripMenuItem.Checked;
-			autoSave = autoSaveToolStripMenuItem.Checked;
+			AutoSave = autoSaveToolStripMenuItem.Checked;
 		}
 
-		private void autoLoadToolStripMenuItem_Click(object sender, EventArgs e)
+		private void AutoLoadToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			autoLoadToolStripMenuItem.Checked = !autoLoadToolStripMenuItem.Checked;
-			autoLoad = autoLoadToolStripMenuItem.Checked;
+			AutoLoad = autoLoadToolStripMenuItem.Checked;
 			if (watcher.Path.Length > 0)
 			{
-				watcher.EnableRaisingEvents = autoLoad;
+				watcher.EnableRaisingEvents = AutoLoad;
 			}
 		}
-	}
+    }
 }

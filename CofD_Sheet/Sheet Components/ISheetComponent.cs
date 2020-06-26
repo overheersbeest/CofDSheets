@@ -21,7 +21,8 @@ namespace CofD_Sheet.Sheet_Components
 	[XmlInclude(typeof(ExperienceComponent))]
 	[XmlInclude(typeof(HealthComponent))]
 	[XmlInclude(typeof(MeritsComponent))]
-	[XmlInclude(typeof(ResourceComponent))]
+    [XmlInclude(typeof(ModificationSetComponent))]
+    [XmlInclude(typeof(ResourceComponent))]
 	[XmlInclude(typeof(SkillsComponent))]
 	[XmlInclude(typeof(StatComponent))]
 	public abstract class ISheetComponent
@@ -48,21 +49,21 @@ namespace CofD_Sheet.Sheet_Components
 		
 		protected void ResizeParentColumn()
 		{
-			Form1.resizeComponentColumn(uiElement);
+			Form1.ResizeComponentColumn(uiElement);
 		}
 
 		protected void OnComponentChanged()
 		{
-			if (Form1.instance.autoSave)
+			if (Form1.instance.AutoSave)
 			{
-				if (Form1.instance.assosiatedFile.Length != 0)
+				if (Form1.instance.AssosiatedFile.Length != 0)
 				{
-					Form1.instance.saveAgain();
+					Form1.instance.SaveAgain();
 				}
 			}
 			else
 			{
-				Form1.instance.sheet.changedSinceSave = true;
+				Form1.instance.sheet.ChangedSinceSave = true;
 			}
 		}
 	}
