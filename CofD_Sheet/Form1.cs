@@ -1,5 +1,6 @@
 ﻿using CofD_Sheet.Sheet_Components;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -40,7 +41,7 @@ namespace CofD_Sheet
 					watcher.EnableRaisingEvents = value;
 					int slashIndex = AssosiatedFile.LastIndexOf('\\');
 					string dir = AssosiatedFile.Substring(0, slashIndex);
-					string name  = AssosiatedFile.Substring(slashIndex + 1, AssosiatedFile.Length - slashIndex - 1);
+					string name = AssosiatedFile.Substring(slashIndex + 1, AssosiatedFile.Length - slashIndex - 1);
 					LoadAgain(this, new FileSystemEventArgs(WatcherChangeTypes.Changed, dir, name));
 				}
 			}
@@ -78,7 +79,7 @@ namespace CofD_Sheet
 				newButton.Click += new System.EventHandler(this.NewSheetButtonClicked);
 				this.newToolStripMenuItem.DropDownItems.Add(newButton);
 			}
-			
+
 			watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
 			watcher.Changed += new FileSystemEventHandler(LoadAgain);
 			autoSaveToolStripMenuItem.Checked = AutoSave;
@@ -188,11 +189,12 @@ namespace CofD_Sheet
 				return false;
 			}
 		}
-		
+
 		public delegate void refreshSheetCallback();
 
 		public void RefreshSheet()
 		{
+			//in case we're being called from another thread
 			if (PlayerTextBox.InvokeRequired)
 			{
 				refreshSheetCallback d = new refreshSheetCallback(RefreshSheet);
@@ -244,7 +246,7 @@ namespace CofD_Sheet
 				int componentRequiredHeight = 0;
 				componentUIElement.Controls.Add(nameLabel, 0, 0);
 				componentRequiredHeight += nameLabel.Size.Height;
-				Control componentValueElement = component.GetUIElement();
+				Control componentValueElement = component.ConstructUIElement();
 				componentUIElement.Controls.Add(componentValueElement, 0, 1);
 				componentRequiredHeight += componentValueElement.Size.Height;
 				componentRequiredHeight += 10;
@@ -267,10 +269,28 @@ namespace CofD_Sheet
 				}
 			}
 
+			//all components refreshed, now apply modification sets
+			List<ModificationSetComponent> modSetComponents = new List<ModificationSetComponent>();
+			foreach (ISheetComponent component in sheet.components)
+			{
+				if (component is ModificationSetComponent modComponent)
+				{
+					modSetComponents.Add(modComponent);
+				}
+				else
+				{
+					component.ResetModifications();
+				}
+			}
+			foreach (ModificationSetComponent modSetComponent in modSetComponents)
+			{
+				modSetComponent.sets[modSetComponent.ActiveIndex].Apply();
+			}
+
 			LeftComponentTable.RowCount = amountOfRows;
 			MiddleComponentTable.RowCount = amountOfRows;
 			RightComponentTable.RowCount = amountOfRows;
-			
+
 			autoSaveDisabled = false;
 		}
 
@@ -362,5 +382,5 @@ namespace CofD_Sheet
 				watcher.EnableRaisingEvents = AutoLoad;
 			}
 		}
-    }
+	}
 }

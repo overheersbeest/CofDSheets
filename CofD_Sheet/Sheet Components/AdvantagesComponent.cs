@@ -30,7 +30,7 @@ namespace CofD_Sheet.Sheet_Components
 			[XmlAttribute]
 			public string value = "";
 		}
-		
+
 		[XmlArray]
 		public List<Advantage> advantages = new List<Advantage>();
 
@@ -48,7 +48,7 @@ namespace CofD_Sheet.Sheet_Components
 			}
 		}
 
-		override public Control GetUIElement()
+		override public Control ConstructUIElement()
 		{
 			uiElement.RowCount = advantages.Count;
 			uiElement.ColumnCount = 1;
@@ -90,7 +90,7 @@ namespace CofD_Sheet.Sheet_Components
 				textBoxes.Add(textBox);
 				advantageElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
 				advantageElement.Controls.Add(textBox, 1, 0);
-				
+
 				uiElement.Controls.Add(advantageElement, 0, a);
 			}
 			OnValueChanged();

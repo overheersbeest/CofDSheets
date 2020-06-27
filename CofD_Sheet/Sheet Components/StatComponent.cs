@@ -46,7 +46,7 @@ namespace CofD_Sheet.Sheet_Components
 			uiElement.ContextMenuStrip = contextMenu;
 		}
 
-		override public Control GetUIElement()
+		override public Control ConstructUIElement()
 		{
 			OnMaxValueChanged();
 
@@ -59,22 +59,22 @@ namespace CofD_Sheet.Sheet_Components
 			TableLayoutPanel uiElement = owner.SourceControl as TableLayoutPanel;
 
 			Form prompt = new Form
-            {
-                StartPosition = FormStartPosition.CenterParent,
-                Width = 325,
+			{
+				StartPosition = FormStartPosition.CenterParent,
+				Width = 325,
 				Height = 100,
 				Text = "Change maximum value"
 			};
 			NumericUpDown inputBox = new NumericUpDown() { Left = 5, Top = 5, Width = 300 };
 			inputBox.Value = maxValue;
-            inputBox.TabIndex = 0;
-            inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { prompt.Close(); } };
-            Button confirmation = new Button() { Text = "Confirm", Left = 205, Width = 100, Top = 30 };
+			inputBox.TabIndex = 0;
+			inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { prompt.Close(); } };
+			Button confirmation = new Button() { Text = "Confirm", Left = 205, Width = 100, Top = 30 };
 			confirmation.TabIndex = 1;
-            confirmation.Click += (sender2, e2) => { prompt.Close(); };
+			confirmation.Click += (sender2, e2) => { prompt.Close(); };
 			Button cancel = new Button() { Text = "Cancel", Left = 100, Width = 100, Top = 30 };
 			cancel.TabIndex = 2;
-            cancel.Click += (sender2, e2) => { inputBox.Value = maxValue; prompt.Close(); };
+			cancel.Click += (sender2, e2) => { inputBox.Value = maxValue; prompt.Close(); };
 			prompt.Controls.Add(inputBox);
 			prompt.Controls.Add(confirmation);
 			prompt.Controls.Add(cancel);

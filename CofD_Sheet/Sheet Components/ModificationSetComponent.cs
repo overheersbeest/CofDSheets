@@ -7,129 +7,155 @@ using System.Xml.Serialization;
 
 namespace CofD_Sheet.Sheet_Components
 {
-    [Serializable]
-    public class ModificationSetComponent : ISheetComponent
-    {
-        [XmlInclude(typeof(IntModification))]
-        [XmlInclude(typeof(StringModification))]
-        public class Modification
-        {
-            public Modification()
-            { }
-            public Modification(string _path)
-            {
-                this.path = _path;
-            }
+	[Serializable]
+	public class ModificationSetComponent : ISheetComponent
+	{
+		[XmlInclude(typeof(IntModification))]
+		[XmlInclude(typeof(StringModification))]
+		public class Modification
+		{
+			public Modification()
+			{ }
+			public Modification(List<string> _path)
+			{
+				this.path = _path;
+			}
 
-            [XmlAttribute]
-            public string path = "InvalidPath";
-        }
+			[XmlArray]
+			public List<string> path = new List<string>();
+		}
 
-        public enum IntModificationType
-        {
-            [XmlEnum(Name = "Absolute")]
-            Absolute,
-            [XmlEnum(Name = "Delta")]
-            Delta
-        }
+		public enum IntModificationType
+		{
+			[XmlEnum(Name = "Absolute")]
+			Absolute,
+			[XmlEnum(Name = "Delta")]
+			Delta
+		}
 
-        public class IntModification : Modification
-        {
-            public IntModification()
-            { }
-            public IntModification(string _path, int _value, IntModificationType _modType) : base(_path)
-            {
-                this.value = _value;
-                this.modType = _modType;
-            }
+		public class IntModification : Modification
+		{
+			public IntModification()
+			{ }
+			public IntModification(List<string> _path, int _value, IntModificationType _modType) : base(_path)
+			{
+				this.value = _value;
+				this.modType = _modType;
+			}
 
-            [XmlAttribute]
-            public IntModificationType modType = IntModificationType.Absolute;
+			[XmlAttribute]
+			public IntModificationType modType = IntModificationType.Absolute;
 
-            [XmlAttribute]
-            public int value = 0;
-        }
+			[XmlAttribute]
+			public bool canExceedLimit = true;
 
-        public class StringModification : Modification
-        {
-            public StringModification() : base()
-            { }
-            public StringModification(string _path, string _value) : base(_path)
-            {
-                this.value = _value;
-            }
+			[XmlAttribute]
+			public int value = 0;
+		}
 
-            [XmlAttribute]
-            public string value = "";
-        }
+		public class StringModification : Modification
+		{
+			public StringModification() : base()
+			{ }
+			public StringModification(List<string> _path, string _value) : base(_path)
+			{
+				this.value = _value;
+			}
 
-        public class ModificationSet
-        {
-            public ModificationSet()
-            { }
-            public ModificationSet(string _name)
-            {
-                this.name = _name;
-            }
-            public ModificationSet(string _name, List<Modification> _modifications)
-            {
-                this.name = _name;
-                this.modifications = _modifications;
-            }
+			[XmlAttribute]
+			public string value = "";
+		}
 
-            [XmlAttribute]
-            public string name = "ModificationSet";
+		public class ModificationSet
+		{
+			public ModificationSet()
+			{ }
+			public ModificationSet(string _name)
+			{
+				this.name = _name;
+			}
+			public ModificationSet(string _name, List<Modification> _modifications)
+			{
+				this.name = _name;
+				this.modifications = _modifications;
+			}
 
-            [XmlArray]
-            public List<Modification> modifications = new List<Modification>();
-        }
+			public void Apply(bool inverse = false)
+			{
+				Sheet sheet = Form1.instance.sheet;
+				foreach (Modification modification in modifications)
+				{
+					if (modification.path.Count > 0)
+					{
+						string targetComponentName = modification.path[0];
+						foreach (ISheetComponent component in sheet.components)
+						{
+							if (component.name == targetComponentName)
+							{
+								component.ApplyModification(modification, inverse);
+								break;
+							}
+						}
+					}
+				}
+			}
 
-        [XmlArray]
-        public List<ModificationSet> sets = new List<ModificationSet>();
+			[XmlAttribute]
+			public string name = "ModificationSet";
 
-        [XmlAttribute]
-        public int ActiveIndex = 0;
+			[XmlArray]
+			public List<Modification> modifications = new List<Modification>();
+		}
 
-        [XmlIgnore]
-        ComboBox comboBox = new ComboBox() { Left = 5, Top = 5, Width = 300 };
+		[XmlArray]
+		public List<ModificationSet> sets = new List<ModificationSet>();
 
-        public ModificationSetComponent() : base("ModificationSetComponent", ColumnId.Undefined)
-        { }
+		[XmlAttribute]
+		public int ActiveIndex = 0;
 
-        public ModificationSetComponent(string componentName, List<string> ModificationSetNames, ColumnId _column) : base(componentName, _column)
-        {
-            foreach (string advantageName in ModificationSetNames)
-            {
-                sets.Add(new ModificationSet(advantageName));
-            }
-        }
+		[XmlIgnore]
+		readonly ComboBox selectionComboBox = new ComboBox() { Left = 5, Top = 5, Width = 300 };
 
-        override public Control GetUIElement()
-        {
-            uiElement.RowCount = sets.Count;
-            uiElement.ColumnCount = 1;
-            uiElement.Dock = DockStyle.Fill;
-            uiElement.Size = new Size(componentWidth, 30 * sets.Count);
-            uiElement.TabIndex = 0;
-            comboBox.Items.Clear();
+		public ModificationSetComponent() : base("ModificationSetComponent", ColumnId.Undefined)
+		{ }
 
-            uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+		public ModificationSetComponent(string componentName, List<string> ModificationSetNames, ColumnId _column) : base(componentName, _column)
+		{
+			foreach (string advantageName in ModificationSetNames)
+			{
+				sets.Add(new ModificationSet(advantageName));
+			}
+		}
 
-            foreach (ModificationSet set in sets)
-            {
-                comboBox.Items.Add(set.name);
-            }
-            uiElement.Controls.Add(comboBox, 0, 0);
+		override public Control ConstructUIElement()
+		{
+			uiElement.RowCount = sets.Count;
+			uiElement.ColumnCount = 1;
+			uiElement.Dock = DockStyle.Fill;
+			uiElement.Size = new Size(componentWidth, 30 * sets.Count);
+			uiElement.TabIndex = 0;
+			selectionComboBox.Items.Clear();
 
-            OnValueChanged();
-            return uiElement;
-        }
+			uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
 
-        void OnValueChanged(object sender = null, EventArgs e = null)
-        {
-            comboBox.SelectedIndex = ActiveIndex;
+			foreach (ModificationSet set in sets)
+			{
+				selectionComboBox.Items.Add(set.name);
+			}
+			selectionComboBox.SelectedIndexChanged += OnValueChanged;
+			uiElement.Controls.Add(selectionComboBox, 0, 0);
 
-            OnComponentChanged();
-        }
-    }
+			OnValueChanged();
+			return uiElement;
+		}
+
+		void OnValueChanged(object sender = null, EventArgs e = null)
+		{
+			sets[ActiveIndex].Apply(true);
+			ActiveIndex = selectionComboBox.SelectedIndex;
+			sets[ActiveIndex].Apply();
+
+			OnComponentChanged();
+		}
+	}
 }

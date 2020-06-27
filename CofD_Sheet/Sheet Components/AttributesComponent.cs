@@ -21,16 +21,33 @@ namespace CofD_Sheet.Sheet_Components
 			public Attribute(string _name, int _value)
 			{
 				this.name = _name;
-				this.currentValue = _value;
+				this.CurrentValue = _value;
 			}
 
 			[XmlAttribute]
 			public string name = "Attribute";
 
-			[XmlAttribute]
-			public int currentValue = 1;
+            [XmlIgnore]
+            private int _currentValue = 1;
 
-			[XmlIgnore]
+            [XmlAttribute]
+			public int CurrentValue
+            {
+                get { return _assosiatedFile; }
+                set
+                {
+                    _assosiatedFile = value;
+                    if (value.Length > 0)
+                    {
+                        watcher.EnableRaisingEvents = AutoLoad;
+                    }
+                }
+            }
+
+            [XmlIgnore]
+            public int modifiedValue = 1;
+
+            [XmlIgnore]
 			public List<RadioButton> pips = new List<RadioButton>();
 		}
 
@@ -57,7 +74,7 @@ namespace CofD_Sheet.Sheet_Components
 			}
 		}
 		
-		override public Control GetUIElement()
+		override public Control ConstructUIElement()
 		{
 			int rowsPerAttribute = Convert.ToInt32(Math.Ceiling(maxValue / Convert.ToSingle(maxDotsPerRow)));
 			int rowAmount = attributes.Count * rowsPerAttribute;
@@ -108,7 +125,7 @@ namespace CofD_Sheet.Sheet_Components
 						Size = new System.Drawing.Size(20, 20),
 						TabIndex = 0,
 						UseVisualStyleBackColor = true,
-						Checked = 0 < attribute.currentValue
+						Checked = 0 < attribute.CurrentValue
 					};
 					pip.Click += new EventHandler(ValueChanged);
 					pip.AutoCheck = false;
@@ -133,14 +150,14 @@ namespace CofD_Sheet.Sheet_Components
 				{
 					if (sender == attribute.pips[i])
 					{
-						if (attribute.currentValue == i + 1)
+						if (attribute.CurrentValue == i + 1)
 						{
 							//when clicking the last pip, reduce value by 1
-							attribute.currentValue = i;
+							attribute.CurrentValue = i;
 						}
 						else
 						{
-							attribute.currentValue = i + 1;
+							attribute.CurrentValue = i + 1;
 						}
 					}
 				}
@@ -154,11 +171,16 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				for (int i = 0; i < attribute.pips.Count; i++)
 				{
-					attribute.pips[i].Checked = i < attribute.currentValue;
+					attribute.pips[i].Checked = i < attribute.CurrentValue;
 				}
 			}
 
 			OnComponentChanged();
 		}
-	}
+
+		override public void ApplyModification(ModificationSetComponent.Modification mod, bool inverse)
+        {
+
+        }
+    }
 }

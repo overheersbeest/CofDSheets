@@ -31,7 +31,7 @@ namespace CofD_Sheet.Sheet_Components
 
 			[XmlAttribute]
 			public int currentValue = 0;
-			
+
 			[XmlIgnore]
 			public List<RadioButton> pips = new List<RadioButton>();
 		}
@@ -44,7 +44,7 @@ namespace CofD_Sheet.Sheet_Components
 
 		[XmlAttribute]
 		public int maxValue = 5;
-		
+
 		[XmlAttribute]
 		public string singularName = "merit";
 
@@ -68,10 +68,10 @@ namespace CofD_Sheet.Sheet_Components
 			}
 		}
 
-		override public Control GetUIElement()
+		override public Control ConstructUIElement()
 		{
 			int columnAmount = 1 + Math.Min(maxValue, maxDotsPerRow);
-			
+
 			uiElement.ColumnCount = columnAmount;
 			uiElement.Dock = DockStyle.Fill;
 			uiElement.TabIndex = 0;
@@ -113,14 +113,14 @@ namespace CofD_Sheet.Sheet_Components
 			inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { prompt.Close(); } };
 			Button confirmation = new Button() { Text = "Add", Left = 205, Width = 100, Top = 30 };
 			confirmation.TabIndex = 1;
-            confirmation.Click += (sender2, e2) => { prompt.Close(); };
+			confirmation.Click += (sender2, e2) => { prompt.Close(); };
 			prompt.Controls.Add(confirmation);
 			prompt.Controls.Add(inputBox);
 			prompt.ShowDialog();
-			
+
 			string newMerit = inputBox.Text;
 			merits.Add(new Merit(newMerit));
-			
+
 			OnMeritsChanged();
 		}
 
@@ -134,14 +134,14 @@ namespace CofD_Sheet.Sheet_Components
 				return;
 			}
 			Form prompt = new Form
-            {
-                StartPosition = FormStartPosition.CenterParent,
-                Width = 325,
+			{
+				StartPosition = FormStartPosition.CenterParent,
+				Width = 325,
 				Height = 100,
 				Text = "Remove " + singularName
 			};
 			Label question = new Label() { Left = 5, Top = 5, Width = 300 };
-			question.Text = "Are you sure you want to remove the \"" + merit.name +"\" " + singularName + "?";
+			question.Text = "Are you sure you want to remove the \"" + merit.name + "\" " + singularName + "?";
 			Button confirmation = new Button() { Text = "Yes", Left = 205, Width = 100, Top = 30 };
 			confirmation.Click += (sender2, e2) => { merits.Remove(merit); prompt.Close(); };
 			Button cancel = new Button() { Text = "No", Left = 100, Width = 100, Top = 30 };

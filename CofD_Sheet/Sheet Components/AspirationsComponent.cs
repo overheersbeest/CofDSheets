@@ -28,7 +28,7 @@ namespace CofD_Sheet.Sheet_Components
 			aspirations = new List<string>(new string[maxAspirations]);
 		}
 
-		override public Control GetUIElement()
+		override public Control ConstructUIElement()
 		{
 			uiElement.RowCount = maxAspirations;
 			uiElement.ColumnCount = 1;

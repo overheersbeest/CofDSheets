@@ -21,8 +21,8 @@ namespace CofD_Sheet.Sheet_Components
 	[XmlInclude(typeof(ExperienceComponent))]
 	[XmlInclude(typeof(HealthComponent))]
 	[XmlInclude(typeof(MeritsComponent))]
-    [XmlInclude(typeof(ModificationSetComponent))]
-    [XmlInclude(typeof(ResourceComponent))]
+	[XmlInclude(typeof(ModificationSetComponent))]
+	[XmlInclude(typeof(ResourceComponent))]
 	[XmlInclude(typeof(SkillsComponent))]
 	[XmlInclude(typeof(StatComponent))]
 	public abstract class ISheetComponent
@@ -45,8 +45,8 @@ namespace CofD_Sheet.Sheet_Components
 			column = _column;
 		}
 
-		abstract public Control GetUIElement();
-		
+		abstract public Control ConstructUIElement();
+
 		protected void ResizeParentColumn()
 		{
 			Form1.ResizeComponentColumn(uiElement);
@@ -65,6 +65,16 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				Form1.instance.sheet.ChangedSinceSave = true;
 			}
+		}
+
+		virtual public void ApplyModification(ModificationSetComponent.Modification mod, bool inverse)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		virtual public void ResetModifications()
+		{
+			//do nothing
 		}
 	}
 }

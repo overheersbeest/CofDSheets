@@ -13,7 +13,7 @@ namespace CofD_Sheet.Sheet_Components
 		public class Skill
 		{
 			public Skill()
-			{}
+			{ }
 			public Skill(string _name)
 			{
 				this.name = _name;
@@ -23,7 +23,7 @@ namespace CofD_Sheet.Sheet_Components
 				this.name = _name;
 				this.currentValue = _value;
 			}
-			
+
 			[XmlAttribute]
 			public string name = "Skill";
 
@@ -59,13 +59,13 @@ namespace CofD_Sheet.Sheet_Components
 				skills.Add(new Skill(skillNames[i]));
 			}
 		}
-		
-		override public Control GetUIElement()
+
+		override public Control ConstructUIElement()
 		{
 			int rowsPerSkill = Convert.ToInt32(Math.Ceiling(maxValue / Convert.ToSingle(maxDotsPerRow)));
 			int rowAmount = skills.Count * rowsPerSkill;
 			int columnAmount = 1 + Math.Min(maxValue, maxDotsPerRow);
-			
+
 			uiElement.RowCount = rowAmount;
 			uiElement.ColumnCount = columnAmount;
 			uiElement.Dock = DockStyle.Fill;
@@ -139,18 +139,18 @@ namespace CofD_Sheet.Sheet_Components
 				return;
 			}
 			Form prompt = new Form
-            {
-                StartPosition = FormStartPosition.CenterParent,
-                Width = 325,
+			{
+				StartPosition = FormStartPosition.CenterParent,
+				Width = 325,
 				Height = 100,
 				Text = "Add Specialty"
 			};
 			TextBox inputBox = new TextBox() { Left = 5, Top = 5, Width = 300 };
-            inputBox.TabIndex = 0;
-            inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { prompt.Close(); } };
-            Button confirmation = new Button() { Text = "Add", Left = 205, Width = 100, Top = 30 };
+			inputBox.TabIndex = 0;
+			inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { prompt.Close(); } };
+			Button confirmation = new Button() { Text = "Add", Left = 205, Width = 100, Top = 30 };
 			confirmation.TabIndex = 1;
-            confirmation.Click += (sender2, e2) => { prompt.Close(); };
+			confirmation.Click += (sender2, e2) => { prompt.Close(); };
 			prompt.Controls.Add(confirmation);
 			prompt.Controls.Add(inputBox);
 			prompt.ShowDialog();
@@ -174,9 +174,9 @@ namespace CofD_Sheet.Sheet_Components
 				return;
 			}
 			Form prompt = new Form
-            {
-                StartPosition = FormStartPosition.CenterParent,
-                Width = 325,
+			{
+				StartPosition = FormStartPosition.CenterParent,
+				Width = 325,
 				Height = 100,
 				Text = "Remove Specialty"
 			};
@@ -184,12 +184,12 @@ namespace CofD_Sheet.Sheet_Components
 			foreach (string specialty in skill.specialties)
 			{
 				inputBox.Items.Add(specialty);
-            }
-            inputBox.TabIndex = 0;
-            inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { prompt.Close(); } };
-            Button confirmation = new Button() { Text = "Remove", Left = 205, Width = 100, Top = 30 };
+			}
+			inputBox.TabIndex = 0;
+			inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { prompt.Close(); } };
+			Button confirmation = new Button() { Text = "Remove", Left = 205, Width = 100, Top = 30 };
 			confirmation.TabIndex = 1;
-            confirmation.Click += (sender2, e2) => { prompt.Close(); };
+			confirmation.Click += (sender2, e2) => { prompt.Close(); };
 			prompt.Controls.Add(confirmation);
 			prompt.Controls.Add(inputBox);
 			prompt.ShowDialog();

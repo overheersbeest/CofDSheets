@@ -33,7 +33,7 @@ namespace CofD_Sheet.Sheet_Components
 
 		[XmlIgnore]
 		TextBox experienceCounter = null;
-		
+
 		public ExperienceComponent() : base("ExperienceComponent", ColumnId.Undefined)
 		{ }
 
@@ -41,14 +41,14 @@ namespace CofD_Sheet.Sheet_Components
 		{
 			beatName = minorName;
 		}
-		
-		override public Control GetUIElement()
+
+		override public Control ConstructUIElement()
 		{
 			int rowAmount = Convert.ToInt32(Math.Ceiling(maxBeats / Convert.ToSingle(maxPerRow)));
 			int checkBoxRows = Math.Min(maxBeats, maxPerRow);
 			int columnSeparatorCount = (checkBoxRows - 1) / 5;
 			int columnAmount = checkBoxRows + columnSeparatorCount;
-			
+
 			uiElement.RowCount = 1;
 			uiElement.ColumnCount = 2;
 			uiElement.Dock = DockStyle.Fill;
@@ -111,11 +111,11 @@ namespace CofD_Sheet.Sheet_Components
 			};
 			experienceCounter.TextChanged += OnValueChanged;
 			uiElement.Controls.Add(experienceCounter, 1, 0);
-			
+
 			OnValueChanged();
 			return uiElement;
 		}
-		
+
 		void OnValueChanged(object sender = null, EventArgs e = null)
 		{
 			bool emptyText = experienceCounter.Text.Length == 0;
