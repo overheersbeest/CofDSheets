@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Modifyables\ModifiableInt.cs" />
     <Compile Include="Sheet Components\AdvantagesComponent.cs" />
     <Compile Include="Sheet Components\AspirationsComponent.cs" />
     <Compile Include="Sheet Components\AttributesComponent.cs" />

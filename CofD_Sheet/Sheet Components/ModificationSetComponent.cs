@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CofD_Sheet.Modifyables;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -25,14 +26,6 @@ namespace CofD_Sheet.Sheet_Components
 			public List<string> path = new List<string>();
 		}
 
-		public enum IntModificationType
-		{
-			[XmlEnum(Name = "Absolute")]
-			Absolute,
-			[XmlEnum(Name = "Delta")]
-			Delta
-		}
-
 		public class IntModification : Modification
 		{
 			public IntModification()
@@ -44,7 +37,7 @@ namespace CofD_Sheet.Sheet_Components
 			}
 
 			[XmlAttribute]
-			public IntModificationType modType = IntModificationType.Absolute;
+			public IntModificationType modType = IntModificationType.Delta;
 
 			[XmlAttribute]
 			public bool canExceedLimit = true;
@@ -80,7 +73,7 @@ namespace CofD_Sheet.Sheet_Components
 				this.modifications = _modifications;
 			}
 
-			public void Apply(bool inverse = false)
+			public void Apply()
 			{
 				Sheet sheet = Form1.instance.sheet;
 				foreach (Modification modification in modifications)
@@ -92,7 +85,7 @@ namespace CofD_Sheet.Sheet_Components
 						{
 							if (component.name == targetComponentName)
 							{
-								component.ApplyModification(modification, inverse);
+								component.ApplyModification(modification);
 								break;
 							}
 						}
@@ -142,6 +135,7 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				selectionComboBox.Items.Add(set.name);
 			}
+			selectionComboBox.SelectedIndex = ActiveIndex;
 			selectionComboBox.SelectedIndexChanged += OnValueChanged;
 			uiElement.Controls.Add(selectionComboBox, 0, 0);
 
@@ -151,11 +145,16 @@ namespace CofD_Sheet.Sheet_Components
 
 		void OnValueChanged(object sender = null, EventArgs e = null)
 		{
-			sets[ActiveIndex].Apply(true);
+			Form1.instance.sheet.ResetModifications();
 			ActiveIndex = selectionComboBox.SelectedIndex;
 			sets[ActiveIndex].Apply();
 
 			OnComponentChanged();
+		}
+
+		override public void ApplyModification(Modification mod)
+		{
+			throw new Exception("trying to modify a modification component");
 		}
 	}
 }

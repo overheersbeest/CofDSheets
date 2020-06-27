@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CofD_Sheet.Modifyables;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -21,33 +22,16 @@ namespace CofD_Sheet.Sheet_Components
 			public Attribute(string _name, int _value)
 			{
 				this.name = _name;
-				this.CurrentValue = _value;
+				this.Value.CurrentValue = _value;
 			}
 
 			[XmlAttribute]
 			public string name = "Attribute";
 
-            [XmlIgnore]
-            private int _currentValue = 1;
+			[XmlElement]
+			public ModifiableInt Value = new ModifiableInt();
 
-            [XmlAttribute]
-			public int CurrentValue
-            {
-                get { return _assosiatedFile; }
-                set
-                {
-                    _assosiatedFile = value;
-                    if (value.Length > 0)
-                    {
-                        watcher.EnableRaisingEvents = AutoLoad;
-                    }
-                }
-            }
-
-            [XmlIgnore]
-            public int modifiedValue = 1;
-
-            [XmlIgnore]
+			[XmlIgnore]
 			public List<RadioButton> pips = new List<RadioButton>();
 		}
 
@@ -124,8 +108,7 @@ namespace CofD_Sheet.Sheet_Components
 						AutoSize = true,
 						Size = new System.Drawing.Size(20, 20),
 						TabIndex = 0,
-						UseVisualStyleBackColor = true,
-						Checked = 0 < attribute.CurrentValue
+						UseVisualStyleBackColor = true
 					};
 					pip.Click += new EventHandler(ValueChanged);
 					pip.AutoCheck = false;
@@ -138,7 +121,6 @@ namespace CofD_Sheet.Sheet_Components
 					uiElement.Controls.Add(pip, column, row);
 				}
 			}
-			OnValueChanged();
 			return uiElement;
 		}
 
@@ -150,14 +132,14 @@ namespace CofD_Sheet.Sheet_Components
 				{
 					if (sender == attribute.pips[i])
 					{
-						if (attribute.CurrentValue == i + 1)
+						if (attribute.Value.CurrentValue == i + 1)
 						{
 							//when clicking the last pip, reduce value by 1
-							attribute.CurrentValue = i;
+							attribute.Value.CurrentValue = i;
 						}
 						else
 						{
-							attribute.CurrentValue = i + 1;
+							attribute.Value.CurrentValue = i + 1;
 						}
 					}
 				}
@@ -171,16 +153,41 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				for (int i = 0; i < attribute.pips.Count; i++)
 				{
-					attribute.pips[i].Checked = i < attribute.CurrentValue;
+					attribute.pips[i].Checked = i < attribute.Value.CurrentValue;
 				}
 			}
 
 			OnComponentChanged();
 		}
 
-		override public void ApplyModification(ModificationSetComponent.Modification mod, bool inverse)
-        {
+		override public void ApplyModification(ModificationSetComponent.Modification mod)
+		{
+			ModificationSetComponent.IntModification intMod = mod as ModificationSetComponent.IntModification;
+			if (intMod != null)
+			{
+				if (mod.path.Count > 1)
+				{
+					string targetAttribute = mod.path[1];
+					foreach (Attribute attribute in attributes)
+					{
+						if (attribute.name == targetAttribute)
+						{
+							attribute.Value.ApplyModification(intMod.modType, intMod.value);
+							OnValueChanged();
+							break;
+						}
+					}
+				}
+			}
+		}
 
-        }
-    }
+		override public void ResetModifications()
+		{
+			foreach (Attribute attribute in attributes)
+			{
+				attribute.Value.Reset();
+			}
+			OnValueChanged();
+		}
+	}
 }

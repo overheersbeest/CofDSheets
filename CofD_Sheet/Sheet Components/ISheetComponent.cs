@@ -67,7 +67,7 @@ namespace CofD_Sheet.Sheet_Components
 			}
 		}
 
-		virtual public void ApplyModification(ModificationSetComponent.Modification mod, bool inverse)
+		virtual public void ApplyModification(ModificationSetComponent.Modification mod)
 		{
 			throw new System.NotImplementedException();
 		}
