@@ -98,9 +98,6 @@ namespace CofD_Sheet.Sheet_Components
 
 		void AddMerit(object sender, EventArgs e)
 		{
-			ContextMenuStrip owner = (sender as ToolStripItem).Owner as ContextMenuStrip;
-			TableLayoutPanel uiElement = owner.SourceControl as TableLayoutPanel;
-
 			Form prompt = new Form
 			{
 				StartPosition = FormStartPosition.CenterParent,
@@ -220,7 +217,7 @@ namespace CofD_Sheet.Sheet_Components
 				}
 			}
 
-			uiElement.Size = new Size(componentWidth, (23 * Math.Max(3, rowAmount)));
+			uiElement.Size = new Size(componentWidth, (rowHeight * Math.Max(3, rowAmount)));
 			ResizeParentColumn();
 
 			OnComponentChanged();

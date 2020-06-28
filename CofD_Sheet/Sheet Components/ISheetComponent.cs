@@ -28,6 +28,12 @@ namespace CofD_Sheet.Sheet_Components
 	public abstract class ISheetComponent
 	{
 		[XmlIgnore]
+		public const int rowHeight = 23;
+
+		[XmlIgnore]
+		public const int inputBoxHeight = 35;
+
+		[XmlIgnore]
 		public const int componentWidth = 315;
 
 		[XmlIgnore]
@@ -47,7 +53,7 @@ namespace CofD_Sheet.Sheet_Components
 
 		abstract public Control ConstructUIElement();
 
-		protected void ResizeParentColumn()
+		public void ResizeParentColumn()
 		{
 			Form1.ResizeComponentColumn(uiElement);
 		}

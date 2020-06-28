@@ -40,9 +40,6 @@ namespace CofD_Sheet.Sheet_Components
 			public IntModificationType modType = IntModificationType.Delta;
 
 			[XmlAttribute]
-			public bool canExceedLimit = true;
-
-			[XmlAttribute]
 			public int value = 0;
 		}
 
@@ -139,15 +136,13 @@ namespace CofD_Sheet.Sheet_Components
 			selectionComboBox.SelectedIndexChanged += OnValueChanged;
 			uiElement.Controls.Add(selectionComboBox, 0, 0);
 
-			OnValueChanged();
 			return uiElement;
 		}
 
 		void OnValueChanged(object sender = null, EventArgs e = null)
 		{
-			Form1.instance.sheet.ResetModifications();
 			ActiveIndex = selectionComboBox.SelectedIndex;
-			sets[ActiveIndex].Apply();
+			Form1.instance.sheet.RefreshModifications();
 
 			OnComponentChanged();
 		}

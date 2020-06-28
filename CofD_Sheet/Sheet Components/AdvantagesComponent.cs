@@ -66,7 +66,7 @@ namespace CofD_Sheet.Sheet_Components
 				TableLayoutPanel advantageElement = new TableLayoutPanel
 				{
 					Name = "advantageTable" + advantage.name,
-					Size = new Size(componentWidth, 23)
+					Size = new Size(componentWidth, rowHeight)
 				};
 
 				Label label = new Label

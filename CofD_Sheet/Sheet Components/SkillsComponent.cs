@@ -69,7 +69,7 @@ namespace CofD_Sheet.Sheet_Components
 			uiElement.RowCount = rowAmount;
 			uiElement.ColumnCount = columnAmount;
 			uiElement.Dock = DockStyle.Fill;
-			uiElement.Size = new Size(componentWidth, (21 * rowAmount));
+			uiElement.Size = new Size(componentWidth, (rowHeight * rowAmount));
 			uiElement.TabIndex = 0;
 
 			//column styles

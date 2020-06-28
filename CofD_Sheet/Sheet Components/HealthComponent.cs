@@ -60,9 +60,6 @@ namespace CofD_Sheet.Sheet_Components
 		}
 		void ChangeMaxValue(object sender, EventArgs e)
 		{
-			ContextMenuStrip owner = (sender as ToolStripItem).Owner as ContextMenuStrip;
-			TableLayoutPanel uiElement = owner.SourceControl as TableLayoutPanel;
-
 			Form prompt = new Form
 			{
 				StartPosition = FormStartPosition.CenterParent,
@@ -105,7 +102,7 @@ namespace CofD_Sheet.Sheet_Components
 			uiElement.ColumnStyles.Clear();
 			uiElement.RowCount = rowAmount;
 			uiElement.ColumnCount = columnAmount;
-			uiElement.Size = new Size(componentWidth, rowAmount * 35);
+			uiElement.Size = new Size(componentWidth, rowAmount * inputBoxHeight);
 			ResizeParentColumn();
 
 			float separatorWidth = 100F / (checkBoxRows * separatorProportion + columnSeparatorCount);

@@ -63,6 +63,8 @@ namespace CofD_Sheet
 
 		FileSystemWatcher watcher = new FileSystemWatcher();
 
+		DrawingHelper drawingHelper;
+
 		public Form1()
 		{
 			instance = this;
@@ -84,6 +86,8 @@ namespace CofD_Sheet
 			watcher.Changed += new FileSystemEventHandler(LoadAgain);
 			autoSaveToolStripMenuItem.Checked = AutoSave;
 			autoLoadToolStripMenuItem.Checked = AutoLoad;
+
+			drawingHelper = new DrawingHelper(this);
 		}
 
 		private void LoadToolStripMenuItem_Click(object sender, EventArgs e)
@@ -203,6 +207,7 @@ namespace CofD_Sheet
 			}
 
 			autoSaveDisabled = true;
+			drawingHelper.SuspendDrawing();
 
 			NameTextBox.Text = sheet.name;
 			PlayerTextBox.Text = sheet.player;
@@ -228,8 +233,6 @@ namespace CofD_Sheet
 				componentUIElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
 				componentUIElement.Dock = DockStyle.Fill;
 				componentUIElement.RowCount = 2;
-				componentUIElement.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-				componentUIElement.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 				componentUIElement.TabIndex = 0;
 				componentUIElement.Size = new Size(292, 26);
 
@@ -243,54 +246,32 @@ namespace CofD_Sheet
 				nameLabel.Font = new Font(nameLabel.Font, FontStyle.Bold);
 				nameLabel.Text = component.name.Replace('_', ' ');
 
-				int componentRequiredHeight = 0;
 				componentUIElement.Controls.Add(nameLabel, 0, 0);
-				componentRequiredHeight += nameLabel.Size.Height;
 				Control componentValueElement = component.ConstructUIElement();
 				componentUIElement.Controls.Add(componentValueElement, 0, 1);
-				componentRequiredHeight += componentValueElement.Size.Height;
-				componentRequiredHeight += 10;
-				componentUIElement.Size = new Size(292, componentRequiredHeight);
 
 				if (component.column == ColumnId.Left)
 				{
-					LeftComponentTable.RowStyles.Add(new RowStyle(SizeType.AutoSize, componentRequiredHeight));
 					LeftComponentTable.Controls.Add(componentUIElement);
 				}
 				else if (component.column == ColumnId.Middle)
 				{
-					MiddleComponentTable.RowStyles.Add(new RowStyle(SizeType.Absolute, componentRequiredHeight));
 					MiddleComponentTable.Controls.Add(componentUIElement);
 				}
 				else
 				{
-					RightComponentTable.RowStyles.Add(new RowStyle(SizeType.Absolute, componentRequiredHeight));
 					RightComponentTable.Controls.Add(componentUIElement);
 				}
 			}
 
 			//all components refreshed, now apply modification sets
-			List<ModificationSetComponent> modSetComponents = new List<ModificationSetComponent>();
-			foreach (ISheetComponent component in sheet.components)
-			{
-				if (component is ModificationSetComponent modComponent)
-				{
-					modSetComponents.Add(modComponent);
-				}
-				else
-				{
-					component.ResetModifications();
-				}
-			}
-			foreach (ModificationSetComponent modSetComponent in modSetComponents)
-			{
-				modSetComponent.sets[modSetComponent.ActiveIndex].Apply();
-			}
+			sheet.RefreshModifications();
 
-			LeftComponentTable.RowCount = amountOfRows;
-			MiddleComponentTable.RowCount = amountOfRows;
-			RightComponentTable.RowCount = amountOfRows;
+			ResizeColumn(LeftComponentTable);
+			ResizeColumn(MiddleComponentTable);
+			ResizeColumn(RightComponentTable);
 
+			drawingHelper.ResumeDrawing(true);
 			autoSaveDisabled = false;
 		}
 
@@ -327,6 +308,21 @@ namespace CofD_Sheet
 				TableLayoutPanel column = cell.Parent as TableLayoutPanel;
 				Form1.ResizeTableHeight(ref column);
 			}
+		}
+
+		public static void ResizeColumn(TableLayoutPanel column)
+		{
+			foreach (Control child in column.Controls)
+			{
+				TableLayoutPanel component = child as TableLayoutPanel;
+				foreach (Control componentChild in column.Controls)
+				{
+					TableLayoutPanel componentValue = componentChild as TableLayoutPanel;
+					ResizeTableHeight(ref componentValue);
+				}
+				ResizeTableHeight(ref component);
+			}
+			ResizeTableHeight(ref column);
 		}
 
 		private static void ResizeTableHeight(ref TableLayoutPanel table)

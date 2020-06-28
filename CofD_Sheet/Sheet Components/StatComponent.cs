@@ -42,7 +42,7 @@ namespace CofD_Sheet.Sheet_Components
 
 			ContextMenuStrip contextMenu = new ContextMenuStrip();
 			ToolStripItem addMeritItem = contextMenu.Items.Add("Change maximum value");
-			addMeritItem.Click += new EventHandler(ChangeMaxValue);
+			addMeritItem.Click += new EventHandler(OpenChangeMaxValueDialog);
 			uiElement.ContextMenuStrip = contextMenu;
 		}
 
@@ -53,11 +53,8 @@ namespace CofD_Sheet.Sheet_Components
 			return uiElement;
 		}
 
-		void ChangeMaxValue(object sender, EventArgs e)
+		void OpenChangeMaxValueDialog(object sender, EventArgs e)
 		{
-			ContextMenuStrip owner = (sender as ToolStripItem).Owner as ContextMenuStrip;
-			TableLayoutPanel uiElement = owner.SourceControl as TableLayoutPanel;
-
 			Form prompt = new Form
 			{
 				StartPosition = FormStartPosition.CenterParent,
@@ -111,7 +108,7 @@ namespace CofD_Sheet.Sheet_Components
 			int columnAmount = checkBoxRows + columnSeparatorCount;
 			uiElement.RowCount = rowAmount;
 			uiElement.ColumnCount = columnAmount;
-			uiElement.Size = new Size(componentWidth, 23 * rowAmount);
+			uiElement.Size = new Size(componentWidth, rowHeight * rowAmount);
 			ResizeParentColumn();
 			uiElement.RowStyles.Clear();
 			uiElement.ColumnStyles.Clear();

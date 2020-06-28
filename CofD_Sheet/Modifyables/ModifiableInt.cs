@@ -26,6 +26,9 @@ namespace CofD_Sheet.Modifyables
 		private int modifier = 0;
 
 		[XmlIgnore]
+		public int maxValue = 0;
+
+		[XmlIgnore]
 		private IntModificationType modType = IntModificationType.Delta;
 
 		[XmlIgnore]
@@ -54,6 +57,8 @@ namespace CofD_Sheet.Modifyables
 						int current = defaultValue + modifier;
 						int setDelta = value - current;
 						defaultValue += setDelta;
+						defaultValue = Math.Max(defaultValue, 0);
+						defaultValue = Math.Min(defaultValue, maxValue);
 						break;
 					case IntModificationType.Absolute:
 						//we can't modify the original value, so we'll set a new absolute value instead

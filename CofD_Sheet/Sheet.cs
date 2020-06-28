@@ -185,11 +185,23 @@ namespace CofD_Sheet
 			}
 		}
 
-		public void ResetModifications()
+		public void RefreshModifications()
 		{
+			List<ModificationSetComponent> modSetComponents = new List<ModificationSetComponent>();
 			foreach (ISheetComponent component in components)
 			{
-				component.ResetModifications();
+				if (component is ModificationSetComponent modComponent)
+				{
+					modSetComponents.Add(modComponent);
+				}
+				else
+				{
+					component.ResetModifications();
+				}
+			}
+			foreach (ModificationSetComponent modSetComponent in modSetComponents)
+			{
+				modSetComponent.sets[modSetComponent.ActiveIndex].Apply();
 			}
 		}
 

@@ -52,7 +52,7 @@ namespace CofD_Sheet.Sheet_Components
 			uiElement.RowCount = 1;
 			uiElement.ColumnCount = 2;
 			uiElement.Dock = DockStyle.Fill;
-			uiElement.Size = new Size(292, 23);
+			uiElement.Size = new Size(292, inputBoxHeight);
 			uiElement.TabIndex = 0;
 
 			//beats element
