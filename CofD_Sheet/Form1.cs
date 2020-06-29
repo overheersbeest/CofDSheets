@@ -267,6 +267,11 @@ namespace CofD_Sheet
 			//all components refreshed, now apply modification sets
 			sheet.RefreshModifications();
 
+			//add empty tables to be used for padding out each column
+			LeftComponentTable.Controls.Add(new TableLayoutPanel());
+			MiddleComponentTable.Controls.Add(new TableLayoutPanel());
+			RightComponentTable.Controls.Add(new TableLayoutPanel());
+
 			ResizeColumn(LeftComponentTable);
 			ResizeColumn(MiddleComponentTable);
 			ResizeColumn(RightComponentTable);
