@@ -29,7 +29,7 @@ namespace CofD_Sheet.Sheet_Components
 			public string name = "Attribute";
 
 			[XmlElement]
-			public ModifiableInt Value = new ModifiableInt();
+			public ModifiableInt Value = new ModifiableInt(1);
 
 			[XmlIgnore]
 			public List<RadioButton> pips = new List<RadioButton>();
@@ -111,7 +111,7 @@ namespace CofD_Sheet.Sheet_Components
 			OnMaxValuePossiblyChanged();
 		}
 
-		void ValueChanged(object sender, EventArgs e)
+		void RecomputeValues(object sender, EventArgs e)
 		{
 			foreach (Attribute attribute in attributes)
 			{
@@ -197,7 +197,7 @@ namespace CofD_Sheet.Sheet_Components
 							TabIndex = 0,
 							UseVisualStyleBackColor = true
 						};
-						pip.Click += new EventHandler(ValueChanged);
+						pip.Click += new EventHandler(RecomputeValues);
 						pip.AutoCheck = false;
 						attribute.pips.Add(pip);
 
@@ -230,8 +230,7 @@ namespace CofD_Sheet.Sheet_Components
 
 		override public void ApplyModification(ModificationSetComponent.Modification mod)
 		{
-			ModificationSetComponent.IntModification intMod = mod as ModificationSetComponent.IntModification;
-			if (intMod != null)
+			if (mod is ModificationSetComponent.IntModification intMod)
 			{
 				if (mod.path.Count > 1)
 				{
@@ -241,7 +240,6 @@ namespace CofD_Sheet.Sheet_Components
 						if (attribute.name == targetAttribute)
 						{
 							attribute.Value.ApplyModification(intMod.modType, intMod.value);
-							OnMaxValuePossiblyChanged();
 							break;
 						}
 					}
@@ -255,6 +253,10 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				attribute.Value.Reset();
 			}
+		}
+
+		override public void OnModificationsComplete()
+		{
 			OnMaxValuePossiblyChanged();
 		}
 	}

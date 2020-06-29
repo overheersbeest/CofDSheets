@@ -83,7 +83,6 @@ namespace CofD_Sheet.Sheet_Components
 							if (component.name == targetComponentName)
 							{
 								component.ApplyModification(modification);
-								break;
 							}
 						}
 					}

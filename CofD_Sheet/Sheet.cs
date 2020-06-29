@@ -203,6 +203,10 @@ namespace CofD_Sheet
 			{
 				modSetComponent.sets[modSetComponent.ActiveIndex].Apply();
 			}
+			foreach (ISheetComponent component in components)
+			{
+				component.OnModificationsComplete();
+			}
 		}
 
 		private ModificationSetComponent GetWerewolfFormModSetComponent()
@@ -215,6 +219,7 @@ namespace CofD_Sheet
 			FormsComponent.sets[1].modifications.Add(new ModificationSetComponent.IntModification(new List<string>() { "Physical_Attributes", "Strength" }, 1, IntModificationType.Delta));
 			FormsComponent.sets[1].modifications.Add(new ModificationSetComponent.IntModification(new List<string>() { "Physical_Attributes", "Stamina" }, 1, IntModificationType.Delta));
 			FormsComponent.sets[1].modifications.Add(new ModificationSetComponent.IntModification(new List<string>() { "Social_Attributes", "Manipulation" }, -1, IntModificationType.Delta));
+			FormsComponent.sets[1].modifications.Add(new ModificationSetComponent.IntModification(new List<string>() { "Health", "MaxValue" }, 2, IntModificationType.Delta));
 			//FormsComponent.sets[1].modifications.Add(new ModificationSetComponent.IntModification(new List<string>() { "Advantages", "Size" }, 1, ModificationSetComponent.IntModificationType.Delta));
 			//FormsComponent.sets[1].modifications.Add(new ModificationSetComponent.IntModification(new List<string>() { "Advantages", "Speed" }, 1, ModificationSetComponent.IntModificationType.Delta));
 			//FormsComponent.sets[1].modifications.Add(new ModificationSetComponent.IntModification(new List<string>() { "Advantages", "Perception" }, 1, ModificationSetComponent.IntModificationType.Delta));
@@ -223,12 +228,14 @@ namespace CofD_Sheet
 			FormsComponent.sets[2].modifications.Add(new ModificationSetComponent.IntModification(new List<string>() { "Physical_Attributes", "Strength" }, 3, IntModificationType.Delta));
 			FormsComponent.sets[2].modifications.Add(new ModificationSetComponent.IntModification(new List<string>() { "Physical_Attributes", "Dexterity" }, 1, IntModificationType.Delta));
 			FormsComponent.sets[2].modifications.Add(new ModificationSetComponent.IntModification(new List<string>() { "Physical_Attributes", "Stamina" }, 2, IntModificationType.Delta));
+			FormsComponent.sets[2].modifications.Add(new ModificationSetComponent.IntModification(new List<string>() { "Health", "MaxValue" }, 4, IntModificationType.Delta));
 
 			//urshul
 			FormsComponent.sets[3].modifications.Add(new ModificationSetComponent.IntModification(new List<string>() { "Physical_Attributes", "Strength" }, 2, IntModificationType.Delta));
 			FormsComponent.sets[3].modifications.Add(new ModificationSetComponent.IntModification(new List<string>() { "Physical_Attributes", "Dexterity" }, 2, IntModificationType.Delta));
 			FormsComponent.sets[3].modifications.Add(new ModificationSetComponent.IntModification(new List<string>() { "Physical_Attributes", "Stamina" }, 2, IntModificationType.Delta));
 			FormsComponent.sets[3].modifications.Add(new ModificationSetComponent.IntModification(new List<string>() { "Social_Attributes", "Manipulation" }, -1, IntModificationType.Delta));
+			FormsComponent.sets[3].modifications.Add(new ModificationSetComponent.IntModification(new List<string>() { "Health", "MaxValue" }, 3, IntModificationType.Delta));
 
 			//urhan
 			FormsComponent.sets[4].modifications.Add(new ModificationSetComponent.IntModification(new List<string>() { "Physical_Attributes", "Dexterity" }, 2, IntModificationType.Delta));

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CofD_Sheet.Modifyables;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -17,8 +18,8 @@ namespace CofD_Sheet.Sheet_Components
 		[XmlIgnore]
 		const float separatorProportion = 2F;
 
-		[XmlAttribute]
-		public int maxValue = 10;
+		[XmlElement]
+		public ModifiableInt MaxValue = new ModifiableInt(10);
 
 		[XmlAttribute]
 		public int aggrivated = 0;
@@ -49,7 +50,7 @@ namespace CofD_Sheet.Sheet_Components
 
 			ContextMenuStrip contextMenu = new ContextMenuStrip();
 			ToolStripItem addMeritItem = contextMenu.Items.Add("Change maximum value");
-			addMeritItem.Click += new EventHandler(ChangeMaxValue);
+			addMeritItem.Click += new EventHandler(OpenChangeMaxValueDialog);
 			uiElement.ContextMenuStrip = contextMenu;
 		}
 
@@ -58,7 +59,8 @@ namespace CofD_Sheet.Sheet_Components
 			OnMaxValueChanged();
 			return uiElement;
 		}
-		void ChangeMaxValue(object sender, EventArgs e)
+
+		void OpenChangeMaxValueDialog(object sender, EventArgs e)
 		{
 			Form prompt = new Form
 			{
@@ -68,7 +70,7 @@ namespace CofD_Sheet.Sheet_Components
 				Text = "Change maximum value"
 			};
 			NumericUpDown inputBox = new NumericUpDown() { Left = 5, Top = 5, Width = 300 };
-			inputBox.Value = maxValue;
+			inputBox.Value = MaxValue.CurrentValue;
 			inputBox.TabIndex = 0;
 			inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { prompt.Close(); } };
 			Button confirmation = new Button() { Text = "Confirm", Left = 205, Width = 100, Top = 30 };
@@ -76,20 +78,22 @@ namespace CofD_Sheet.Sheet_Components
 			confirmation.Click += (sender2, e2) => { prompt.Close(); };
 			Button cancel = new Button() { Text = "Cancel", Left = 100, Width = 100, Top = 30 };
 			cancel.TabIndex = 2;
-			cancel.Click += (sender2, e2) => { inputBox.Value = maxValue; prompt.Close(); };
+			cancel.Click += (sender2, e2) => { inputBox.Value = MaxValue.CurrentValue; prompt.Close(); };
 			prompt.Controls.Add(inputBox);
 			prompt.Controls.Add(confirmation);
 			prompt.Controls.Add(cancel);
 			prompt.ShowDialog();
 
-			maxValue = (int)inputBox.Value;
+			MaxValue.CurrentValue = (int)inputBox.Value;
 			OnMaxValueChanged();
 		}
 
 		void OnMaxValueChanged()
 		{
-			int rowAmount = Convert.ToInt32(Math.Ceiling(maxValue / Convert.ToSingle(maxPerRow)));
-			int checkBoxRows = Math.Min(maxValue, maxPerRow);
+			HandleDamageRollover();
+
+			int rowAmount = Convert.ToInt32(Math.Ceiling(MaxValue.CurrentValue / Convert.ToSingle(maxPerRow)));
+			int checkBoxRows = Math.Min(MaxValue.CurrentValue, maxPerRow);
 			int columnSeparatorCount = (checkBoxRows - 1) / 5;
 			int columnAmount = checkBoxRows + columnSeparatorCount;
 
@@ -123,7 +127,7 @@ namespace CofD_Sheet.Sheet_Components
 						if (r == 0)
 							uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, separatorWidth * separatorProportion));
 						int slotNr = slots.Count;
-						if (slotNr < maxValue)
+						if (slotNr < MaxValue.CurrentValue)
 						{
 							TextBox slot = new TextBox();
 							slot.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -131,7 +135,7 @@ namespace CofD_Sheet.Sheet_Components
 							slot.AutoSize = true;
 							slot.Size = new System.Drawing.Size(15, 14);
 							slot.TabIndex = 0;
-							slot.TextChanged += ValueChanged;
+							slot.TextChanged += RecomputeValues;
 							slots.Add(slot);
 							uiElement.Controls.Add(slot, c, r);
 						}
@@ -141,7 +145,7 @@ namespace CofD_Sheet.Sheet_Components
 			OnValueChanged();
 		}
 
-		void ValueChanged(object sender, EventArgs e)
+		void RecomputeValues(object sender, EventArgs e)
 		{
 			aggrivated = 0;
 			lethal = 0;
@@ -152,53 +156,59 @@ namespace CofD_Sheet.Sheet_Components
 				aggrivated += text.Count(f => f == '*');
 				lethal += text.Count(f => f == 'x' || f == 'X');
 				bashing += text.Count(f => f == '/' || f == '\\');
-				int overDamage = Math.Max(0, aggrivated + lethal + bashing - maxValue);
-				while (aggrivated < maxValue
-					   && overDamage > 0)
+				HandleDamageRollover();
+			}
+
+			OnValueChanged();
+		}
+
+		void HandleDamageRollover()
+		{
+			int overDamage = Math.Max(0, aggrivated + lethal + bashing - MaxValue.CurrentValue);
+			while (aggrivated < MaxValue.CurrentValue
+				   && overDamage > 0)
+			{
+				if (bashing > 0)
 				{
-					if (bashing > 0)
+					//use bashing to upgrade least severe damage
+					bashing--;
+					if (bashing >= 1)
 					{
-						//use bashing to upgrade least severe damage
+						//2 bashing -> 1 lethal
 						bashing--;
-						if (bashing >= 1)
-						{
-							//2 bashing -> 1 lethal
-							bashing--;
-							lethal++;
-						}
-						else
-						{
-							//bashing + lethal -> aggrivated
-							lethal--;
-							aggrivated++;
-						}
+						lethal++;
 					}
 					else
 					{
-						//no bashing damage, but still too much damage
-						//2 lethal -> 1 aggrivated
-						lethal -= 2;
+						//bashing + lethal -> aggrivated
+						lethal--;
 						aggrivated++;
 					}
-					overDamage--;
 				}
-
-				//in case we still have damage left after having a health track filled with aggrivated damage, remove all other damages
-				if (aggrivated >= maxValue)
+				else
 				{
-					aggrivated = maxValue;
-					lethal = 0;
-					bashing = 0;
+					//no bashing damage, but still too much damage
+					//2 lethal -> 1 aggrivated
+					lethal -= 2;
+					aggrivated++;
 				}
+				overDamage--;
 			}
-			OnValueChanged();
+
+			//in case we still have damage left after having a health track filled with aggrivated damage, remove all other damages
+			if (aggrivated >= MaxValue.CurrentValue)
+			{
+				aggrivated = MaxValue.CurrentValue;
+				lethal = 0;
+				bashing = 0;
+			}
 		}
 
 		void OnValueChanged()
 		{
 			for (int i = 0; i < slots.Count; i++)
 			{
-				slots[i].TextChanged -= ValueChanged;
+				slots[i].TextChanged -= RecomputeValues;
 				if (i < aggrivated)
 				{
 					slots[i].Text = "*";
@@ -215,7 +225,7 @@ namespace CofD_Sheet.Sheet_Components
 				{
 					slots[i].Text = "";
 				}
-				slots[i].TextChanged += ValueChanged;
+				slots[i].TextChanged += RecomputeValues;
 			}
 
 			OnComponentChanged();
@@ -226,7 +236,7 @@ namespace CofD_Sheet.Sheet_Components
 			if (e.KeyData == Keys.Back)
 			{
 				((TextBox)sender).Text = "";
-				ValueChanged(sender, null);
+				RecomputeValues(sender, null);
 			}
 			else if (e.KeyData == Keys.Left
 					 || e.KeyData == Keys.Right)
@@ -251,6 +261,30 @@ namespace CofD_Sheet.Sheet_Components
 					slots[currentFocusIndex + 1].Focus();
 				}
 			}
+		}
+
+		override public void ApplyModification(ModificationSetComponent.Modification mod)
+		{
+			if (mod is ModificationSetComponent.IntModification intMod)
+			{
+				if (mod.path.Count > 1)
+				{
+					if (mod.path[1] == "MaxValue")
+					{
+						MaxValue.ApplyModification(intMod.modType, intMod.value);
+					}
+				}
+			}
+		}
+
+		override public void ResetModifications()
+		{
+			MaxValue.Reset();
+		}
+
+		override public void OnModificationsComplete()
+		{
+			OnMaxValueChanged();
 		}
 	}
 }

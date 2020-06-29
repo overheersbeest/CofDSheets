@@ -19,6 +19,11 @@ namespace CofD_Sheet.Modifyables
 	[Serializable]
 	public class ModifiableInt
 	{
+		public ModifiableInt(int _defaultValue)
+		{
+			defaultValue = _defaultValue;
+		}
+
 		[XmlAttribute]
 		public int defaultValue = 1;
 
@@ -26,7 +31,7 @@ namespace CofD_Sheet.Modifyables
 		private int modifier = 0;
 
 		[XmlIgnore]
-		public int maxValue = 0;
+		public int maxValue = int.MaxValue;
 
 		[XmlIgnore]
 		private IntModificationType modType = IntModificationType.Delta;
@@ -85,7 +90,7 @@ namespace CofD_Sheet.Modifyables
 					{
 						throw new Exception("absolute modified int being modified again with delta value.");
 					}
-					modifier = newModifier;
+					modifier += newModifier;
 					break;
 				case IntModificationType.Absolute:
 					if (modType != IntModificationType.Delta

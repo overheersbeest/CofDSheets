@@ -82,5 +82,10 @@ namespace CofD_Sheet.Sheet_Components
 		{
 			//do nothing
 		}
+
+		virtual public void OnModificationsComplete()
+		{
+			//do nothing
+		}
 	}
 }
