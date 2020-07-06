@@ -152,7 +152,7 @@ namespace CofD_Sheet
 				}
 				catch (Exception ex)
 				{
-					MessageBox.Show("Error: Could not reload file from disk. Original error: " + ex.Message);
+					MessageBox.Show("Error: Could not reload file from disk. Original error: " + ex.Message + "\n" + ex.InnerException);
 				}
 			}
 		}
@@ -170,7 +170,14 @@ namespace CofD_Sheet
 			}
 			catch (Exception e)
 			{
-				MessageBox.Show("Error: Could not save file to disk. " + e.Message);
+				string ExceptionTrace = "";
+				Exception Inner = e.InnerException;
+				while (Inner != null)
+				{
+					ExceptionTrace += "\r\n" + Inner.Message;
+					Inner = Inner.InnerException;
+				}
+				MessageBox.Show("Error: Could not save file to disk. " + e.Message + ExceptionTrace);
 				return false;
 			}
 		}
@@ -189,7 +196,7 @@ namespace CofD_Sheet
 			}
 			catch (Exception e)
 			{
-				MessageBox.Show("Error: Could not load file from disk. " + e.Message);
+				MessageBox.Show("Error: Could not load file from disk. " + e.Message + "\n" + e.InnerException);
 				return false;
 			}
 		}

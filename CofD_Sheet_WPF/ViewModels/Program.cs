@@ -133,7 +133,14 @@ namespace CofD_Sheet_WPF.ViewModels
 			}
 			catch (Exception e)
 			{
-				MessageBox.Show("Error: Could not save file to disk. " + e.Message);
+				string ExceptionTrace = "";
+				Exception Inner = e.InnerException;
+				while (Inner != null)
+				{
+					ExceptionTrace += "\r\n" + Inner.Message;
+					Inner = Inner.InnerException;
+				}
+				MessageBox.Show("Error: Could not save file to disk. " + e.Message + ExceptionTrace);
 			}
 		}
 
@@ -150,7 +157,14 @@ namespace CofD_Sheet_WPF.ViewModels
 			}
 			catch (Exception e)
 			{
-				MessageBox.Show("Error: Could not load file from disk. " + e.Message);
+				string ExceptionTrace = "";
+				Exception Inner = e.InnerException;
+				while (Inner != null)
+				{
+					ExceptionTrace += "\r\n" + Inner.Message;
+					Inner = Inner.InnerException;
+				}
+				MessageBox.Show("Error: Could not load file from disk. " + e.Message + ExceptionTrace);
 				return false;
 			}
 		}
@@ -179,7 +193,14 @@ namespace CofD_Sheet_WPF.ViewModels
 				}
 				catch (Exception ex)
 				{
-					MessageBox.Show("Error: Could not reload file from disk. Original error: " + ex.Message);
+					string ExceptionTrace = "";
+					Exception Inner = ex.InnerException;
+					while (Inner != null)
+					{
+						ExceptionTrace += "\r\n" + Inner.Message;
+						Inner = Inner.InnerException;
+					}
+					MessageBox.Show("Error: Could not reload file from disk. Original error: " + ex.Message + ExceptionTrace);
 				}
 			}
 		}
