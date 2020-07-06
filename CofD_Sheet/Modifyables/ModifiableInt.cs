@@ -19,6 +19,8 @@ namespace CofD_Sheet.Modifyables
 	[Serializable]
 	public class ModifiableInt
 	{
+		public ModifiableInt()
+		{ }
 		public ModifiableInt(int _defaultValue)
 		{
 			defaultValue = _defaultValue;
