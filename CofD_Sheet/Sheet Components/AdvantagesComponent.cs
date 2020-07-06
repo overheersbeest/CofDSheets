@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CofD_Sheet.Modifyables;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -36,11 +37,11 @@ namespace CofD_Sheet.Sheet_Components
 			{ }
 			public NumericAdvantage(string _name, int _value) : base(_name)
 			{
-				this.value = _value;
+				this.Value.CurrentValue = _value;
 			}
 
-			[XmlAttribute]
-			public int value = 0;
+			[XmlElement]
+			public ModifiableInt Value = new ModifiableInt(0);
 
 			[XmlIgnore]
 			private Label CachedLabel;
@@ -53,7 +54,7 @@ namespace CofD_Sheet.Sheet_Components
 				Label label = new Label
 				{
 					Anchor = AnchorStyles.Left,
-					Text = value.ToString()
+					Text = Value.CurrentValue.ToString()
 				};
 
 				ContextMenuStrip contextMenu = new ContextMenuStrip();
@@ -68,7 +69,7 @@ namespace CofD_Sheet.Sheet_Components
 
 			public override void OnValueChanged()
 			{
-				CachedLabel.Text = value.ToString();
+				CachedLabel.Text = Value.CurrentValue.ToString();
 			}
 
 			private void OpenChangeValueDialog(object sender, EventArgs e)
@@ -84,7 +85,7 @@ namespace CofD_Sheet.Sheet_Components
 				bool confirmed = false;
 
 				NumericUpDown inputBox = new NumericUpDown() { Left = 5, Top = 5, Width = 300 };
-				inputBox.Value = value;
+				inputBox.Value = Value.CurrentValue;
 				inputBox.TabIndex = 0;
 				inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { confirmed = true; prompt.Close(); } };
 				Button confirmation = new Button() { Text = "Confirm", Left = 205, Width = 100, Top = 30 };
@@ -100,9 +101,10 @@ namespace CofD_Sheet.Sheet_Components
 
 				if (confirmed)
 				{
-					value = (int)inputBox.Value;
+					Value.CurrentValue = (int)inputBox.Value;
+
+					CachedParent.OnValueChanged();
 				}
-				CachedParent.OnValueChanged();
 			}
 		}
 
@@ -179,8 +181,9 @@ namespace CofD_Sheet.Sheet_Components
 				if (confirmed)
 				{
 					value = inputBox.Text;
+
+					CachedParent.OnValueChanged();
 				}
-				CachedParent.OnValueChanged();
 			}
 		}
 
@@ -192,15 +195,15 @@ namespace CofD_Sheet.Sheet_Components
 			{ }
 			public ArmorAdvantage(string _name, int _general, int _ballistic) : base(_name)
 			{
-				this.general = _general;
-				this.ballistic = _ballistic;
+				this.General.CurrentValue = _general;
+				this.Ballistic.CurrentValue = _ballistic;
 			}
 
-			[XmlAttribute]
-			public int general = 0;
+			[XmlElement]
+			public ModifiableInt General = new ModifiableInt(0);
 
-			[XmlAttribute]
-			public int ballistic = 0;
+			[XmlElement]
+			public ModifiableInt Ballistic = new ModifiableInt(0);
 
 			[XmlIgnore]
 			private Label CachedLabel;
@@ -213,7 +216,7 @@ namespace CofD_Sheet.Sheet_Components
 				Label label = new Label
 				{
 					Anchor = AnchorStyles.Left,
-					Text = general.ToString() + "/" + ballistic.ToString()
+					Text = General.CurrentValue.ToString() + "/" + Ballistic.CurrentValue.ToString()
 				};
 
 				ContextMenuStrip contextMenu = new ContextMenuStrip();
@@ -228,7 +231,7 @@ namespace CofD_Sheet.Sheet_Components
 
 			public override void OnValueChanged()
 			{
-				CachedLabel.Text = general.ToString() + "/" + ballistic.ToString();
+				CachedLabel.Text = General.CurrentValue.ToString() + "/" + Ballistic.CurrentValue.ToString();
 			}
 
 			private void OpenChangeValueDialog(object sender, EventArgs e)
@@ -244,7 +247,7 @@ namespace CofD_Sheet.Sheet_Components
 				bool confirmed = false;
 
 				NumericUpDown inputBoxGeneral = new NumericUpDown() { Left = 5, Top = 5, Width = 120 };
-				inputBoxGeneral.Value = general;
+				inputBoxGeneral.Value = General.CurrentValue;
 				inputBoxGeneral.TabIndex = 0;
 				inputBoxGeneral.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { confirmed = true; prompt.Close(); } };
 
@@ -253,7 +256,7 @@ namespace CofD_Sheet.Sheet_Components
 				label.Text = "/";
 
 				NumericUpDown inputBoxBallistic = new NumericUpDown() { Left = 185, Top = 5, Width = 120 };
-				inputBoxBallistic.Value = ballistic;
+				inputBoxBallistic.Value = Ballistic.CurrentValue;
 				inputBoxBallistic.TabIndex = 0;
 				inputBoxBallistic.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { confirmed = true; prompt.Close(); } };
 
@@ -273,8 +276,9 @@ namespace CofD_Sheet.Sheet_Components
 
 				if (confirmed)
 				{
-					general = (int)inputBoxGeneral.Value;
-					ballistic = (int)inputBoxBallistic.Value;
+					General.CurrentValue = (int)inputBoxGeneral.Value;
+					Ballistic.CurrentValue = (int)inputBoxBallistic.Value;
+
 					CachedParent.OnValueChanged();
 				}
 			}
@@ -336,6 +340,64 @@ namespace CofD_Sheet.Sheet_Components
 			}
 
 			OnComponentChanged();
+		}
+
+		override public void ApplyModification(ModificationSetComponent.Modification mod)
+		{
+			if (mod is ModificationSetComponent.IntModification intMod)
+			{
+				if (mod.path.Count > 1)
+				{
+					string targetAdvantage = mod.path[1];
+					foreach (Advantage advantage in advantages)
+					{
+						if (advantage.name == targetAdvantage)
+						{
+							if (advantage is NumericAdvantage numericAdvantage)
+							{
+								numericAdvantage.Value.ApplyModification(intMod.modType, intMod.value);
+							}
+							else if (advantage is ArmorAdvantage armorAdvantage)
+							{
+								if (mod.path.Count > 2)
+								{
+									string targetType = mod.path[2];
+									if (targetType == "general")
+									{
+										armorAdvantage.General.ApplyModification(intMod.modType, intMod.value);
+									}
+									else if (targetType == "ballistic")
+									{
+										armorAdvantage.Ballistic.ApplyModification(intMod.modType, intMod.value);
+									}
+								}
+							}
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		override public void ResetModifications()
+		{
+			foreach (Advantage advantage in advantages)
+			{
+				if (advantage is NumericAdvantage numericAdvantage)
+				{
+					numericAdvantage.Value.Reset();
+				}
+				else if (advantage is ArmorAdvantage armorAdvantage)
+				{
+					armorAdvantage.General.Reset();
+					armorAdvantage.Ballistic.Reset();
+				}
+			}
+		}
+
+		override public void OnModificationsComplete()
+		{
+			OnValueChanged();
 		}
 	}
 }

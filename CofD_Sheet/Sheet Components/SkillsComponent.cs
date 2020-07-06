@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CofD_Sheet.Modifyables;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -21,14 +22,14 @@ namespace CofD_Sheet.Sheet_Components
 			public Skill(string _name, int _value)
 			{
 				this.name = _name;
-				this.currentValue = _value;
+				this.Value.CurrentValue = _value;
 			}
 
 			[XmlAttribute]
 			public string name = "Skill";
 
-			[XmlAttribute]
-			public int currentValue = 0;
+			[XmlElement]
+			public ModifiableInt Value = new ModifiableInt(0);
 
 			[XmlElement]
 			public List<String> specialties = new List<String>();
@@ -46,90 +47,81 @@ namespace CofD_Sheet.Sheet_Components
 		[XmlAttribute]
 		public int maxValue = 5;
 
+		[XmlIgnore]
+		public int maxValueVisible = 0;
+
 		[XmlArray]
 		public List<Skill> skills = new List<Skill>();
 
 		public SkillsComponent() : base("SkillsComponent", ColumnId.Undefined)
-		{ }
+		{
+			Init();
+		}
 
 		public SkillsComponent(string componentName, List<string> skillNames, ColumnId _column) : base(componentName, _column)
 		{
+			Init();
+
 			for (int i = 0; i < skillNames.Count; i++)
 			{
 				skills.Add(new Skill(skillNames[i]));
 			}
 		}
 
-		override public Control ConstructUIElement()
+		void Init()
 		{
-			int rowsPerSkill = Convert.ToInt32(Math.Ceiling(maxValue / Convert.ToSingle(maxDotsPerRow)));
-			int rowAmount = skills.Count * rowsPerSkill;
-			int columnAmount = 1 + Math.Min(maxValue, maxDotsPerRow);
-
-			uiElement.RowCount = rowAmount;
-			uiElement.ColumnCount = columnAmount;
 			uiElement.Dock = DockStyle.Fill;
-			uiElement.Size = new Size(componentWidth, (rowHeight * rowAmount));
 			uiElement.TabIndex = 0;
 
-			//column styles
-			uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, nameLabelWidth));
-			for (int c = 1; c < columnAmount; c++)
-			{
-				uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F / (columnAmount - 1)));
-			}
+			ContextMenuStrip contextMenu = new ContextMenuStrip();
+			ToolStripItem changeMaxValueItem = contextMenu.Items.Add("Change maximum value");
+			changeMaxValueItem.Click += new EventHandler(OpenChangeMaxValueDialog);
+			uiElement.ContextMenuStrip = contextMenu;
+		}
 
-			for (int a = 0; a < skills.Count; a++)
-			{
-				Skill skill = skills[a];
-				for (int ar = 0; ar < rowsPerSkill; ++ar)
-				{
-					uiElement.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / rowAmount));
-					if (ar == 0)
-					{
-						Label skillNameLabel = new Label
-						{
-							Anchor = AnchorStyles.None,
-							AutoSize = true,
-							Name = "skillNameLabel" + skill.name,
-							Size = new Size(nameLabelWidth, 20),
-							TabIndex = 0
-						};
-						OnSpecialtiesChanged(skillNameLabel, skill);
-						uiElement.Controls.Add(skillNameLabel, 0, a * rowsPerSkill);
-					}
-				}
-
-				//pips
-				skill.pips.Clear();
-				for (int p = 0; p < maxValue; p++)
-				{
-					RadioButton pip = new RadioButton
-					{
-						Anchor = System.Windows.Forms.AnchorStyles.None,
-						AutoSize = true,
-						Size = new System.Drawing.Size(20, 20),
-						TabIndex = 0,
-						UseVisualStyleBackColor = true,
-						Checked = 0 < skill.currentValue
-					};
-					pip.Click += new EventHandler(ValueChanged);
-					pip.AutoCheck = false;
-					skill.pips.Add(pip);
-
-					//insert pip in table
-					int rowIndexOfSkill = Convert.ToInt32(Math.Floor(p / Convert.ToSingle(maxDotsPerRow)));
-					int column = (p - (rowIndexOfSkill * maxDotsPerRow)) + 1;
-					int row = a * rowsPerSkill + rowIndexOfSkill;
-					uiElement.Controls.Add(pip, column, row);
-				}
-			}
-			OnValueChanged();
+		override public Control ConstructUIElement()
+		{
+			OnMaxValuePossiblyChanged();
 
 			return uiElement;
 		}
 
-		void AddSpecialty(object sender, EventArgs e)
+		void OpenChangeMaxValueDialog(object sender, EventArgs e)
+		{
+			Form prompt = new Form
+			{
+				StartPosition = FormStartPosition.CenterParent,
+				Width = 325,
+				Height = 100,
+				Text = "Change maximum value"
+			};
+
+			bool confirmed = false;
+
+			NumericUpDown inputBox = new NumericUpDown() { Left = 5, Top = 5, Width = 300 };
+			inputBox.Value = maxValue;
+			inputBox.TabIndex = 0;
+			inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { confirmed = true; prompt.Close(); } };
+			Button confirmation = new Button() { Text = "Confirm", Left = 205, Width = 100, Top = 30 };
+			confirmation.TabIndex = 1;
+			confirmation.Click += (sender2, e2) => { confirmed = true; prompt.Close(); };
+			Button cancel = new Button() { Text = "Cancel", Left = 100, Width = 100, Top = 30 };
+			cancel.TabIndex = 2;
+			cancel.Click += (sender2, e2) => { prompt.Close(); };
+			prompt.Controls.Add(inputBox);
+			prompt.Controls.Add(confirmation);
+			prompt.Controls.Add(cancel);
+			prompt.ShowDialog();
+
+			if (confirmed)
+			{
+				maxValue = (int)inputBox.Value;
+
+				OnMaxValuePossiblyChanged();
+			}
+		}
+
+		void OpenAddSpecialtyDialog(object sender, EventArgs e)
 		{
 			ContextMenuStrip owner = (sender as ToolStripItem).Owner as ContextMenuStrip;
 			Label skillLabel = owner.SourceControl as Label;
@@ -165,12 +157,12 @@ namespace CofD_Sheet.Sheet_Components
 				{
 					skill.specialties.Add(newSpecialty);
 				}
-			}
 
-			OnSpecialtiesChanged(skillLabel, skill);
+				OnSpecialtiesChanged(skillLabel, skill);
+			}
 		}
 
-		void RemoveSpecialty(object sender, EventArgs e)
+		void OpenRemoveSpecialtyDialog(object sender, EventArgs e)
 		{
 			ContextMenuStrip owner = (sender as ToolStripItem).Owner as ContextMenuStrip;
 			Label skillLabel = owner.SourceControl as Label;
@@ -210,9 +202,9 @@ namespace CofD_Sheet.Sheet_Components
 				{
 					skill.specialties.Remove(specialtytoRemove);
 				}
-			}
 
-			OnSpecialtiesChanged(skillLabel, skill);
+				OnSpecialtiesChanged(skillLabel, skill);
+			}
 		}
 
 		void OnSpecialtiesChanged(Label label, Skill skill)
@@ -228,11 +220,11 @@ namespace CofD_Sheet.Sheet_Components
 
 			ContextMenuStrip contextMenu = new ContextMenuStrip();
 			ToolStripItem addSpecialtyItem = contextMenu.Items.Add("Add Specialty");
-			addSpecialtyItem.Click += new EventHandler(AddSpecialty);
+			addSpecialtyItem.Click += new EventHandler(OpenAddSpecialtyDialog);
 			if (skill.specialties.Count > 0)
 			{
 				ToolStripItem removeSpecialtyItem = contextMenu.Items.Add("Remove Specialty");
-				removeSpecialtyItem.Click += new EventHandler(RemoveSpecialty);
+				removeSpecialtyItem.Click += new EventHandler(OpenRemoveSpecialtyDialog);
 			}
 
 			label.ContextMenuStrip = contextMenu;
@@ -240,7 +232,7 @@ namespace CofD_Sheet.Sheet_Components
 			OnComponentChanged();
 		}
 
-		void ValueChanged(object sender, EventArgs e)
+		void RecomputeValues(object sender, EventArgs e)
 		{
 			foreach (Skill skill in skills)
 			{
@@ -248,18 +240,99 @@ namespace CofD_Sheet.Sheet_Components
 				{
 					if (sender == skill.pips[i])
 					{
-						if (skill.currentValue == i + 1)
+						if (skill.Value.CurrentValue == i + 1)
 						{
 							//when clicking the last pip, reduce value by 1
-							skill.currentValue = i;
+							skill.Value.CurrentValue = i;
 						}
 						else
 						{
-							skill.currentValue = i + 1;
+							skill.Value.CurrentValue = i + 1;
 						}
 					}
 				}
 			}
+			OnValueChanged();
+		}
+
+		void OnMaxValuePossiblyChanged()
+		{
+			int newVisibleMaxValue = maxValue;
+			foreach (Skill skill in skills)
+			{
+				skill.Value.maxValue = maxValue;
+				newVisibleMaxValue = Math.Max(newVisibleMaxValue, skill.Value.CurrentValue);
+			}
+
+			if (newVisibleMaxValue != maxValueVisible)
+			{
+				int rowsPerSkill = Convert.ToInt32(Math.Ceiling(maxValue / Convert.ToSingle(maxDotsPerRow)));
+				int rowAmount = skills.Count * rowsPerSkill;
+				int columnAmount = 1 + Math.Min(maxValue, maxDotsPerRow);
+
+				uiElement.RowCount = rowAmount;
+				uiElement.ColumnCount = columnAmount;
+				uiElement.Size = new Size(componentWidth, (rowHeight * rowAmount));
+				ResizeParentColumn();
+				uiElement.RowStyles.Clear();
+				uiElement.ColumnStyles.Clear();
+				uiElement.Controls.Clear();
+
+				//column styles
+				uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, nameLabelWidth));
+				for (int c = 1; c < columnAmount; c++)
+				{
+					uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F / (columnAmount - 1)));
+				}
+
+				for (int a = 0; a < skills.Count; a++)
+				{
+					Skill skill = skills[a];
+					for (int ar = 0; ar < rowsPerSkill; ++ar)
+					{
+						uiElement.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / rowAmount));
+						if (ar == 0)
+						{
+							Label skillNameLabel = new Label
+							{
+								Anchor = AnchorStyles.None,
+								AutoSize = true,
+								Name = "skillNameLabel" + skill.name,
+								Size = new Size(nameLabelWidth, 20),
+								TabIndex = 0
+							};
+							OnSpecialtiesChanged(skillNameLabel, skill);
+							uiElement.Controls.Add(skillNameLabel, 0, a * rowsPerSkill);
+						}
+					}
+
+					//pips
+					skill.pips.Clear();
+					for (int p = 0; p < maxValue; p++)
+					{
+						RadioButton pip = new RadioButton
+						{
+							Anchor = System.Windows.Forms.AnchorStyles.None,
+							AutoSize = true,
+							Size = new System.Drawing.Size(20, 20),
+							TabIndex = 0,
+							UseVisualStyleBackColor = true
+						};
+						pip.Click += new EventHandler(RecomputeValues);
+						pip.AutoCheck = false;
+						skill.pips.Add(pip);
+
+						//insert pip in table
+						int rowIndexOfSkill = Convert.ToInt32(Math.Floor(p / Convert.ToSingle(maxDotsPerRow)));
+						int column = (p - (rowIndexOfSkill * maxDotsPerRow)) + 1;
+						int row = a * rowsPerSkill + rowIndexOfSkill;
+						uiElement.Controls.Add(pip, column, row);
+					}
+				}
+
+				maxValueVisible = newVisibleMaxValue;
+			}
+
 			OnValueChanged();
 		}
 
@@ -269,11 +342,43 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				for (int i = 0; i < skill.pips.Count; i++)
 				{
-					skill.pips[i].Checked = i < skill.currentValue;
+					skill.pips[i].Checked = i < skill.Value.CurrentValue;
 				}
 			}
 
 			OnComponentChanged();
+		}
+
+		override public void ApplyModification(ModificationSetComponent.Modification mod)
+		{
+			if (mod is ModificationSetComponent.IntModification intMod)
+			{
+				if (mod.path.Count > 1)
+				{
+					string targetSkill = mod.path[1];
+					foreach (Skill skill in skills)
+					{
+						if (skill.name == targetSkill)
+						{
+							skill.Value.ApplyModification(intMod.modType, intMod.value);
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		override public void ResetModifications()
+		{
+			foreach (Skill skill in skills)
+			{
+				skill.Value.Reset();
+			}
+		}
+
+		override public void OnModificationsComplete()
+		{
+			OnMaxValuePossiblyChanged();
 		}
 	}
 }

@@ -305,8 +305,7 @@ namespace CofD_Sheet
 
 		public static void ResizeComponentColumn(Control component)
 		{
-			TableLayoutPanel cell = component.Parent as TableLayoutPanel;
-			if (cell != null)
+			if (component.Parent is TableLayoutPanel cell)
 			{
 				cell.Size = new Size(cell.Size.Width, component.Size.Height);
 				Form1.ResizeTableHeight(ref cell);

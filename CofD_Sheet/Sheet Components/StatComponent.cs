@@ -83,11 +83,12 @@ namespace CofD_Sheet.Sheet_Components
 			if (confirmed)
 			{
 				maxValue = (int)inputBox.Value;
+
+				OnMaxValueChanged();
 			}
-			OnMaxValueChanged();
 		}
 
-		void ValueChanged(object sender, EventArgs e)
+		void RecomputeValue(object sender, EventArgs e)
 		{
 			for (int i = pips.Count - 1; i >= 0; i--)
 			{
@@ -164,7 +165,7 @@ namespace CofD_Sheet.Sheet_Components
 									UseVisualStyleBackColor = true,
 									Checked = pipIter < currentValue
 								};
-								pip.Click += new EventHandler(ValueChanged);
+								pip.Click += new EventHandler(RecomputeValue);
 								pip.AutoCheck = false;
 								pips.Add(pip);
 							}

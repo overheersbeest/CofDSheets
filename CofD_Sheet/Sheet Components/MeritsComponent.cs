@@ -122,9 +122,9 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				string newMerit = inputBox.Text;
 				merits.Add(new Merit(newMerit));
-			}
 
-			OnMeritsChanged();
+				OnMeritsChanged();
+			}
 		}
 
 		void RemoveMerit(object sender, EventArgs e)
@@ -160,9 +160,9 @@ namespace CofD_Sheet.Sheet_Components
 			if (confirmed)
 			{
 				merits.Remove(merit);
-			}
 
-			OnMeritsChanged();
+				OnMeritsChanged();
+			}
 		}
 
 		void OnMeritsChanged()

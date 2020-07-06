@@ -83,11 +83,12 @@ namespace CofD_Sheet.Sheet_Components
 			if (confirmed)
 			{
 				maxValue = (int)inputBox.Value;
+
+				OnMaxValueChanged();
 			}
-			OnMaxValueChanged();
 		}
 
-		void ValueChanged(object sender, EventArgs e)
+		void RecomputeValue(object sender, EventArgs e)
 		{
 			for (int i = 0; i < checkBoxes.Count; i++)
 			{
@@ -165,7 +166,7 @@ namespace CofD_Sheet.Sheet_Components
 									UseVisualStyleBackColor = true,
 									Checked = checkBoxIter < currentValue
 								};
-								checkBox.Click += new EventHandler(ValueChanged);
+								checkBox.Click += new EventHandler(RecomputeValue);
 								checkBox.AutoCheck = false;
 								checkBoxes.Add(checkBox);
 							}

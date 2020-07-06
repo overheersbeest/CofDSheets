@@ -44,7 +44,7 @@ namespace CofD_Sheet.Sheet_Components
 		[XmlAttribute]
 		public int maxValue = 5;
 
-		[XmlAttribute]
+		[XmlIgnore]
 		public int maxValueVisible = 0;
 
 		[XmlArray]
@@ -113,8 +113,9 @@ namespace CofD_Sheet.Sheet_Components
 			if (confirmed)
 			{
 				maxValue = (int)inputBox.Value;
+
+				OnMaxValuePossiblyChanged();
 			}
-			OnMaxValuePossiblyChanged();
 		}
 
 		void RecomputeValues(object sender, EventArgs e)
@@ -157,7 +158,6 @@ namespace CofD_Sheet.Sheet_Components
 
 				uiElement.RowCount = rowAmount;
 				uiElement.ColumnCount = columnAmount;
-				uiElement.Dock = DockStyle.Fill;
 				uiElement.Size = new Size(componentWidth, rowHeight * rowAmount);
 				ResizeParentColumn();
 				uiElement.RowStyles.Clear();
@@ -217,7 +217,7 @@ namespace CofD_Sheet.Sheet_Components
 
 				maxValueVisible = newVisibleMaxValue;
 			}
-			
+
 			OnValueChanged();
 		}
 

@@ -90,8 +90,9 @@ namespace CofD_Sheet.Sheet_Components
 			if (confirmed)
 			{
 				MaxValue.CurrentValue = (int)inputBox.Value;
+
+				OnMaxValueChanged();
 			}
-			OnMaxValueChanged();
 		}
 
 		void OnMaxValueChanged()
