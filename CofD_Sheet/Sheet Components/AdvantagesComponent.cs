@@ -80,22 +80,28 @@ namespace CofD_Sheet.Sheet_Components
 					Height = 100,
 					Text = "Change value"
 				};
+
+				bool confirmed = false;
+
 				NumericUpDown inputBox = new NumericUpDown() { Left = 5, Top = 5, Width = 300 };
 				inputBox.Value = value;
 				inputBox.TabIndex = 0;
-				inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { prompt.Close(); } };
+				inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { confirmed = true; prompt.Close(); } };
 				Button confirmation = new Button() { Text = "Confirm", Left = 205, Width = 100, Top = 30 };
 				confirmation.TabIndex = 1;
-				confirmation.Click += (sender2, e2) => { prompt.Close(); };
+				confirmation.Click += (sender2, e2) => { confirmed = true; prompt.Close(); };
 				Button cancel = new Button() { Text = "Cancel", Left = 100, Width = 100, Top = 30 };
 				cancel.TabIndex = 2;
-				cancel.Click += (sender2, e2) => { inputBox.Value = value; prompt.Close(); };
+				cancel.Click += (sender2, e2) => { prompt.Close(); };
 				prompt.Controls.Add(inputBox);
 				prompt.Controls.Add(confirmation);
 				prompt.Controls.Add(cancel);
 				prompt.ShowDialog();
 
-				value = (int)inputBox.Value;
+				if (confirmed)
+				{
+					value = (int)inputBox.Value;
+				}
 				CachedParent.OnValueChanged();
 			}
 		}
@@ -152,22 +158,28 @@ namespace CofD_Sheet.Sheet_Components
 					Height = 100,
 					Text = "Change value"
 				};
+
+				bool confirmed = false;
+
 				TextBox inputBox = new TextBox() { Left = 5, Top = 5, Width = 300 };
 				inputBox.Text = value;
 				inputBox.TabIndex = 0;
-				inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { prompt.Close(); } };
+				inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { confirmed = true; prompt.Close(); } };
 				Button confirmation = new Button() { Text = "Confirm", Left = 205, Width = 100, Top = 30 };
 				confirmation.TabIndex = 1;
-				confirmation.Click += (sender2, e2) => { prompt.Close(); };
+				confirmation.Click += (sender2, e2) => { confirmed = true; prompt.Close(); };
 				Button cancel = new Button() { Text = "Cancel", Left = 100, Width = 100, Top = 30 };
 				cancel.TabIndex = 2;
-				cancel.Click += (sender2, e2) => { inputBox.Text = value; prompt.Close(); };
+				cancel.Click += (sender2, e2) => { prompt.Close(); };
 				prompt.Controls.Add(inputBox);
 				prompt.Controls.Add(confirmation);
 				prompt.Controls.Add(cancel);
 				prompt.ShowDialog();
 
-				value = inputBox.Text;
+				if (confirmed)
+				{
+					value = inputBox.Text;
+				}
 				CachedParent.OnValueChanged();
 			}
 		}
@@ -229,10 +241,12 @@ namespace CofD_Sheet.Sheet_Components
 					Text = "Change values"
 				};
 
+				bool confirmed = false;
+
 				NumericUpDown inputBoxGeneral = new NumericUpDown() { Left = 5, Top = 5, Width = 120 };
 				inputBoxGeneral.Value = general;
 				inputBoxGeneral.TabIndex = 0;
-				inputBoxGeneral.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { prompt.Close(); } };
+				inputBoxGeneral.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { confirmed = true; prompt.Close(); } };
 
 				Label label = new Label { Left = 130, Top = 5, Width = 55 };
 				label.TextAlign = ContentAlignment.MiddleCenter;
@@ -241,14 +255,14 @@ namespace CofD_Sheet.Sheet_Components
 				NumericUpDown inputBoxBallistic = new NumericUpDown() { Left = 185, Top = 5, Width = 120 };
 				inputBoxBallistic.Value = ballistic;
 				inputBoxBallistic.TabIndex = 0;
-				inputBoxBallistic.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { prompt.Close(); } };
+				inputBoxBallistic.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { confirmed = true; prompt.Close(); } };
 
 				Button confirmation = new Button() { Text = "Confirm", Left = 205, Width = 100, Top = 30 };
 				confirmation.TabIndex = 1;
-				confirmation.Click += (sender2, e2) => { prompt.Close(); };
+				confirmation.Click += (sender2, e2) => { confirmed = true; prompt.Close(); };
 				Button cancel = new Button() { Text = "Cancel", Left = 100, Width = 100, Top = 30 };
 				cancel.TabIndex = 2;
-				cancel.Click += (sender2, e2) => { inputBoxGeneral.Value = general; inputBoxBallistic.Value = ballistic; prompt.Close(); };
+				cancel.Click += (sender2, e2) => { prompt.Close(); };
 
 				prompt.Controls.Add(inputBoxGeneral);
 				prompt.Controls.Add(label);
@@ -257,9 +271,12 @@ namespace CofD_Sheet.Sheet_Components
 				prompt.Controls.Add(cancel);
 				prompt.ShowDialog();
 
-				general = (int)inputBoxGeneral.Value;
-				ballistic = (int)inputBoxBallistic.Value;
-				CachedParent.OnValueChanged();
+				if (confirmed)
+				{
+					general = (int)inputBoxGeneral.Value;
+					ballistic = (int)inputBoxBallistic.Value;
+					CachedParent.OnValueChanged();
+				}
 			}
 		}
 

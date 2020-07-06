@@ -71,8 +71,8 @@ namespace CofD_Sheet.Sheet_Components
 			uiElement.TabIndex = 0;
 
 			ContextMenuStrip contextMenu = new ContextMenuStrip();
-			ToolStripItem addMeritItem = contextMenu.Items.Add("Change maximum value");
-			addMeritItem.Click += new EventHandler(OpenChangeMaxValueDialog);
+			ToolStripItem changeMaxValueItem = contextMenu.Items.Add("Change maximum value");
+			changeMaxValueItem.Click += new EventHandler(OpenChangeMaxValueDialog);
 			uiElement.ContextMenuStrip = contextMenu;
 		}
 
@@ -92,22 +92,28 @@ namespace CofD_Sheet.Sheet_Components
 				Height = 100,
 				Text = "Change maximum value"
 			};
+
+			bool confirmed = false;
+
 			NumericUpDown inputBox = new NumericUpDown() { Left = 5, Top = 5, Width = 300 };
 			inputBox.Value = maxValue;
 			inputBox.TabIndex = 0;
-			inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { prompt.Close(); } };
+			inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { confirmed = true; prompt.Close(); } };
 			Button confirmation = new Button() { Text = "Confirm", Left = 205, Width = 100, Top = 30 };
 			confirmation.TabIndex = 1;
-			confirmation.Click += (sender2, e2) => { prompt.Close(); };
+			confirmation.Click += (sender2, e2) => { confirmed = true; prompt.Close(); };
 			Button cancel = new Button() { Text = "Cancel", Left = 100, Width = 100, Top = 30 };
 			cancel.TabIndex = 2;
-			cancel.Click += (sender2, e2) => { inputBox.Value = maxValue; prompt.Close(); };
+			cancel.Click += (sender2, e2) => { prompt.Close(); };
 			prompt.Controls.Add(inputBox);
 			prompt.Controls.Add(confirmation);
 			prompt.Controls.Add(cancel);
 			prompt.ShowDialog();
 
-			maxValue = (int)inputBox.Value;
+			if (confirmed)
+			{
+				maxValue = (int)inputBox.Value;
+			}
 			OnMaxValuePossiblyChanged();
 		}
 

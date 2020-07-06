@@ -105,18 +105,24 @@ namespace CofD_Sheet.Sheet_Components
 				Height = 100,
 				Text = "Add " + singularName
 			};
+
+			bool confirmed = false;
+
 			TextBox inputBox = new TextBox() { Left = 5, Top = 5, Width = 300 };
 			inputBox.TabIndex = 0;
-			inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { prompt.Close(); } };
+			inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { confirmed = true; prompt.Close(); } };
 			Button confirmation = new Button() { Text = "Add", Left = 205, Width = 100, Top = 30 };
 			confirmation.TabIndex = 1;
-			confirmation.Click += (sender2, e2) => { prompt.Close(); };
+			confirmation.Click += (sender2, e2) => { confirmed = true; prompt.Close(); };
 			prompt.Controls.Add(confirmation);
 			prompt.Controls.Add(inputBox);
 			prompt.ShowDialog();
 
-			string newMerit = inputBox.Text;
-			merits.Add(new Merit(newMerit));
+			if (confirmed)
+			{
+				string newMerit = inputBox.Text;
+				merits.Add(new Merit(newMerit));
+			}
 
 			OnMeritsChanged();
 		}
@@ -137,16 +143,24 @@ namespace CofD_Sheet.Sheet_Components
 				Height = 100,
 				Text = "Remove " + singularName
 			};
+
+			bool confirmed = false;
+
 			Label question = new Label() { Left = 5, Top = 5, Width = 300 };
 			question.Text = "Are you sure you want to remove the \"" + merit.name + "\" " + singularName + "?";
 			Button confirmation = new Button() { Text = "Yes", Left = 205, Width = 100, Top = 30 };
-			confirmation.Click += (sender2, e2) => { merits.Remove(merit); prompt.Close(); };
+			confirmation.Click += (sender2, e2) => { confirmed = true; prompt.Close(); };
 			Button cancel = new Button() { Text = "No", Left = 100, Width = 100, Top = 30 };
 			cancel.Click += (sender2, e2) => { prompt.Close(); };
 			prompt.Controls.Add(question);
 			prompt.Controls.Add(confirmation);
 			prompt.Controls.Add(cancel);
 			prompt.ShowDialog();
+
+			if (confirmed)
+			{
+				merits.Remove(merit);
+			}
 
 			OnMeritsChanged();
 		}

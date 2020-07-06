@@ -145,20 +145,26 @@ namespace CofD_Sheet.Sheet_Components
 				Height = 100,
 				Text = "Add Specialty"
 			};
+
+			bool confirmed = false;
+
 			TextBox inputBox = new TextBox() { Left = 5, Top = 5, Width = 300 };
 			inputBox.TabIndex = 0;
-			inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { prompt.Close(); } };
+			inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { confirmed = true; prompt.Close(); } };
 			Button confirmation = new Button() { Text = "Add", Left = 205, Width = 100, Top = 30 };
 			confirmation.TabIndex = 1;
-			confirmation.Click += (sender2, e2) => { prompt.Close(); };
+			confirmation.Click += (sender2, e2) => { confirmed = true; prompt.Close(); };
 			prompt.Controls.Add(confirmation);
 			prompt.Controls.Add(inputBox);
 			prompt.ShowDialog();
 
-			string newSpecialty = inputBox.Text;
-			if (!skill.specialties.Contains(newSpecialty))
+			if (confirmed)
 			{
-				skill.specialties.Add(newSpecialty);
+				string newSpecialty = inputBox.Text;
+				if (!skill.specialties.Contains(newSpecialty))
+				{
+					skill.specialties.Add(newSpecialty);
+				}
 			}
 
 			OnSpecialtiesChanged(skillLabel, skill);
@@ -180,24 +186,30 @@ namespace CofD_Sheet.Sheet_Components
 				Height = 100,
 				Text = "Remove Specialty"
 			};
+
+			bool confirmed = false;
+
 			ComboBox inputBox = new ComboBox() { Left = 5, Top = 5, Width = 300 };
 			foreach (string specialty in skill.specialties)
 			{
 				inputBox.Items.Add(specialty);
 			}
 			inputBox.TabIndex = 0;
-			inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { prompt.Close(); } };
+			inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { confirmed = true; prompt.Close(); } };
 			Button confirmation = new Button() { Text = "Remove", Left = 205, Width = 100, Top = 30 };
 			confirmation.TabIndex = 1;
-			confirmation.Click += (sender2, e2) => { prompt.Close(); };
+			confirmation.Click += (sender2, e2) => { confirmed = true; prompt.Close(); };
 			prompt.Controls.Add(confirmation);
 			prompt.Controls.Add(inputBox);
 			prompt.ShowDialog();
 
-			string specialtytoRemove = inputBox.SelectedItem as string;
-			if (skill.specialties.Contains(specialtytoRemove))
+			if (confirmed)
 			{
-				skill.specialties.Remove(specialtytoRemove);
+				string specialtytoRemove = inputBox.SelectedItem as string;
+				if (skill.specialties.Contains(specialtytoRemove))
+				{
+					skill.specialties.Remove(specialtytoRemove);
+				}
 			}
 
 			OnSpecialtiesChanged(skillLabel, skill);
