@@ -65,7 +65,7 @@ namespace CofD_Sheet
 					components.Add(new SkillsComponent("Social_Skills", new List<string> { "Animal_Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge" }, ColumnId.Left));
 
 					components.Add(new MeritsComponent("Merits", "merit", true, new List<string>(), 5, ColumnId.Middle));
-					components.Add(new AdvantagesComponent("Advantages", new List<string> { "Virtue", "Vice", "Size", "Speed", "Defense", "Armor", "Initiative Mod" }, ColumnId.Middle));
+					components.Add(new AdvantagesComponent("Advantages", GetGetAdvantages(type), ColumnId.Middle));
 					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
 
 					components.Add(new HealthComponent("Health", ColumnId.Right));
@@ -86,7 +86,7 @@ namespace CofD_Sheet
 
 					components.Add(new MeritsComponent("Merits", "merit", true, new List<string>(), 5, ColumnId.Middle));
 					components.Add(new MeritsComponent("Arcana", "arcanum", false, new List<string> { "Death", "Fate", "Forces", "Life", "Matter", "Mind", "Prime", "Space", "Spirit", "Time" }, 5, ColumnId.Middle));
-					components.Add(new AdvantagesComponent("Advantages", new List<string> { "Virtue", "Vice", "Size", "Speed", "Defense", "Armor", "Initiative Mod" }, ColumnId.Middle));
+					components.Add(new AdvantagesComponent("Advantages", GetGetAdvantages(type), ColumnId.Middle));
 					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
 					components.Add(new ExperienceComponent("Arcane_Experience", "Arcane_Beats", ColumnId.Middle));
 
@@ -112,7 +112,7 @@ namespace CofD_Sheet
 
 					components.Add(new MeritsComponent("Merits", "merit", true, new List<string>(), 5, ColumnId.Middle));
 					components.Add(new MeritsComponent("Renown", "renown", false, new List<string> { "Cunning", "Glory", "Honor", "Purity", "Wisdom" }, 5, ColumnId.Middle));
-					components.Add(new AdvantagesComponent("Advantages", new List<string> { "Bone", "Blood", "Size", "Speed", "Defense", "Armor", "Initiative Mod" }, ColumnId.Middle));
+					components.Add(new AdvantagesComponent("Advantages", GetGetAdvantages(type), ColumnId.Middle));
 					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
 
 					components.Add(new HealthComponent("Health", ColumnId.Right));
@@ -135,7 +135,7 @@ namespace CofD_Sheet
 
 					components.Add(new MeritsComponent("Merits", "merit", true, new List<string>(), 5, ColumnId.Middle));
 					components.Add(new MeritsComponent("Disciplines", "discipline", true, new List<string>(), 5, ColumnId.Middle));
-					components.Add(new AdvantagesComponent("Advantages", new List<string> { "Mask", "Dirge", "Size", "Speed", "Defense", "Armor", "Initiative Mod" }, ColumnId.Middle));
+					components.Add(new AdvantagesComponent("Advantages", GetGetAdvantages(type), ColumnId.Middle));
 					components.Add(new MeritsComponent("Banes", "bane", true, new List<string>(), 0, ColumnId.Middle));
 					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
 
@@ -159,7 +159,7 @@ namespace CofD_Sheet
 
 					components.Add(new MeritsComponent("Merits", "merit", true, new List<string>(), 5, ColumnId.Middle));
 					components.Add(new MeritsComponent("Tells", "tell", true, new List<string>(), 0, ColumnId.Middle));
-					components.Add(new AdvantagesComponent("Advantages", new List<string> { "Virtue", "Vice", "Size", "Speed", "Defense", "Armor", "Initiative Mod" }, ColumnId.Middle));
+					components.Add(new AdvantagesComponent("Advantages", GetGetAdvantages(type), ColumnId.Middle));
 					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
 
 					components.Add(new HealthComponent("Health", ColumnId.Right));
@@ -173,7 +173,7 @@ namespace CofD_Sheet
 					components.Add(new AttributesComponent("Attributes", new List<string> { "Power", "Finesse", "Resistance" }, ColumnId.Left));
 
 					components.Add(new MeritsComponent("Influences", "influence", true, new List<string>(), 5, ColumnId.Middle));
-					components.Add(new AdvantagesComponent("Advantages", new List<string> { "Ban", "Bane", "Size", "Speed", "Defense", "Armor", "Initiative Mod" }, ColumnId.Middle));
+					components.Add(new AdvantagesComponent("Advantages", GetGetAdvantages(type), ColumnId.Middle));
 
 					components.Add(new HealthComponent("Corpus", ColumnId.Right));
 					components.Add(new ResourceComponent("Willpower", ColumnId.Right));
@@ -243,6 +243,40 @@ namespace CofD_Sheet
 			FormsComponent.sets[4].modifications.Add(new ModificationSetComponent.IntModification(new List<string>() { "Social_Attributes", "Manipulation" }, -1, IntModificationType.Delta));
 
 			return FormsComponent;
+		}
+
+		private List<AdvantagesComponent.Advantage> GetGetAdvantages(SheetType type)
+		{
+			List<AdvantagesComponent.Advantage> retVal = new List<AdvantagesComponent.Advantage>();
+			switch (type)
+			{
+				case SheetType.Mortal:
+				case SheetType.WolfBlooded:
+				case SheetType.Mage:
+					retVal.Add(new AdvantagesComponent.StringAdvantage("Virtue"));
+					retVal.Add(new AdvantagesComponent.StringAdvantage("Vice"));
+					break;
+				case SheetType.Werewolf:
+					retVal.Add(new AdvantagesComponent.StringAdvantage("Bone"));
+					retVal.Add(new AdvantagesComponent.StringAdvantage("Blood"));
+					break;
+				case SheetType.Vampire:
+					retVal.Add(new AdvantagesComponent.StringAdvantage("Mask"));
+					retVal.Add(new AdvantagesComponent.StringAdvantage("Dirge"));
+					break;
+				case SheetType.Spirit:
+					retVal.Add(new AdvantagesComponent.StringAdvantage("Ban"));
+					retVal.Add(new AdvantagesComponent.StringAdvantage("Bane"));
+					break;
+			}
+
+			retVal.Add(new AdvantagesComponent.NumericAdvantage("Size"));
+			retVal.Add(new AdvantagesComponent.NumericAdvantage("Speed"));
+			retVal.Add(new AdvantagesComponent.NumericAdvantage("Defense"));
+			retVal.Add(new AdvantagesComponent.ArmorAdvantage("Armor"));
+			retVal.Add(new AdvantagesComponent.NumericAdvantage("Initiative Mod"));
+
+			return retVal;
 		}
 	}
 }

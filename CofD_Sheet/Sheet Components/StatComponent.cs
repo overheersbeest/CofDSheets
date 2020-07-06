@@ -41,8 +41,8 @@ namespace CofD_Sheet.Sheet_Components
 			uiElement.TabIndex = 0;
 
 			ContextMenuStrip contextMenu = new ContextMenuStrip();
-			ToolStripItem addMeritItem = contextMenu.Items.Add("Change maximum value");
-			addMeritItem.Click += new EventHandler(OpenChangeMaxValueDialog);
+			ToolStripItem ChangeMaxItem = contextMenu.Items.Add("Change maximum value");
+			ChangeMaxItem.Click += new EventHandler(OpenChangeMaxValueDialog);
 			uiElement.ContextMenuStrip = contextMenu;
 		}
 
