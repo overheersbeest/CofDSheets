@@ -127,21 +127,27 @@ namespace CofD_Sheet.Sheet_Components
 					{
 						//break, to separate groups of 5
 						if (r == 0)
+						{
 							uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, separatorWidth));
+						}
 					}
 					else
 					{
 						if (r == 0)
+						{
 							uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, separatorWidth * separatorProportion));
+						}
 						int slotNr = slots.Count;
 						if (slotNr < MaxValue.CurrentValue)
 						{
-							TextBox slot = new TextBox();
-							slot.Anchor = System.Windows.Forms.AnchorStyles.None;
+							TextBox slot = new TextBox
+							{
+								Anchor = System.Windows.Forms.AnchorStyles.None,
+								AutoSize = true,
+								Size = new System.Drawing.Size(15, 14),
+								TabIndex = 0
+							};
 							slot.KeyDown += new KeyEventHandler(OnKeyDown);
-							slot.AutoSize = true;
-							slot.Size = new System.Drawing.Size(15, 14);
-							slot.TabIndex = 0;
 							slot.TextChanged += RecomputeValues;
 							slots.Add(slot);
 							uiElement.Controls.Add(slot, c, r);

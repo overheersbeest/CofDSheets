@@ -17,14 +17,13 @@ namespace CofD_Sheet.Sheet_Components
 	}
 	[XmlInclude(typeof(AdvantagesComponent))]
 	[XmlInclude(typeof(AspirationsComponent))]
-	[XmlInclude(typeof(AttributesComponent))]
 	[XmlInclude(typeof(ExperienceComponent))]
 	[XmlInclude(typeof(HealthComponent))]
 	[XmlInclude(typeof(MeritsComponent))]
 	[XmlInclude(typeof(ModificationSetComponent))]
 	[XmlInclude(typeof(ResourceComponent))]
-	[XmlInclude(typeof(SkillsComponent))]
 	[XmlInclude(typeof(StatComponent))]
+	[XmlInclude(typeof(TraitsComponent))]
 	public abstract class ISheetComponent
 	{
 		[XmlIgnore]

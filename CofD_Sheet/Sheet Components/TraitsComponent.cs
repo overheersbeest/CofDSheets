@@ -9,30 +9,30 @@ using System.Xml.Serialization;
 namespace CofD_Sheet.Sheet_Components
 {
 	[Serializable]
-	public class SkillsComponent : ISheetComponent
+	public class TraitsComponent : ISheetComponent
 	{
-		public class Skill
+		public class Trait
 		{
-			public Skill()
+			public Trait()
 			{ }
-			public Skill(string _name)
+			public Trait(string _name)
 			{
 				this.name = _name;
 			}
-			public Skill(string _name, int _value)
+			public Trait(string _name, int _value)
 			{
 				this.name = _name;
 				this.Value.CurrentValue = _value;
 			}
 
 			[XmlAttribute]
-			public string name = "Skill";
+			public string name = "Trait";
 
 			[XmlElement]
 			public ModifiableInt Value = new ModifiableInt(0);
 
 			[XmlElement]
-			public List<String> specialties = new List<String>();
+			public List<string> specialties = new List<string>();
 
 			[XmlIgnore]
 			public List<RadioButton> pips = new List<RadioButton>();
@@ -42,29 +42,34 @@ namespace CofD_Sheet.Sheet_Components
 		const int maxDotsPerRow = 10;
 
 		[XmlIgnore]
-		const int nameLabelWidth = 180;
+		const int nameLabelWidth = 160;
 
 		[XmlAttribute]
 		public int maxValue = 5;
+
+		[XmlAttribute]
+		public bool canHaveSpecialties = false;
 
 		[XmlIgnore]
 		public int maxValueVisible = 0;
 
 		[XmlArray]
-		public List<Skill> skills = new List<Skill>();
+		public List<Trait> Traits = new List<Trait>();
 
-		public SkillsComponent() : base("SkillsComponent", ColumnId.Undefined)
+		public TraitsComponent() : base("TraitsComponent", ColumnId.Undefined)
 		{
 			Init();
 		}
 
-		public SkillsComponent(string componentName, List<string> skillNames, ColumnId _column) : base(componentName, _column)
+		public TraitsComponent(string componentName, bool _canHaveSpecialties, List<string> TraitNames, ColumnId _column) : base(componentName, _column)
 		{
 			Init();
 
-			for (int i = 0; i < skillNames.Count; i++)
+			canHaveSpecialties = _canHaveSpecialties;
+
+			for (int i = 0; i < TraitNames.Count; i++)
 			{
-				skills.Add(new Skill(skillNames[i]));
+				Traits.Add(new Trait(TraitNames[i]));
 			}
 		}
 
@@ -124,9 +129,9 @@ namespace CofD_Sheet.Sheet_Components
 		void OpenAddSpecialtyDialog(object sender, EventArgs e)
 		{
 			ContextMenuStrip owner = (sender as ToolStripItem).Owner as ContextMenuStrip;
-			Label skillLabel = owner.SourceControl as Label;
-			Skill skill = skills.Find(x => skillLabel.Text.StartsWith(x.name));
-			if (skill == null)
+			Label TraitLabel = owner.SourceControl as Label;
+			Trait Trait = Traits.Find(x => TraitLabel.Text.StartsWith(x.name));
+			if (Trait == null)
 			{
 				return;
 			}
@@ -153,21 +158,21 @@ namespace CofD_Sheet.Sheet_Components
 			if (confirmed)
 			{
 				string newSpecialty = inputBox.Text;
-				if (!skill.specialties.Contains(newSpecialty))
+				if (!Trait.specialties.Contains(newSpecialty))
 				{
-					skill.specialties.Add(newSpecialty);
+					Trait.specialties.Add(newSpecialty);
 				}
 
-				OnSpecialtiesChanged(skillLabel, skill);
+				OnSpecialtiesChanged(TraitLabel, Trait);
 			}
 		}
 
 		void OpenRemoveSpecialtyDialog(object sender, EventArgs e)
 		{
 			ContextMenuStrip owner = (sender as ToolStripItem).Owner as ContextMenuStrip;
-			Label skillLabel = owner.SourceControl as Label;
-			Skill skill = skills.Find(x => skillLabel.Text.StartsWith(x.name));
-			if (skill == null)
+			Label TraitLabel = owner.SourceControl as Label;
+			Trait Trait = Traits.Find(x => TraitLabel.Text.StartsWith(x.name));
+			if (Trait == null)
 			{
 				return;
 			}
@@ -182,7 +187,7 @@ namespace CofD_Sheet.Sheet_Components
 			bool confirmed = false;
 
 			ComboBox inputBox = new ComboBox() { Left = 5, Top = 5, Width = 300 };
-			foreach (string specialty in skill.specialties)
+			foreach (string specialty in Trait.specialties)
 			{
 				inputBox.Items.Add(specialty);
 			}
@@ -198,56 +203,60 @@ namespace CofD_Sheet.Sheet_Components
 			if (confirmed)
 			{
 				string specialtytoRemove = inputBox.SelectedItem as string;
-				if (skill.specialties.Contains(specialtytoRemove))
+				if (Trait.specialties.Contains(specialtytoRemove))
 				{
-					skill.specialties.Remove(specialtytoRemove);
+					Trait.specialties.Remove(specialtytoRemove);
 				}
 
-				OnSpecialtiesChanged(skillLabel, skill);
+				OnSpecialtiesChanged(TraitLabel, Trait);
 			}
 		}
 
-		void OnSpecialtiesChanged(Label label, Skill skill)
+		void OnSpecialtiesChanged(Label label, Trait Trait)
 		{
-			if (skill.specialties.Count > 0)
+			if (Trait.specialties.Count > 0)
 			{
-				label.Text = skill.name + " (" + string.Join(", ", skill.specialties) + ")";
+				label.Text = Trait.name + " (" + string.Join(", ", Trait.specialties) + ")";
 			}
 			else
 			{
-				label.Text = skill.name;
+				label.Text = Trait.name;
 			}
 
-			ContextMenuStrip contextMenu = new ContextMenuStrip();
-			ToolStripItem addSpecialtyItem = contextMenu.Items.Add("Add Specialty");
-			addSpecialtyItem.Click += new EventHandler(OpenAddSpecialtyDialog);
-			if (skill.specialties.Count > 0)
+			if (canHaveSpecialties)
 			{
-				ToolStripItem removeSpecialtyItem = contextMenu.Items.Add("Remove Specialty");
-				removeSpecialtyItem.Click += new EventHandler(OpenRemoveSpecialtyDialog);
-			}
+				ContextMenuStrip contextMenu = new ContextMenuStrip();
+				ToolStripItem addSpecialtyItem = contextMenu.Items.Add("Add Specialty");
+				addSpecialtyItem.Click += new EventHandler(OpenAddSpecialtyDialog);
+				if (Trait.specialties.Count > 0)
+				{
+					ToolStripItem removeSpecialtyItem = contextMenu.Items.Add("Remove Specialty");
+					removeSpecialtyItem.Click += new EventHandler(OpenRemoveSpecialtyDialog);
+				}
 
-			label.ContextMenuStrip = contextMenu;
+				label.ContextMenuStrip = contextMenu;
+
+			}
 
 			OnComponentChanged();
 		}
 
 		void RecomputeValues(object sender, EventArgs e)
 		{
-			foreach (Skill skill in skills)
+			foreach (Trait Trait in Traits)
 			{
-				for (int i = 0; i < skill.pips.Count; i++)
+				for (int i = 0; i < Trait.pips.Count; i++)
 				{
-					if (sender == skill.pips[i])
+					if (sender == Trait.pips[i])
 					{
-						if (skill.Value.CurrentValue == i + 1)
+						if (Trait.Value.CurrentValue == i + 1)
 						{
 							//when clicking the last pip, reduce value by 1
-							skill.Value.CurrentValue = i;
+							Trait.Value.CurrentValue = i;
 						}
 						else
 						{
-							skill.Value.CurrentValue = i + 1;
+							Trait.Value.CurrentValue = i + 1;
 						}
 					}
 				}
@@ -258,21 +267,21 @@ namespace CofD_Sheet.Sheet_Components
 		void OnMaxValuePossiblyChanged()
 		{
 			int newVisibleMaxValue = maxValue;
-			foreach (Skill skill in skills)
+			foreach (Trait Trait in Traits)
 			{
-				skill.Value.maxValue = maxValue;
-				newVisibleMaxValue = Math.Max(newVisibleMaxValue, skill.Value.CurrentValue);
+				Trait.Value.maxValue = maxValue;
+				newVisibleMaxValue = Math.Max(newVisibleMaxValue, Trait.Value.CurrentValue);
 			}
 
 			if (newVisibleMaxValue != maxValueVisible)
 			{
-				int rowsPerSkill = Convert.ToInt32(Math.Ceiling(maxValue / Convert.ToSingle(maxDotsPerRow)));
-				int rowAmount = skills.Count * rowsPerSkill;
-				int columnAmount = 1 + Math.Min(maxValue, maxDotsPerRow);
+				int rowsPerTrait = Convert.ToInt32(Math.Ceiling(newVisibleMaxValue / Convert.ToSingle(maxDotsPerRow)));
+				int rowAmount = Traits.Count * rowsPerTrait;
+				int columnAmount = 1 + Math.Min(newVisibleMaxValue, maxDotsPerRow);
 
 				uiElement.RowCount = rowAmount;
 				uiElement.ColumnCount = columnAmount;
-				uiElement.Size = new Size(componentWidth, (rowHeight * rowAmount));
+				uiElement.Size = new Size(componentWidth, rowHeight * rowAmount);
 				ResizeParentColumn();
 				uiElement.RowStyles.Clear();
 				uiElement.ColumnStyles.Clear();
@@ -285,47 +294,50 @@ namespace CofD_Sheet.Sheet_Components
 					uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F / (columnAmount - 1)));
 				}
 
-				for (int a = 0; a < skills.Count; a++)
+				for (int a = 0; a < Traits.Count; a++)
 				{
-					Skill skill = skills[a];
-					for (int ar = 0; ar < rowsPerSkill; ++ar)
+					Trait Trait = Traits[a];
+					for (int ar = 0; ar < rowsPerTrait; ++ar)
 					{
 						uiElement.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / rowAmount));
 						if (ar == 0)
 						{
-							Label skillNameLabel = new Label
+							Label TraitNameLabel = new Label
 							{
 								Anchor = AnchorStyles.None,
 								AutoSize = true,
-								Name = "skillNameLabel" + skill.name,
-								Size = new Size(nameLabelWidth, 20),
-								TabIndex = 0
+								Name = "TraitNameLabel" + Trait.name,
+								Size = new Size(nameLabelWidth, 20)
 							};
-							OnSpecialtiesChanged(skillNameLabel, skill);
-							uiElement.Controls.Add(skillNameLabel, 0, a * rowsPerSkill);
+
+							OnSpecialtiesChanged(TraitNameLabel, Trait);
+							uiElement.Controls.Add(TraitNameLabel, 0, a * rowsPerTrait);
 						}
 					}
 
 					//pips
-					skill.pips.Clear();
-					for (int p = 0; p < maxValue; p++)
+					Trait.pips.Clear();
+					for (int p = 0; p < newVisibleMaxValue; p++)
 					{
 						RadioButton pip = new RadioButton
 						{
 							Anchor = System.Windows.Forms.AnchorStyles.None,
 							AutoSize = true,
-							Size = new System.Drawing.Size(20, 20),
+							Size = new System.Drawing.Size(18, 18),
 							TabIndex = 0,
-							UseVisualStyleBackColor = true
+							UseVisualStyleBackColor = true,
+							Padding = new Padding(0),
+							Margin = new Padding(0),
+							Dock = DockStyle.Fill
 						};
 						pip.Click += new EventHandler(RecomputeValues);
 						pip.AutoCheck = false;
-						skill.pips.Add(pip);
+						Trait.pips.Add(pip);
 
 						//insert pip in table
-						int rowIndexOfSkill = Convert.ToInt32(Math.Floor(p / Convert.ToSingle(maxDotsPerRow)));
-						int column = (p - (rowIndexOfSkill * maxDotsPerRow)) + 1;
-						int row = a * rowsPerSkill + rowIndexOfSkill;
+						int rowIndexOfTrait = Convert.ToInt32(Math.Floor(p / Convert.ToSingle(maxDotsPerRow)));
+						int column = (p - (rowIndexOfTrait * maxDotsPerRow)) + 1;
+						int row = a * rowsPerTrait + rowIndexOfTrait;
 						uiElement.Controls.Add(pip, column, row);
 					}
 				}
@@ -338,11 +350,11 @@ namespace CofD_Sheet.Sheet_Components
 
 		void OnValueChanged()
 		{
-			foreach (Skill skill in skills)
+			foreach (Trait Trait in Traits)
 			{
-				for (int i = 0; i < skill.pips.Count; i++)
+				for (int i = 0; i < Trait.pips.Count; i++)
 				{
-					skill.pips[i].Checked = i < skill.Value.CurrentValue;
+					Trait.pips[i].Checked = i < Trait.Value.CurrentValue;
 				}
 			}
 
@@ -355,12 +367,12 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				if (mod.path.Count > 1)
 				{
-					string targetSkill = mod.path[1];
-					foreach (Skill skill in skills)
+					string targetTrait = mod.path[1];
+					foreach (Trait Trait in Traits)
 					{
-						if (skill.name == targetSkill)
+						if (Trait.name == targetTrait)
 						{
-							skill.Value.ApplyModification(intMod.modType, intMod.value);
+							Trait.Value.ApplyModification(intMod.modType, intMod.value);
 							break;
 						}
 					}
@@ -370,9 +382,9 @@ namespace CofD_Sheet.Sheet_Components
 
 		override public void ResetModifications()
 		{
-			foreach (Skill skill in skills)
+			foreach (Trait Trait in Traits)
 			{
-				skill.Value.Reset();
+				Trait.Value.Reset();
 			}
 		}
 
