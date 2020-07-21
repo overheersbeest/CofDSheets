@@ -64,7 +64,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sheet Components\MeritsComponent.cs" />
     <Compile Include="Sheet Components\ModificationSetComponent.cs" />
     <Compile Include="Sheet Components\ResourceComponent.cs" />
     <Compile Include="Sheet Components\StatComponent.cs" />

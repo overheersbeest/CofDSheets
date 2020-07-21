@@ -50,37 +50,57 @@ namespace CofD_Sheet.Sheet_Components
 		[XmlAttribute]
 		public bool canHaveSpecialties = false;
 
+		[XmlAttribute]
+		public bool canModifyTraits = true;
+
+		[XmlAttribute]
+		public string singularName = "trait";
+
+		[XmlAttribute]
+		public bool canModifyMaxValue = true;
+
 		[XmlIgnore]
-		public int maxValueVisible = 0;
+		public int maxValueVisible = -1;
 
 		[XmlArray]
 		public List<Trait> Traits = new List<Trait>();
 
 		public TraitsComponent() : base("TraitsComponent", ColumnId.Undefined)
-		{
-			Init();
-		}
+		{ }
 
-		public TraitsComponent(string componentName, bool _canHaveSpecialties, List<string> TraitNames, ColumnId _column) : base(componentName, _column)
+		public TraitsComponent(string componentName, bool _canHaveSpecialties, bool _canModifyTraits, string _singularName, bool _canModifyMaxValue, List<string> TraitNames, int _maxValue, ColumnId _column) : base(componentName, _column)
 		{
-			Init();
-
 			canHaveSpecialties = _canHaveSpecialties;
+			canModifyTraits = _canModifyTraits;
+			singularName = _singularName;
+			canModifyMaxValue = _canModifyMaxValue;
+			maxValue = _maxValue;
 
 			for (int i = 0; i < TraitNames.Count; i++)
 			{
 				Traits.Add(new Trait(TraitNames[i]));
 			}
+
+			Init();
 		}
 
-		void Init()
+		override public void Init()
 		{
 			uiElement.Dock = DockStyle.Fill;
-			uiElement.TabIndex = 0;
 
 			ContextMenuStrip contextMenu = new ContextMenuStrip();
-			ToolStripItem changeMaxValueItem = contextMenu.Items.Add("Change maximum value");
-			changeMaxValueItem.Click += new EventHandler(OpenChangeMaxValueDialog);
+			if (canModifyMaxValue)
+			{
+				ToolStripItem changeMaxValueItem = contextMenu.Items.Add("Change maximum value");
+				changeMaxValueItem.Click += new EventHandler(OpenChangeMaxValueDialog);
+			}
+
+			if (canModifyTraits)
+			{
+				ToolStripItem addTraitItem = contextMenu.Items.Add("Add " + singularName);
+				addTraitItem.Click += new EventHandler(OpenAddTraitDialog);
+			}
+
 			uiElement.ContextMenuStrip = contextMenu;
 		}
 
@@ -126,6 +146,7 @@ namespace CofD_Sheet.Sheet_Components
 			}
 		}
 
+#region Specialties
 		void OpenAddSpecialtyDialog(object sender, EventArgs e)
 		{
 			ContextMenuStrip owner = (sender as ToolStripItem).Owner as ContextMenuStrip;
@@ -240,6 +261,150 @@ namespace CofD_Sheet.Sheet_Components
 
 			OnComponentChanged();
 		}
+#endregion
+
+#region Add/Remove Traits
+		void OpenAddTraitDialog(object sender, EventArgs e)
+		{
+			Form prompt = new Form
+			{
+				StartPosition = FormStartPosition.CenterParent,
+				Width = 325,
+				Height = 100,
+				Text = "Add " + singularName
+			};
+
+			bool confirmed = false;
+
+			TextBox inputBox = new TextBox() { Left = 5, Top = 5, Width = 300 };
+			inputBox.TabIndex = 0;
+			inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { confirmed = true; prompt.Close(); } };
+			Button confirmation = new Button() { Text = "Add", Left = 205, Width = 100, Top = 30 };
+			confirmation.TabIndex = 1;
+			confirmation.Click += (sender2, e2) => { confirmed = true; prompt.Close(); };
+			prompt.Controls.Add(confirmation);
+			prompt.Controls.Add(inputBox);
+			prompt.ShowDialog();
+
+			if (confirmed)
+			{
+				string newTrait = inputBox.Text;
+				Traits.Add(new Trait(newTrait));
+
+				OnTraitsChanged();
+			}
+		}
+
+		void OpenRemoveTraitDialog(object sender, EventArgs e)
+		{
+			ContextMenuStrip owner = (sender as ToolStripItem).Owner as ContextMenuStrip;
+			Label traitLabel = owner.SourceControl as Label;
+			Trait trait = Traits.Find(x => traitLabel.Text.StartsWith(x.name));
+			if (trait == null)
+			{
+				return;
+			}
+			Form prompt = new Form
+			{
+				StartPosition = FormStartPosition.CenterParent,
+				Width = 325,
+				Height = 100,
+				Text = "Remove " + singularName
+			};
+
+			bool confirmed = false;
+
+			Label question = new Label() { Left = 5, Top = 5, Width = 300 };
+			question.Text = "Are you sure you want to remove the \"" + trait.name + "\" " + singularName + "?";
+			Button confirmation = new Button() { Text = "Yes", Left = 205, Width = 100, Top = 30 };
+			confirmation.Click += (sender2, e2) => { confirmed = true; prompt.Close(); };
+			Button cancel = new Button() { Text = "No", Left = 100, Width = 100, Top = 30 };
+			cancel.Click += (sender2, e2) => { prompt.Close(); };
+			prompt.Controls.Add(question);
+			prompt.Controls.Add(confirmation);
+			prompt.Controls.Add(cancel);
+			prompt.ShowDialog();
+
+			if (confirmed)
+			{
+				Traits.Remove(trait);
+
+				OnTraitsChanged();
+			}
+		}
+
+		void OnTraitsChanged()
+		{
+			int rowsPerTrait = Math.Max(1, Convert.ToInt32(Math.Ceiling(maxValueVisible / Convert.ToSingle(maxDotsPerRow))));
+			int rowAmount = Traits.Count * rowsPerTrait;
+			int columnAmount = 1 + Math.Min(maxValueVisible, maxDotsPerRow);
+
+			uiElement.RowCount = rowAmount;
+			uiElement.ColumnCount = columnAmount;
+			uiElement.Size = new Size(componentWidth, rowHeight * rowAmount);
+			ResizeParentColumn();
+			uiElement.RowStyles.Clear();
+			uiElement.ColumnStyles.Clear();
+			uiElement.Controls.Clear();
+
+			//column styles
+			uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, nameLabelWidth));
+			for (int c = 1; c < columnAmount; c++)
+			{
+				uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F / (columnAmount - 1)));
+			}
+
+			for (int a = 0; a < Traits.Count; a++)
+			{
+				Trait trait = Traits[a];
+				for (int ar = 0; ar < rowsPerTrait; ++ar)
+				{
+					uiElement.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / rowAmount));
+					if (ar == 0)
+					{
+						Label TraitNameLabel = new Label
+						{
+							Anchor = AnchorStyles.None,
+							AutoSize = true,
+							Name = "TraitNameLabel" + trait.name,
+							Size = new Size(nameLabelWidth, 20)
+						};
+
+						OnSpecialtiesChanged(TraitNameLabel, trait);
+						uiElement.Controls.Add(TraitNameLabel, 0, a * rowsPerTrait);
+					}
+				}
+
+				//pips
+				trait.pips.Clear();
+				for (int p = 0; p < maxValueVisible; p++)
+				{
+					RadioButton pip = new RadioButton
+					{
+						Anchor = System.Windows.Forms.AnchorStyles.None,
+						AutoSize = true,
+						Size = new System.Drawing.Size(18, 18),
+						TabIndex = 0,
+						UseVisualStyleBackColor = true,
+						Padding = new Padding(0),
+						Margin = new Padding(0),
+						Dock = DockStyle.Fill
+					};
+					pip.Click += new EventHandler(RecomputeValues);
+					pip.AutoCheck = false;
+					trait.pips.Add(pip);
+
+					//insert pip in table
+					int rowIndexOfTrait = Convert.ToInt32(Math.Floor(p / Convert.ToSingle(maxDotsPerRow)));
+					int column = (p - (rowIndexOfTrait * maxDotsPerRow)) + 1;
+					int row = a * rowsPerTrait + rowIndexOfTrait;
+					uiElement.Controls.Add(pip, column, row);
+				}
+			}
+
+			OnValueChanged();
+		}
+#endregion
 
 		void RecomputeValues(object sender, EventArgs e)
 		{
@@ -275,77 +440,13 @@ namespace CofD_Sheet.Sheet_Components
 
 			if (newVisibleMaxValue != maxValueVisible)
 			{
-				int rowsPerTrait = Convert.ToInt32(Math.Ceiling(newVisibleMaxValue / Convert.ToSingle(maxDotsPerRow)));
-				int rowAmount = Traits.Count * rowsPerTrait;
-				int columnAmount = 1 + Math.Min(newVisibleMaxValue, maxDotsPerRow);
-
-				uiElement.RowCount = rowAmount;
-				uiElement.ColumnCount = columnAmount;
-				uiElement.Size = new Size(componentWidth, rowHeight * rowAmount);
-				ResizeParentColumn();
-				uiElement.RowStyles.Clear();
-				uiElement.ColumnStyles.Clear();
-				uiElement.Controls.Clear();
-
-				//column styles
-				uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, nameLabelWidth));
-				for (int c = 1; c < columnAmount; c++)
-				{
-					uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F / (columnAmount - 1)));
-				}
-
-				for (int a = 0; a < Traits.Count; a++)
-				{
-					Trait Trait = Traits[a];
-					for (int ar = 0; ar < rowsPerTrait; ++ar)
-					{
-						uiElement.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / rowAmount));
-						if (ar == 0)
-						{
-							Label TraitNameLabel = new Label
-							{
-								Anchor = AnchorStyles.None,
-								AutoSize = true,
-								Name = "TraitNameLabel" + Trait.name,
-								Size = new Size(nameLabelWidth, 20)
-							};
-
-							OnSpecialtiesChanged(TraitNameLabel, Trait);
-							uiElement.Controls.Add(TraitNameLabel, 0, a * rowsPerTrait);
-						}
-					}
-
-					//pips
-					Trait.pips.Clear();
-					for (int p = 0; p < newVisibleMaxValue; p++)
-					{
-						RadioButton pip = new RadioButton
-						{
-							Anchor = System.Windows.Forms.AnchorStyles.None,
-							AutoSize = true,
-							Size = new System.Drawing.Size(18, 18),
-							TabIndex = 0,
-							UseVisualStyleBackColor = true,
-							Padding = new Padding(0),
-							Margin = new Padding(0),
-							Dock = DockStyle.Fill
-						};
-						pip.Click += new EventHandler(RecomputeValues);
-						pip.AutoCheck = false;
-						Trait.pips.Add(pip);
-
-						//insert pip in table
-						int rowIndexOfTrait = Convert.ToInt32(Math.Floor(p / Convert.ToSingle(maxDotsPerRow)));
-						int column = (p - (rowIndexOfTrait * maxDotsPerRow)) + 1;
-						int row = a * rowsPerTrait + rowIndexOfTrait;
-						uiElement.Controls.Add(pip, column, row);
-					}
-				}
-
 				maxValueVisible = newVisibleMaxValue;
+				OnTraitsChanged();
 			}
-
-			OnValueChanged();
+			else
+			{
+				OnValueChanged();
+			}
 		}
 
 		void OnValueChanged()

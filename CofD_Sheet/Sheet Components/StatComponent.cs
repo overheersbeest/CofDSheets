@@ -26,16 +26,14 @@ namespace CofD_Sheet.Sheet_Components
 		List<RadioButton> pips = new List<RadioButton>();
 
 		public StatComponent() : base("StatComponent", ColumnId.Undefined)
-		{
-			Init();
-		}
+		{ }
 
 		public StatComponent(string componentName, ColumnId _column) : base(componentName, _column)
 		{
 			Init();
 		}
 
-		void Init()
+		override public void Init()
 		{
 			uiElement.Dock = DockStyle.Fill;
 			uiElement.TabIndex = 0;

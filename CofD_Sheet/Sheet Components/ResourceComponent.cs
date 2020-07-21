@@ -26,16 +26,14 @@ namespace CofD_Sheet.Sheet_Components
 		List<CheckBox> checkBoxes = new List<CheckBox>();
 
 		public ResourceComponent() : base("SimpleComponent", ColumnId.Undefined)
-		{
-			Init();
-		}
+		{ }
 
 		public ResourceComponent(string componentName, ColumnId _column) : base(componentName, _column)
 		{
 			Init();
 		}
 
-		void Init()
+		override public void Init()
 		{
 			uiElement.Dock = DockStyle.Fill;
 			uiElement.TabIndex = 0;

@@ -196,6 +196,10 @@ namespace CofD_Sheet
 				XmlSerializer serializer = new XmlSerializer(typeof(Sheet));
 				StreamReader reader = new StreamReader(path);
 				sheet = (Sheet)serializer.Deserialize(reader);
+				foreach (ISheetComponent component in sheet.components)
+				{
+					component.Init();
+				}
 				reader.Close();
 				AssosiatedFile = path;
 				RefreshSheet();
@@ -274,14 +278,17 @@ namespace CofD_Sheet
 				if (component.column == ColumnId.Left)
 				{
 					LeftComponentTable.Controls.Add(componentUIElement);
+					LeftComponentTable.RowCount++;
 				}
 				else if (component.column == ColumnId.Middle)
 				{
 					MiddleComponentTable.Controls.Add(componentUIElement);
+					MiddleComponentTable.RowCount++;
 				}
 				else
 				{
 					RightComponentTable.Controls.Add(componentUIElement);
+					RightComponentTable.RowCount++;
 				}
 			}
 
@@ -290,8 +297,11 @@ namespace CofD_Sheet
 
 			//add empty tables to be used for padding out each column
 			LeftComponentTable.Controls.Add(new TableLayoutPanel());
+			LeftComponentTable.RowCount++;
 			MiddleComponentTable.Controls.Add(new TableLayoutPanel());
+			MiddleComponentTable.RowCount++;
 			RightComponentTable.Controls.Add(new TableLayoutPanel());
+			RightComponentTable.RowCount++;
 
 			ResizeColumn(LeftComponentTable);
 			ResizeColumn(MiddleComponentTable);
@@ -329,9 +339,9 @@ namespace CofD_Sheet
 			if (component.Parent is TableLayoutPanel cell)
 			{
 				cell.Size = new Size(cell.Size.Width, component.Size.Height);
-				Form1.ResizeTableHeight(ref cell);
+				ResizeTableHeight(ref cell);
 				TableLayoutPanel column = cell.Parent as TableLayoutPanel;
-				Form1.ResizeTableHeight(ref column);
+				ResizeTableHeight(ref column);
 			}
 		}
 

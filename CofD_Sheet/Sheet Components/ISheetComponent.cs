@@ -19,7 +19,6 @@ namespace CofD_Sheet.Sheet_Components
 	[XmlInclude(typeof(AspirationsComponent))]
 	[XmlInclude(typeof(ExperienceComponent))]
 	[XmlInclude(typeof(HealthComponent))]
-	[XmlInclude(typeof(MeritsComponent))]
 	[XmlInclude(typeof(ModificationSetComponent))]
 	[XmlInclude(typeof(ResourceComponent))]
 	[XmlInclude(typeof(StatComponent))]
@@ -48,6 +47,11 @@ namespace CofD_Sheet.Sheet_Components
 		{
 			name = componentName;
 			column = _column;
+		}
+
+		virtual public void Init()
+		{
+			//do nothing
 		}
 
 		abstract public Control ConstructUIElement();

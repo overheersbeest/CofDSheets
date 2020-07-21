@@ -56,36 +56,36 @@ namespace CofD_Sheet
 			switch (type)
 			{
 				case SheetType.Mortal:
-					components.Add(new TraitsComponent("Mental_Attributes", false, new List<string> { "Intelligence", "Wits", "Resolve" }, ColumnId.Left));
-					components.Add(new TraitsComponent("Physical_Attributes", false, new List<string> { "Strength", "Dexterity", "Stamina" }, ColumnId.Middle));
-					components.Add(new TraitsComponent("Social_Attributes", false, new List<string> { "Presence", "Manipulation", "Composure" }, ColumnId.Right));
+					components.Add(new TraitsComponent("Mental_Attributes", false, false, "attribute", true, new List<string> { "Intelligence", "Wits", "Resolve" }, 5, ColumnId.Left));
+					components.Add(new TraitsComponent("Physical_Attributes", false, false, "attribute", true, new List<string> { "Strength", "Dexterity", "Stamina" }, 5, ColumnId.Middle));
+					components.Add(new TraitsComponent("Social_Attributes", false, false, "attribute", true, new List<string> { "Presence", "Manipulation", "Composure" }, 5, ColumnId.Right));
 
-					components.Add(new TraitsComponent("Mental_Skills", true, new List<string> { "Academics", "Computer", "Crafts", "Investigation", "Medicine", "Occult", "Politics", "Science" }, ColumnId.Left));
-					components.Add(new TraitsComponent("Physical_Skills", true, new List<string> { "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry" }, ColumnId.Left));
-					components.Add(new TraitsComponent("Social_Skills", true, new List<string> { "Animal_Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge" }, ColumnId.Left));
+					components.Add(new TraitsComponent("Mental_Skills", true, false, "skill", true, new List<string> { "Academics", "Computer", "Crafts", "Investigation", "Medicine", "Occult", "Politics", "Science" }, 5, ColumnId.Left));
+					components.Add(new TraitsComponent("Physical_Skills", true, false, "skill", true, new List<string> { "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry" }, 5, ColumnId.Left));
+					components.Add(new TraitsComponent("Social_Skills", true, false, "skill", true, new List<string> { "Animal_Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge" }, 5, ColumnId.Left));
 
-					components.Add(new MeritsComponent("Merits", "merit", true, new List<string>(), 5, ColumnId.Middle));
+					components.Add(new TraitsComponent("Merits", false, true, "merit", false, new List<string>(), 5, ColumnId.Middle));
 					components.Add(new AdvantagesComponent("Advantages", GetGetAdvantages(type), ColumnId.Middle));
 					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
 
 					components.Add(new HealthComponent("Health", ColumnId.Right));
 					components.Add(new ResourceComponent("Willpower", ColumnId.Right));
 					components.Add(new StatComponent("Integrity", ColumnId.Right));
-					components.Add(new MeritsComponent("Conditions", "condition", true, new List<string>(), 0, ColumnId.Right));
+					components.Add(new TraitsComponent("Conditions", false, true, "condition", false, new List<string>(), 0, ColumnId.Right));
 					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
-					components.Add(new MeritsComponent("Equipment", "equipment", true, new List<string>(), 0, ColumnId.Right));
+					components.Add(new TraitsComponent("Equipment", false, true, "equipment", false, new List<string>(), 0, ColumnId.Right));
 					break;
 				case SheetType.Mage:
-					components.Add(new TraitsComponent("Mental_Attributes", false, new List<string> { "Intelligence", "Wits", "Resolve" }, ColumnId.Left));
-					components.Add(new TraitsComponent("Physical_Attributes", false, new List<string> { "Strength", "Dexterity", "Stamina" }, ColumnId.Middle));
-					components.Add(new TraitsComponent("Social_Attributes", false, new List<string> { "Presence", "Manipulation", "Composure" }, ColumnId.Right));
+					components.Add(new TraitsComponent("Mental_Attributes", false, false, "attribute", true, new List<string> { "Intelligence", "Wits", "Resolve" }, 5, ColumnId.Left));
+					components.Add(new TraitsComponent("Physical_Attributes", false, false, "attribute", true, new List<string> { "Strength", "Dexterity", "Stamina" }, 5, ColumnId.Middle));
+					components.Add(new TraitsComponent("Social_Attributes", false, false, "attribute", true, new List<string> { "Presence", "Manipulation", "Composure" }, 5, ColumnId.Right));
 
-					components.Add(new TraitsComponent("Mental_Skills", true, new List<string> { "Academics", "Computer", "Crafts", "Investigation", "Medicine", "Occult", "Politics", "Science" }, ColumnId.Left));
-					components.Add(new TraitsComponent("Physical_Skills", true, new List<string> { "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry" }, ColumnId.Left));
-					components.Add(new TraitsComponent("Social_Skills", true, new List<string> { "Animal_Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge" }, ColumnId.Left));
+					components.Add(new TraitsComponent("Mental_Skills", true, false, "skill", true, new List<string> { "Academics", "Computer", "Crafts", "Investigation", "Medicine", "Occult", "Politics", "Science" }, 5, ColumnId.Left));
+					components.Add(new TraitsComponent("Physical_Skills", true, false, "skill", true, new List<string> { "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry" }, 5, ColumnId.Left));
+					components.Add(new TraitsComponent("Social_Skills", true, false, "skill", true, new List<string> { "Animal_Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge" }, 5, ColumnId.Left));
 
-					components.Add(new MeritsComponent("Merits", "merit", true, new List<string>(), 5, ColumnId.Middle));
-					components.Add(new MeritsComponent("Arcana", "arcanum", false, new List<string> { "Death", "Fate", "Forces", "Life", "Matter", "Mind", "Prime", "Space", "Spirit", "Time" }, 5, ColumnId.Middle));
+					components.Add(new TraitsComponent("Merits", false, true, "merit", false, new List<string>(), 5, ColumnId.Middle));
+					components.Add(new TraitsComponent("Arcana", false, false, "arcanum", false, new List<string> { "Death", "Fate", "Forces", "Life", "Matter", "Mind", "Prime", "Space", "Spirit", "Time" }, 5, ColumnId.Middle));
 					components.Add(new AdvantagesComponent("Advantages", GetGetAdvantages(type), ColumnId.Middle));
 					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
 					components.Add(new ExperienceComponent("Arcane_Experience", "Arcane_Beats", ColumnId.Middle));
@@ -95,50 +95,50 @@ namespace CofD_Sheet
 					components.Add(new StatComponent("Gnosis", ColumnId.Right));
 					components.Add(new ResourceComponent("Mana", ColumnId.Right));
 					components.Add(new StatComponent("Wisdom", ColumnId.Right));
-					components.Add(new MeritsComponent("Conditions", "condition", true, new List<string>(), 0, ColumnId.Right));
+					components.Add(new TraitsComponent("Conditions", false, true, "condition", false, new List<string>(), 0, ColumnId.Right));
 					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
 					components.Add(new AspirationsComponent("Obsessions", 1, ColumnId.Right));
-					components.Add(new MeritsComponent("Equipment", "equipment", true, new List<string>(), 0, ColumnId.Right));
+					components.Add(new TraitsComponent("Equipment", false, true, "equipment", false, new List<string>(), 0, ColumnId.Right));
 					break;
 				case SheetType.Werewolf:
-					components.Add(new TraitsComponent("Mental_Attributes", false, new List<string> { "Intelligence", "Wits", "Resolve" }, ColumnId.Left));
-					components.Add(new TraitsComponent("Physical_Attributes", false, new List<string> { "Strength", "Dexterity", "Stamina" }, ColumnId.Middle));
-					components.Add(new TraitsComponent("Social_Attributes", false, new List<string> { "Presence", "Manipulation", "Composure" }, ColumnId.Right));
+					components.Add(new TraitsComponent("Mental_Attributes", false, false, "attribute", true, new List<string> { "Intelligence", "Wits", "Resolve" }, 5, ColumnId.Left));
+					components.Add(new TraitsComponent("Physical_Attributes", false, false, "attribute", true, new List<string> { "Strength", "Dexterity", "Stamina" }, 5, ColumnId.Middle));
+					components.Add(new TraitsComponent("Social_Attributes", false, false, "attribute", true, new List<string> { "Presence", "Manipulation", "Composure" }, 5, ColumnId.Right));
 
-					components.Add(new TraitsComponent("Mental_Skills", true, new List<string> { "Academics", "Computer", "Crafts", "Investigation", "Medicine", "Occult", "Politics", "Science" }, ColumnId.Left));
-					components.Add(new TraitsComponent("Physical_Skills", true, new List<string> { "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry" }, ColumnId.Left));
-					components.Add(new TraitsComponent("Social_Skills", true, new List<string> { "Animal_Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge" }, ColumnId.Left));
+					components.Add(new TraitsComponent("Mental_Skills", true, false, "skill", true, new List<string> { "Academics", "Computer", "Crafts", "Investigation", "Medicine", "Occult", "Politics", "Science" }, 5, ColumnId.Left));
+					components.Add(new TraitsComponent("Physical_Skills", true, false, "skill", true, new List<string> { "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry" }, 5, ColumnId.Left));
+					components.Add(new TraitsComponent("Social_Skills", true, false, "skill", true, new List<string> { "Animal_Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge" }, 5, ColumnId.Left));
 					components.Add(GetWerewolfFormModSetComponent());
 
-					components.Add(new MeritsComponent("Merits", "merit", true, new List<string>(), 5, ColumnId.Middle));
-					components.Add(new MeritsComponent("Renown", "renown", false, new List<string> { "Cunning", "Glory", "Honor", "Purity", "Wisdom" }, 5, ColumnId.Middle));
+					components.Add(new TraitsComponent("Merits", false, true, "merit", false, new List<string>(), 5, ColumnId.Middle));
+					components.Add(new TraitsComponent("Renown", false, false, "renown", false, new List<string> { "Cunning", "Glory", "Honor", "Purity", "Wisdom" }, 5, ColumnId.Middle));
 					components.Add(new AdvantagesComponent("Advantages", GetGetAdvantages(type), ColumnId.Middle));
 					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
-					components.Add(new MeritsComponent("Rites", "rite", true, new List<string>(), 0, ColumnId.Middle));
+					components.Add(new TraitsComponent("Rites", false, true, "rite", false, new List<string>(), 0, ColumnId.Middle));
 
 					components.Add(new HealthComponent("Health", ColumnId.Right));
 					components.Add(new ResourceComponent("Willpower", ColumnId.Right));
 					components.Add(new StatComponent("Primal_Urge", ColumnId.Right));
 					components.Add(new ResourceComponent("Essence", ColumnId.Right));
 					components.Add(new StatComponent("Harmony", ColumnId.Right));
-					components.Add(new MeritsComponent("Conditions", "condition", true, new List<string>(), 0, ColumnId.Right));
+					components.Add(new TraitsComponent("Conditions", false, true, "condition", false, new List<string>(), 0, ColumnId.Right));
 					components.Add(new AspirationsComponent("Aspirations", 4, ColumnId.Right));
-					components.Add(new MeritsComponent("Gifts", "gift", true, new List<string>(), 0, ColumnId.Right));
-					components.Add(new MeritsComponent("Equipment", "equipment", true, new List<string>(), 0, ColumnId.Right));
+					components.Add(new TraitsComponent("Gifts", false, true, "gift", false, new List<string>(), 0, ColumnId.Right));
+					components.Add(new TraitsComponent("Equipment", false, true, "equipment", false, new List<string>(), 0, ColumnId.Right));
 					break;
 				case SheetType.Vampire:
-					components.Add(new TraitsComponent("Mental_Attributes", false, new List<string> { "Intelligence", "Wits", "Resolve" }, ColumnId.Left));
-					components.Add(new TraitsComponent("Physical_Attributes", false, new List<string> { "Strength", "Dexterity", "Stamina" }, ColumnId.Middle));
-					components.Add(new TraitsComponent("Social_Attributes", false, new List<string> { "Presence", "Manipulation", "Composure" }, ColumnId.Right));
+					components.Add(new TraitsComponent("Mental_Attributes", false, false, "attribute", true, new List<string> { "Intelligence", "Wits", "Resolve" }, 5, ColumnId.Left));
+					components.Add(new TraitsComponent("Physical_Attributes", false, false, "attribute", true, new List<string> { "Strength", "Dexterity", "Stamina" }, 5, ColumnId.Middle));
+					components.Add(new TraitsComponent("Social_Attributes", false, false, "attribute", true, new List<string> { "Presence", "Manipulation", "Composure" }, 5, ColumnId.Right));
 
-					components.Add(new TraitsComponent("Mental_Skills", true, new List<string> { "Academics", "Computer", "Crafts", "Investigation", "Medicine", "Occult", "Politics", "Science" }, ColumnId.Left));
-					components.Add(new TraitsComponent("Physical_Skills", true, new List<string> { "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry" }, ColumnId.Left));
-					components.Add(new TraitsComponent("Social_Skills", true, new List<string> { "Animal_Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge" }, ColumnId.Left));
+					components.Add(new TraitsComponent("Mental_Skills", true, false, "skill", true, new List<string> { "Academics", "Computer", "Crafts", "Investigation", "Medicine", "Occult", "Politics", "Science" }, 5, ColumnId.Left));
+					components.Add(new TraitsComponent("Physical_Skills", true, false, "skill", true, new List<string> { "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry" }, 5, ColumnId.Left));
+					components.Add(new TraitsComponent("Social_Skills", true, false, "skill", true, new List<string> { "Animal_Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge" }, 5, ColumnId.Left));
 
-					components.Add(new MeritsComponent("Merits", "merit", true, new List<string>(), 5, ColumnId.Middle));
-					components.Add(new MeritsComponent("Disciplines", "discipline", true, new List<string>(), 5, ColumnId.Middle));
+					components.Add(new TraitsComponent("Merits", false, true, "merit", false, new List<string>(), 5, ColumnId.Middle));
+					components.Add(new TraitsComponent("Disciplines", false, true, "discipline", false, new List<string>(), 5, ColumnId.Middle));
 					components.Add(new AdvantagesComponent("Advantages", GetGetAdvantages(type), ColumnId.Middle));
-					components.Add(new MeritsComponent("Banes", "bane", true, new List<string>(), 0, ColumnId.Middle));
+					components.Add(new TraitsComponent("Banes", false, true, "bane", false, new List<string>(), 0, ColumnId.Middle));
 					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
 
 					components.Add(new HealthComponent("Health", ColumnId.Right));
@@ -146,42 +146,42 @@ namespace CofD_Sheet
 					components.Add(new StatComponent("Blood Potency", ColumnId.Right));
 					components.Add(new ResourceComponent("Vitae", ColumnId.Right));
 					components.Add(new StatComponent("Humanity", ColumnId.Right));
-					components.Add(new MeritsComponent("Conditions", "condition", true, new List<string>(), 0, ColumnId.Right));
+					components.Add(new TraitsComponent("Conditions", false, true, "condition", false, new List<string>(), 0, ColumnId.Right));
 					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
-					components.Add(new MeritsComponent("Equipment", "equipment", true, new List<string>(), 0, ColumnId.Right));
+					components.Add(new TraitsComponent("Equipment", false, true, "equipment", false, new List<string>(), 0, ColumnId.Right));
 					break;
 				case SheetType.WolfBlooded:
-					components.Add(new TraitsComponent("Mental_Attributes", false, new List<string> { "Intelligence", "Wits", "Resolve" }, ColumnId.Left));
-					components.Add(new TraitsComponent("Physical_Attributes", false, new List<string> { "Strength", "Dexterity", "Stamina" }, ColumnId.Middle));
-					components.Add(new TraitsComponent("Social_Attributes", false, new List<string> { "Presence", "Manipulation", "Composure" }, ColumnId.Right));
+					components.Add(new TraitsComponent("Mental_Attributes", false, false, "attribute", true, new List<string> { "Intelligence", "Wits", "Resolve" }, 5, ColumnId.Left));
+					components.Add(new TraitsComponent("Physical_Attributes", false, false, "attribute", true, new List<string> { "Strength", "Dexterity", "Stamina" }, 5, ColumnId.Middle));
+					components.Add(new TraitsComponent("Social_Attributes", false, false, "attribute", true, new List<string> { "Presence", "Manipulation", "Composure" }, 5, ColumnId.Right));
 
-					components.Add(new TraitsComponent("Mental_Skills", true, new List<string> { "Academics", "Computer", "Crafts", "Investigation", "Medicine", "Occult", "Politics", "Science" }, ColumnId.Left));
-					components.Add(new TraitsComponent("Physical_Skills", true, new List<string> { "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry" }, ColumnId.Left));
-					components.Add(new TraitsComponent("Social_Skills", true, new List<string> { "Animal_Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge" }, ColumnId.Left));
+					components.Add(new TraitsComponent("Mental_Skills", true, false, "skill", true, new List<string> { "Academics", "Computer", "Crafts", "Investigation", "Medicine", "Occult", "Politics", "Science" }, 5, ColumnId.Left));
+					components.Add(new TraitsComponent("Physical_Skills", true, false, "skill", true, new List<string> { "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry" }, 5, ColumnId.Left));
+					components.Add(new TraitsComponent("Social_Skills", true, false, "skill", true, new List<string> { "Animal_Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge" }, 5, ColumnId.Left));
 
-					components.Add(new MeritsComponent("Merits", "merit", true, new List<string>(), 5, ColumnId.Middle));
-					components.Add(new MeritsComponent("Tells", "tell", true, new List<string>(), 0, ColumnId.Middle));
+					components.Add(new TraitsComponent("Merits", false, true, "merit", false, new List<string>(), 5, ColumnId.Middle));
+					components.Add(new TraitsComponent("Tells", false, true, "tell", false, new List<string>(), 0, ColumnId.Middle));
 					components.Add(new AdvantagesComponent("Advantages", GetGetAdvantages(type), ColumnId.Middle));
 					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
 
 					components.Add(new HealthComponent("Health", ColumnId.Right));
 					components.Add(new ResourceComponent("Willpower", ColumnId.Right));
 					components.Add(new StatComponent("Integrity", ColumnId.Right));
-					components.Add(new MeritsComponent("Conditions", "condition", true, new List<string>(), 0, ColumnId.Right));
+					components.Add(new TraitsComponent("Conditions", false, true, "condition", false, new List<string>(), 0, ColumnId.Right));
 					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
-					components.Add(new MeritsComponent("Equipment", "equipment", true, new List<string>(), 0, ColumnId.Right));
+					components.Add(new TraitsComponent("Equipment", false, true, "equipment", false, new List<string>(), 0, ColumnId.Right));
 					break;
 				case SheetType.Spirit:
-					components.Add(new TraitsComponent("Attributes", false, new List<string> { "Power", "Finesse", "Resistance" }, ColumnId.Left));
+					components.Add(new TraitsComponent("Attributes", false, false, "attribute", true, new List<string> { "Power", "Finesse", "Resistance" }, 15, ColumnId.Left));
 
-					components.Add(new MeritsComponent("Influences", "influence", true, new List<string>(), 5, ColumnId.Middle));
+					components.Add(new TraitsComponent("Influences", false, true, "influence", false, new List<string>(), 5, ColumnId.Middle));
 					components.Add(new AdvantagesComponent("Advantages", GetGetAdvantages(type), ColumnId.Middle));
 
 					components.Add(new HealthComponent("Corpus", ColumnId.Right));
 					components.Add(new ResourceComponent("Willpower", ColumnId.Right));
 					components.Add(new ResourceComponent("Essence", ColumnId.Right));
 					components.Add(new StatComponent("Rank", ColumnId.Right));
-					components.Add(new MeritsComponent("Conditions", "condition", true, new List<string>(), 0, ColumnId.Right));
+					components.Add(new TraitsComponent("Conditions", false, true, "condition", false, new List<string>(), 0, ColumnId.Right));
 					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
 					break;
 			}
