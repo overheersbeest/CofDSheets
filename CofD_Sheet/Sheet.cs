@@ -114,6 +114,7 @@ namespace CofD_Sheet
 					components.Add(new MeritsComponent("Renown", "renown", false, new List<string> { "Cunning", "Glory", "Honor", "Purity", "Wisdom" }, 5, ColumnId.Middle));
 					components.Add(new AdvantagesComponent("Advantages", GetGetAdvantages(type), ColumnId.Middle));
 					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
+					components.Add(new MeritsComponent("Rites", "rite", true, new List<string>(), 0, ColumnId.Middle));
 
 					components.Add(new HealthComponent("Health", ColumnId.Right));
 					components.Add(new ResourceComponent("Willpower", ColumnId.Right));
@@ -121,7 +122,8 @@ namespace CofD_Sheet
 					components.Add(new ResourceComponent("Essence", ColumnId.Right));
 					components.Add(new StatComponent("Harmony", ColumnId.Right));
 					components.Add(new MeritsComponent("Conditions", "condition", true, new List<string>(), 0, ColumnId.Right));
-					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
+					components.Add(new AspirationsComponent("Aspirations", 4, ColumnId.Right));
+					components.Add(new MeritsComponent("Gifts", "gift", true, new List<string>(), 0, ColumnId.Right));
 					components.Add(new MeritsComponent("Equipment", "equipment", true, new List<string>(), 0, ColumnId.Right));
 					break;
 				case SheetType.Vampire:
