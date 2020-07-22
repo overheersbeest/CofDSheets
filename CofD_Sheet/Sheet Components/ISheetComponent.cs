@@ -21,7 +21,6 @@ namespace CofD_Sheet.Sheet_Components
 	[XmlInclude(typeof(HealthComponent))]
 	[XmlInclude(typeof(ModificationSetComponent))]
 	[XmlInclude(typeof(ResourceComponent))]
-	[XmlInclude(typeof(StatComponent))]
 	[XmlInclude(typeof(TraitsComponent))]
 	public abstract class ISheetComponent
 	{

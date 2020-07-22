@@ -103,7 +103,7 @@ namespace CofD_Sheet.Sheet_Components
 		public int ActiveIndex = 0;
 
 		[XmlIgnore]
-		readonly ComboBox selectionComboBox = new ComboBox() { Left = 5, Top = 5, Width = 300 };
+		private readonly ComboBox selectionComboBox = new ComboBox() { Left = 5, Top = 5, Width = 300 };
 
 		public ModificationSetComponent() : base("ModificationSetComponent", ColumnId.Undefined)
 		{ }

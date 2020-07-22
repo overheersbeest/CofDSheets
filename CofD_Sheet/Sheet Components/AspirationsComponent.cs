@@ -17,7 +17,7 @@ namespace CofD_Sheet.Sheet_Components
 		public List<string> aspirations = new List<string>();
 
 		[XmlIgnore]
-		List<TextBox> textBoxes = new List<TextBox>();
+		private readonly List<TextBox> textBoxes = new List<TextBox>();
 
 		public AspirationsComponent() : base("AspirationsComponent", ColumnId.Undefined)
 		{ }

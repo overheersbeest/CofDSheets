@@ -22,14 +22,24 @@ namespace CofD_Sheet.Sheet_Components
 		[XmlAttribute]
 		public int currentValue = 0;
 
+		[XmlAttribute]
+		public bool canMultistep = false;
+
+		[XmlAttribute]
+		public bool canModifyMaxValue = true;
+
 		[XmlIgnore]
-		List<CheckBox> checkBoxes = new List<CheckBox>();
+		private readonly List<Control> controls = new List<Control>();
 
 		public ResourceComponent() : base("SimpleComponent", ColumnId.Undefined)
 		{ }
 
-		public ResourceComponent(string componentName, ColumnId _column) : base(componentName, _column)
+		public ResourceComponent(string componentName, bool _canMultistep, bool _canModifyMaxValue, int _maxValue, ColumnId _column) : base(componentName, _column)
 		{
+			canMultistep = _canMultistep;
+			canModifyMaxValue = _canModifyMaxValue;
+			maxValue = _maxValue;
+
 			Init();
 		}
 
@@ -39,8 +49,11 @@ namespace CofD_Sheet.Sheet_Components
 			uiElement.TabIndex = 0;
 
 			ContextMenuStrip contextMenu = new ContextMenuStrip();
-			ToolStripItem changeMaxValueItem = contextMenu.Items.Add("Change maximum value");
-			changeMaxValueItem.Click += new EventHandler(ChangeMaxValue);
+			if (canModifyMaxValue)
+			{
+				ToolStripItem changeMaxValueItem = contextMenu.Items.Add("Change maximum value");
+				changeMaxValueItem.Click += new EventHandler(OpenChangeMaxValueDialog);
+			}
 			uiElement.ContextMenuStrip = contextMenu;
 		}
 
@@ -51,7 +64,7 @@ namespace CofD_Sheet.Sheet_Components
 			return uiElement;
 		}
 
-		void ChangeMaxValue(object sender, EventArgs e)
+		void OpenChangeMaxValueDialog(object sender, EventArgs e)
 		{
 			Form prompt = new Form
 			{
@@ -69,7 +82,7 @@ namespace CofD_Sheet.Sheet_Components
 			inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { confirmed = true; prompt.Close(); } };
 			Button confirmation = new Button() { Text = "Confirm", Left = 205, Width = 100, Top = 30 };
 			confirmation.TabIndex = 1;
-			confirmation.Click += (sender2, e2) => { confirmed = true;  prompt.Close(); };
+			confirmation.Click += (sender2, e2) => { confirmed = true; prompt.Close(); };
 			Button cancel = new Button() { Text = "Cancel", Left = 100, Width = 100, Top = 30 };
 			cancel.TabIndex = 2;
 			cancel.Click += (sender2, e2) => { prompt.Close(); };
@@ -88,18 +101,33 @@ namespace CofD_Sheet.Sheet_Components
 
 		void RecomputeValue(object sender, EventArgs e)
 		{
-			for (int i = 0; i < checkBoxes.Count; i++)
+			for (int i = 0; i < controls.Count; i++)
 			{
-				if (sender == checkBoxes[i])
+				if (sender == controls[i])
 				{
-					if (currentValue == i + 1)
+					if (canMultistep)
 					{
-						//when clicking the last pip, reduce value by 1
-						currentValue = i;
+						if (currentValue == i + 1)
+						{
+							//when clicking the last pip, reduce value by 1
+							currentValue = i;
+						}
+						else
+						{
+							currentValue = i + 1;
+						}
 					}
 					else
 					{
-						currentValue = i + 1;
+						bool isChecked = currentValue > i;
+						if (isChecked)
+						{
+							--currentValue;
+						}
+						else
+						{
+							++currentValue;
+						}
 					}
 				}
 			}
@@ -121,16 +149,16 @@ namespace CofD_Sheet.Sheet_Components
 
 			float separatorWidth = uiElement.Size.Width / (checkBoxRows * separatorProportion + columnSeparatorCount);
 
-			if (checkBoxes.Count > maxValue)
+			if (controls.Count > maxValue)
 			{
-				for (int i = maxValue; i < checkBoxes.Count; ++i)
+				for (int i = maxValue; i < controls.Count; ++i)
 				{
-					checkBoxes[i].Dispose();
+					controls[i].Dispose();
 				}
-				checkBoxes.RemoveRange(maxValue, checkBoxes.Count - maxValue);
+				controls.RemoveRange(maxValue, controls.Count - maxValue);
 			}
 
-			int checkBoxIter = 0;
+			int controlIter = 0;
 			for (int r = 0; r < rowAmount; r++)
 			{
 				uiElement.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / rowAmount));
@@ -150,26 +178,45 @@ namespace CofD_Sheet.Sheet_Components
 						{
 							uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, separatorWidth * separatorProportion));
 						}
-						if (checkBoxIter < maxValue)
+						if (controlIter < maxValue)
 						{
-							if (checkBoxIter >= checkBoxes.Count)
+							if (controlIter >= controls.Count)
 							{
-								CheckBox checkBox = new CheckBox
+								Control newControl;
+								if (canMultistep)
 								{
-									Anchor = System.Windows.Forms.AnchorStyles.None,
-									AutoSize = true,
-									Size = new System.Drawing.Size(15, 14),
-									Dock = DockStyle.Fill,
-									TabIndex = 0,
-									UseVisualStyleBackColor = true,
-									Checked = checkBoxIter < currentValue
-								};
-								checkBox.Click += new EventHandler(RecomputeValue);
-								checkBox.AutoCheck = false;
-								checkBoxes.Add(checkBox);
+									newControl = new CheckBox
+									{
+										Anchor = System.Windows.Forms.AnchorStyles.None,
+										AutoSize = true,
+										Size = new System.Drawing.Size(15, 14),
+										Dock = DockStyle.Fill,
+										TabIndex = 0,
+										UseVisualStyleBackColor = true,
+										Checked = controlIter < currentValue,
+										AutoCheck = false
+									};
+								}
+								else
+								{
+									newControl = new RadioButton
+									{
+										Anchor = System.Windows.Forms.AnchorStyles.None,
+										AutoSize = true,
+										Size = new System.Drawing.Size(15, 14),
+										Dock = DockStyle.Fill,
+										TabIndex = 0,
+										UseVisualStyleBackColor = true,
+										Checked = controlIter < currentValue,
+										AutoCheck = false
+									};
+								}
+								newControl.Click += new EventHandler(RecomputeValue);
+
+								controls.Add(newControl);
 							}
-							uiElement.Controls.Add(checkBoxes[checkBoxIter], c, r);
-							checkBoxIter++;
+							uiElement.Controls.Add(controls[controlIter], c, r);
+							controlIter++;
 						}
 					}
 				}
@@ -178,42 +225,24 @@ namespace CofD_Sheet.Sheet_Components
 			currentValue = Math.Min(currentValue, maxValue);
 
 			OnValueChanged();
-
-			for (int r = 0; r < rowAmount; r++)
-			{
-				uiElement.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / rowAmount));
-				for (int c = 0; c < columnAmount; c++)
-				{
-					if ((c + 1) % 6 == 0)
-					{
-						//break, to separate groups of 5
-						if (r == 0)
-						{
-							uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, separatorWidth));
-						}
-					}
-					else
-					{
-						int checkBoxNr = checkBoxes.Count;
-						if (r == 0)
-						{
-							uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, separatorWidth * separatorProportion));
-						}
-						if (checkBoxNr < maxValue)
-						{
-
-						}
-					}
-				}
-			}
-			OnValueChanged();
 		}
 
 		void OnValueChanged()
 		{
-			for (int i = checkBoxes.Count - 1; i >= 0; i--)
+			for (int i = controls.Count - 1; i >= 0; i--)
 			{
-				checkBoxes[i].Checked = i < currentValue;
+				if (controls[i] is CheckBox checkBox)
+				{
+					checkBox.Checked = i < currentValue;
+				}
+				else if (controls[i] is RadioButton pip)
+				{
+					pip.Checked = i < currentValue;
+				}
+				else
+				{
+					throw new Exception("unrecognized control in ResourceComponent");
+				}
 			}
 
 			OnComponentChanged();

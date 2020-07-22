@@ -29,7 +29,7 @@ namespace CofD_Sheet.Sheet_Components
 		public int experience = 0;
 
 		[XmlIgnore]
-		List<CheckBox> beatBoxes = new List<CheckBox>();
+		private readonly List<CheckBox> beatBoxes = new List<CheckBox>();
 
 		[XmlIgnore]
 		TextBox experienceCounter = null;

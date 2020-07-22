@@ -35,7 +35,7 @@ namespace CofD_Sheet.Sheet_Components
 			public List<string> specialties = new List<string>();
 
 			[XmlIgnore]
-			public List<RadioButton> pips = new List<RadioButton>();
+			public readonly List<RadioButton> pips = new List<RadioButton>();
 		}
 
 		[XmlIgnore]
@@ -49,6 +49,9 @@ namespace CofD_Sheet.Sheet_Components
 
 		[XmlAttribute]
 		public bool canHaveSpecialties = false;
+
+		[XmlAttribute]
+		public string specialtyName = "specialty";
 
 		[XmlAttribute]
 		public bool canModifyTraits = true;
@@ -68,9 +71,10 @@ namespace CofD_Sheet.Sheet_Components
 		public TraitsComponent() : base("TraitsComponent", ColumnId.Undefined)
 		{ }
 
-		public TraitsComponent(string componentName, bool _canHaveSpecialties, bool _canModifyTraits, string _singularName, bool _canModifyMaxValue, List<string> TraitNames, int _maxValue, ColumnId _column) : base(componentName, _column)
+		public TraitsComponent(string componentName, bool _canHaveSpecialties, string _specialtyName, bool _canModifyTraits, string _singularName, bool _canModifyMaxValue, List<string> TraitNames, int _maxValue, ColumnId _column) : base(componentName, _column)
 		{
 			canHaveSpecialties = _canHaveSpecialties;
+			specialtyName = _specialtyName;
 			canModifyTraits = _canModifyTraits;
 			singularName = _singularName;
 			canModifyMaxValue = _canModifyMaxValue;
@@ -161,7 +165,7 @@ namespace CofD_Sheet.Sheet_Components
 				StartPosition = FormStartPosition.CenterParent,
 				Width = 325,
 				Height = 100,
-				Text = "Add Specialty"
+				Text = "Add " + specialtyName
 			};
 
 			bool confirmed = false;
@@ -202,7 +206,7 @@ namespace CofD_Sheet.Sheet_Components
 				StartPosition = FormStartPosition.CenterParent,
 				Width = 325,
 				Height = 100,
-				Text = "Remove Specialty"
+				Text = "Remove " + specialtyName
 			};
 
 			bool confirmed = false;
@@ -244,20 +248,24 @@ namespace CofD_Sheet.Sheet_Components
 				label.Text = Trait.name;
 			}
 
+			ContextMenuStrip contextMenu = new ContextMenuStrip();
+			if (canModifyTraits)
+			{
+				ToolStripItem addSpecialtyItem = contextMenu.Items.Add("Remove " + Trait.name);
+				addSpecialtyItem.Click += new EventHandler(OpenRemoveTraitDialog);
+			}
 			if (canHaveSpecialties)
 			{
-				ContextMenuStrip contextMenu = new ContextMenuStrip();
-				ToolStripItem addSpecialtyItem = contextMenu.Items.Add("Add Specialty");
+				ToolStripItem addSpecialtyItem = contextMenu.Items.Add("Add " + specialtyName);
 				addSpecialtyItem.Click += new EventHandler(OpenAddSpecialtyDialog);
 				if (Trait.specialties.Count > 0)
 				{
-					ToolStripItem removeSpecialtyItem = contextMenu.Items.Add("Remove Specialty");
+					ToolStripItem removeSpecialtyItem = contextMenu.Items.Add("Remove " + specialtyName);
 					removeSpecialtyItem.Click += new EventHandler(OpenRemoveSpecialtyDialog);
 				}
-
-				label.ContextMenuStrip = contextMenu;
-
 			}
+
+			label.ContextMenuStrip = contextMenu;
 
 			OnComponentChanged();
 		}

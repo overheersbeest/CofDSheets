@@ -31,7 +31,7 @@ namespace CofD_Sheet.Sheet_Components
 		public int bashing = 0;
 
 		[XmlIgnore]
-		List<TextBox> slots = new List<TextBox>();
+		private readonly List<TextBox> slots = new List<TextBox>();
 
 		public HealthComponent() : base("HealthComponent", ColumnId.Undefined)
 		{ }
