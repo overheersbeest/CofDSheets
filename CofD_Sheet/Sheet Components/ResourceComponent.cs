@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CofD_Sheet.Modifications;
+using CofD_Sheet.Modifyables;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -16,8 +18,8 @@ namespace CofD_Sheet.Sheet_Components
 		[XmlIgnore]
 		const float separatorProportion = 2F;
 
-		[XmlAttribute]
-		public int maxValue = 10;
+		[XmlElement]
+		public ModifiableInt MaxValue = new ModifiableInt(0);
 
 		[XmlAttribute]
 		public int currentValue = 0;
@@ -34,11 +36,12 @@ namespace CofD_Sheet.Sheet_Components
 		public ResourceComponent() : base("SimpleComponent", ColumnId.Undefined)
 		{ }
 
-		public ResourceComponent(string componentName, bool _canMultistep, bool _canModifyMaxValue, int _maxValue, ColumnId _column) : base(componentName, _column)
+		public ResourceComponent(string componentName, bool _canMultistep, bool _canModifyMaxValue, int _startValue, int _maxValue, ColumnId _column) : base(componentName, _column)
 		{
 			canMultistep = _canMultistep;
 			canModifyMaxValue = _canModifyMaxValue;
-			maxValue = _maxValue;
+			MaxValue.CurrentValue = _maxValue;
+			currentValue = _startValue;
 
 			Init();
 		}
@@ -77,7 +80,7 @@ namespace CofD_Sheet.Sheet_Components
 			bool confirmed = false;
 
 			NumericUpDown inputBox = new NumericUpDown() { Left = 5, Top = 5, Width = 300 };
-			inputBox.Value = maxValue;
+			inputBox.Value = MaxValue.CurrentValue;
 			inputBox.TabIndex = 0;
 			inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { confirmed = true; prompt.Close(); } };
 			Button confirmation = new Button() { Text = "Confirm", Left = 205, Width = 100, Top = 30 };
@@ -93,7 +96,7 @@ namespace CofD_Sheet.Sheet_Components
 
 			if (confirmed)
 			{
-				maxValue = (int)inputBox.Value;
+				MaxValue.CurrentValue = (int)inputBox.Value;
 
 				OnMaxValueChanged();
 			}
@@ -101,7 +104,7 @@ namespace CofD_Sheet.Sheet_Components
 
 		void RecomputeValue(object sender, EventArgs e)
 		{
-			for (int i = 0; i < controls.Count; i++)
+			for (int i = 0; i < controls.Count; ++i)
 			{
 				if (sender == controls[i])
 				{
@@ -136,8 +139,8 @@ namespace CofD_Sheet.Sheet_Components
 
 		void OnMaxValueChanged()
 		{
-			int rowAmount = Convert.ToInt32(Math.Ceiling(maxValue / Convert.ToSingle(maxPerRow)));
-			int checkBoxRows = Math.Min(maxValue, maxPerRow);
+			int rowAmount = Convert.ToInt32(Math.Ceiling(MaxValue.CurrentValue / Convert.ToSingle(maxPerRow)));
+			int checkBoxRows = Math.Min(MaxValue.CurrentValue, maxPerRow);
 			int columnSeparatorCount = (checkBoxRows - 1) / 5;
 			int columnAmount = checkBoxRows + columnSeparatorCount;
 			uiElement.RowCount = rowAmount;
@@ -149,20 +152,20 @@ namespace CofD_Sheet.Sheet_Components
 
 			float separatorWidth = uiElement.Size.Width / (checkBoxRows * separatorProportion + columnSeparatorCount);
 
-			if (controls.Count > maxValue)
+			if (controls.Count > MaxValue.CurrentValue)
 			{
-				for (int i = maxValue; i < controls.Count; ++i)
+				for (int i = MaxValue.CurrentValue; i < controls.Count; ++i)
 				{
 					controls[i].Dispose();
 				}
-				controls.RemoveRange(maxValue, controls.Count - maxValue);
+				controls.RemoveRange(MaxValue.CurrentValue, controls.Count - MaxValue.CurrentValue);
 			}
 
 			int controlIter = 0;
-			for (int r = 0; r < rowAmount; r++)
+			for (int r = 0; r < rowAmount; ++r)
 			{
 				uiElement.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / rowAmount));
-				for (int c = 0; c < columnAmount; c++)
+				for (int c = 0; c < columnAmount; ++c)
 				{
 					if ((c + 1) % 6 == 0)
 					{
@@ -178,7 +181,7 @@ namespace CofD_Sheet.Sheet_Components
 						{
 							uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, separatorWidth * separatorProportion));
 						}
-						if (controlIter < maxValue)
+						if (controlIter < MaxValue.CurrentValue)
 						{
 							if (controlIter >= controls.Count)
 							{
@@ -190,7 +193,7 @@ namespace CofD_Sheet.Sheet_Components
 										Anchor = System.Windows.Forms.AnchorStyles.None,
 										AutoSize = true,
 										Size = new System.Drawing.Size(15, 14),
-										Dock = DockStyle.Fill,
+										Dock = DockStyle.None,
 										TabIndex = 0,
 										UseVisualStyleBackColor = true,
 										Checked = controlIter < currentValue,
@@ -204,7 +207,7 @@ namespace CofD_Sheet.Sheet_Components
 										Anchor = System.Windows.Forms.AnchorStyles.None,
 										AutoSize = true,
 										Size = new System.Drawing.Size(15, 14),
-										Dock = DockStyle.Fill,
+										Dock = DockStyle.None,
 										TabIndex = 0,
 										UseVisualStyleBackColor = true,
 										Checked = controlIter < currentValue,
@@ -216,13 +219,13 @@ namespace CofD_Sheet.Sheet_Components
 								controls.Add(newControl);
 							}
 							uiElement.Controls.Add(controls[controlIter], c, r);
-							controlIter++;
+							++controlIter;
 						}
 					}
 				}
 			}
 
-			currentValue = Math.Min(currentValue, maxValue);
+			currentValue = Math.Min(currentValue, MaxValue.CurrentValue);
 
 			OnValueChanged();
 		}
@@ -246,6 +249,47 @@ namespace CofD_Sheet.Sheet_Components
 			}
 
 			OnComponentChanged();
+		}
+
+		public override int QueryInt(List<string> path)
+		{
+			if (path.Count > 1)
+			{
+				if (path[1] == "MaxValue")
+				{
+					return MaxValue.CurrentValue;
+				}
+				if (path[1] == "Value")
+				{
+					return currentValue;
+				}
+			}
+
+			throw new Exception("Component could not complete Query: " + path.ToString());
+		}
+
+		override public void ApplyModification(Modification mod, Sheet sheet)
+		{
+			if (mod is IntModification intMod)
+			{
+				if (mod.path.Count > 1)
+				{
+					if (mod.path[1] == "MaxValue")
+					{
+						MaxValue.ApplyModification(intMod, sheet);
+					}
+				}
+			}
+		}
+
+		override public void ResetModifications()
+		{
+			MaxValue.Reset();
+		}
+
+		override public void OnModificationsComplete()
+		{
+			OnMaxValueChanged();
 		}
 	}
 }

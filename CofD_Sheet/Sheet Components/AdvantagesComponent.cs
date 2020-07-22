@@ -1,4 +1,5 @@
-﻿using CofD_Sheet.Modifyables;
+﻿using CofD_Sheet.Modifications;
+using CofD_Sheet.Modifyables;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -304,7 +305,7 @@ namespace CofD_Sheet.Sheet_Components
 			uiElement.TabIndex = 0;
 
 			uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-			for (int a = 0; a < advantages.Count; a++)
+			for (int a = 0; a < advantages.Count; ++a)
 			{
 				Advantage advantage = advantages[a];
 				uiElement.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / advantages.Count));
@@ -342,9 +343,45 @@ namespace CofD_Sheet.Sheet_Components
 			OnComponentChanged();
 		}
 
-		override public void ApplyModification(ModificationSetComponent.Modification mod)
+		public override int QueryInt(List<string> path)
 		{
-			if (mod is ModificationSetComponent.IntModification intMod)
+			if (path.Count > 1)
+			{
+				string targetAdvantage = path[1];
+				foreach (Advantage advantage in advantages)
+				{
+					if (advantage.name == targetAdvantage)
+					{
+						if (advantage is NumericAdvantage numericAdvantage)
+						{
+							return numericAdvantage.Value.CurrentValue;
+						}
+						else if (advantage is ArmorAdvantage armorAdvantage)
+						{
+							if (path.Count > 2)
+							{
+								string targetType = path[2];
+								if (targetType == "general")
+								{
+									return armorAdvantage.General.CurrentValue;
+								}
+								else if (targetType == "ballistic")
+								{
+									return armorAdvantage.Ballistic.CurrentValue;
+								}
+							}
+						}
+						break;
+					}
+				}
+			}
+
+			throw new Exception("Component could not complete Query: " + path.ToString());
+		}
+
+		override public void ApplyModification(Modification mod, Sheet sheet)
+		{
+			if (mod is IntModification intMod)
 			{
 				if (mod.path.Count > 1)
 				{
@@ -355,7 +392,7 @@ namespace CofD_Sheet.Sheet_Components
 						{
 							if (advantage is NumericAdvantage numericAdvantage)
 							{
-								numericAdvantage.Value.ApplyModification(intMod.modType, intMod.value);
+								numericAdvantage.Value.ApplyModification(intMod, sheet);
 							}
 							else if (advantage is ArmorAdvantage armorAdvantage)
 							{
@@ -364,11 +401,11 @@ namespace CofD_Sheet.Sheet_Components
 									string targetType = mod.path[2];
 									if (targetType == "general")
 									{
-										armorAdvantage.General.ApplyModification(intMod.modType, intMod.value);
+										armorAdvantage.General.ApplyModification(intMod, sheet);
 									}
 									else if (targetType == "ballistic")
 									{
-										armorAdvantage.Ballistic.ApplyModification(intMod.modType, intMod.value);
+										armorAdvantage.Ballistic.ApplyModification(intMod, sheet);
 									}
 								}
 							}

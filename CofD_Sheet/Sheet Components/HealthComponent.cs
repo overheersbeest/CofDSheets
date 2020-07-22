@@ -1,4 +1,5 @@
-﻿using CofD_Sheet.Modifyables;
+﻿using CofD_Sheet.Modifications;
+using CofD_Sheet.Modifyables;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -19,7 +20,7 @@ namespace CofD_Sheet.Sheet_Components
 		const float separatorProportion = 2F;
 
 		[XmlElement]
-		public ModifiableInt MaxValue = new ModifiableInt(10);
+		public ModifiableInt MaxValue = new ModifiableInt(0);
 
 		[XmlAttribute]
 		public int aggrivated = 0;
@@ -116,10 +117,10 @@ namespace CofD_Sheet.Sheet_Components
 
 			float separatorWidth = 100F / (checkBoxRows * separatorProportion + columnSeparatorCount);
 
-			for (int r = 0; r < rowAmount; r++)
+			for (int r = 0; r < rowAmount; ++r)
 			{
 				uiElement.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / rowAmount));
-				for (int c = 0; c < columnAmount; c++)
+				for (int c = 0; c < columnAmount; ++c)
 				{
 					if ((c + 1) % 6 == 0)
 					{
@@ -161,7 +162,7 @@ namespace CofD_Sheet.Sheet_Components
 			aggrivated = 0;
 			lethal = 0;
 			bashing = 0;
-			for (int i = 0; i < slots.Count; i++)
+			for (int i = 0; i < slots.Count; ++i)
 			{
 				string text = slots[i].Text;
 				aggrivated += text.Count(f => f == '*');
@@ -187,13 +188,13 @@ namespace CofD_Sheet.Sheet_Components
 					{
 						//2 bashing -> 1 lethal
 						bashing--;
-						lethal++;
+						++lethal;
 					}
 					else
 					{
 						//bashing + lethal -> aggrivated
 						lethal--;
-						aggrivated++;
+						++aggrivated;
 					}
 				}
 				else
@@ -201,7 +202,7 @@ namespace CofD_Sheet.Sheet_Components
 					//no bashing damage, but still too much damage
 					//2 lethal -> 1 aggrivated
 					lethal -= 2;
-					aggrivated++;
+					++aggrivated;
 				}
 				overDamage--;
 			}
@@ -217,7 +218,7 @@ namespace CofD_Sheet.Sheet_Components
 
 		void OnValueChanged()
 		{
-			for (int i = 0; i < slots.Count; i++)
+			for (int i = 0; i < slots.Count; ++i)
 			{
 				slots[i].TextChanged -= RecomputeValues;
 				if (i < aggrivated)
@@ -253,7 +254,7 @@ namespace CofD_Sheet.Sheet_Components
 					 || e.KeyData == Keys.Right)
 			{
 				int currentFocusIndex = 0;
-				for (int i = 0; i < slots.Count; i++)
+				for (int i = 0; i < slots.Count; ++i)
 				{
 					if (sender == slots[i])
 					{
@@ -274,15 +275,40 @@ namespace CofD_Sheet.Sheet_Components
 			}
 		}
 
-		override public void ApplyModification(ModificationSetComponent.Modification mod)
+		public override int QueryInt(List<string> path)
 		{
-			if (mod is ModificationSetComponent.IntModification intMod)
+			if (path.Count > 1)
+			{
+				if (path[1] == "MaxValue")
+				{
+					return MaxValue.CurrentValue;
+				}
+				if (path[1] == "bashing")
+				{
+					return bashing;
+				}
+				if (path[1] == "lethal")
+				{
+					return lethal;
+				}
+				if (path[1] == "aggrivated")
+				{
+					return aggrivated;
+				}
+			}
+
+			throw new Exception("Component could not complete Query: " + path.ToString());
+		}
+
+		override public void ApplyModification(Modification mod, Sheet sheet)
+		{
+			if (mod is IntModification intMod)
 			{
 				if (mod.path.Count > 1)
 				{
 					if (mod.path[1] == "MaxValue")
 					{
-						MaxValue.ApplyModification(intMod.modType, intMod.value);
+						MaxValue.ApplyModification(intMod, sheet);
 					}
 				}
 			}

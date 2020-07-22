@@ -38,7 +38,7 @@ namespace CofD_Sheet.Sheet_Components
 			textBoxes.Clear();
 
 			uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-			for (int r = 0; r < maxAspirations; r++)
+			for (int r = 0; r < maxAspirations; ++r)
 			{
 				uiElement.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / maxAspirations));
 
@@ -61,7 +61,7 @@ namespace CofD_Sheet.Sheet_Components
 
 		void OnValueChanged(object sender = null, EventArgs e = null)
 		{
-			for (int i = 0; i < textBoxes.Count; i++)
+			for (int i = 0; i < textBoxes.Count; ++i)
 			{
 				aspirations[i] = textBoxes[i].Text;
 			}

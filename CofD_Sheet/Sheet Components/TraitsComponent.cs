@@ -1,4 +1,5 @@
-﻿using CofD_Sheet.Modifyables;
+﻿using CofD_Sheet.Modifications;
+using CofD_Sheet.Modifyables;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -71,7 +72,7 @@ namespace CofD_Sheet.Sheet_Components
 		public TraitsComponent() : base("TraitsComponent", ColumnId.Undefined)
 		{ }
 
-		public TraitsComponent(string componentName, bool _canHaveSpecialties, string _specialtyName, bool _canModifyTraits, string _singularName, bool _canModifyMaxValue, List<string> TraitNames, int _maxValue, ColumnId _column) : base(componentName, _column)
+		public TraitsComponent(string componentName, bool _canHaveSpecialties, string _specialtyName, bool _canModifyTraits, string _singularName, bool _canModifyMaxValue, List<string> TraitNames, int _startValue, int _maxValue, ColumnId _column) : base(componentName, _column)
 		{
 			canHaveSpecialties = _canHaveSpecialties;
 			specialtyName = _specialtyName;
@@ -80,9 +81,9 @@ namespace CofD_Sheet.Sheet_Components
 			canModifyMaxValue = _canModifyMaxValue;
 			maxValue = _maxValue;
 
-			for (int i = 0; i < TraitNames.Count; i++)
+			for (int i = 0; i < TraitNames.Count; ++i)
 			{
-				Traits.Add(new Trait(TraitNames[i]));
+				Traits.Add(new Trait(TraitNames[i], _startValue));
 			}
 
 			Init();
@@ -249,11 +250,6 @@ namespace CofD_Sheet.Sheet_Components
 			}
 
 			ContextMenuStrip contextMenu = new ContextMenuStrip();
-			if (canModifyTraits)
-			{
-				ToolStripItem addSpecialtyItem = contextMenu.Items.Add("Remove " + Trait.name);
-				addSpecialtyItem.Click += new EventHandler(OpenRemoveTraitDialog);
-			}
 			if (canHaveSpecialties)
 			{
 				ToolStripItem addSpecialtyItem = contextMenu.Items.Add("Add " + specialtyName);
@@ -263,6 +259,11 @@ namespace CofD_Sheet.Sheet_Components
 					ToolStripItem removeSpecialtyItem = contextMenu.Items.Add("Remove " + specialtyName);
 					removeSpecialtyItem.Click += new EventHandler(OpenRemoveSpecialtyDialog);
 				}
+			}
+			if (canModifyTraits)
+			{
+				ToolStripItem addSpecialtyItem = contextMenu.Items.Add("Remove " + Trait.name);
+				addSpecialtyItem.Click += new EventHandler(OpenRemoveTraitDialog);
 			}
 
 			label.ContextMenuStrip = contextMenu;
@@ -357,12 +358,12 @@ namespace CofD_Sheet.Sheet_Components
 
 			//column styles
 			uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, nameLabelWidth));
-			for (int c = 1; c < columnAmount; c++)
+			for (int c = 1; c < columnAmount; ++c)
 			{
 				uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F / (columnAmount - 1)));
 			}
 
-			for (int a = 0; a < Traits.Count; a++)
+			for (int a = 0; a < Traits.Count; ++a)
 			{
 				Trait trait = Traits[a];
 				for (int ar = 0; ar < rowsPerTrait; ++ar)
@@ -385,7 +386,7 @@ namespace CofD_Sheet.Sheet_Components
 
 				//pips
 				trait.pips.Clear();
-				for (int p = 0; p < maxValueVisible; p++)
+				for (int p = 0; p < maxValueVisible; ++p)
 				{
 					RadioButton pip = new RadioButton
 					{
@@ -416,20 +417,20 @@ namespace CofD_Sheet.Sheet_Components
 
 		void RecomputeValues(object sender, EventArgs e)
 		{
-			foreach (Trait Trait in Traits)
+			foreach (Trait trait in Traits)
 			{
-				for (int i = 0; i < Trait.pips.Count; i++)
+				for (int i = 0; i < trait.pips.Count; ++i)
 				{
-					if (sender == Trait.pips[i])
+					if (sender == trait.pips[i])
 					{
-						if (Trait.Value.CurrentValue == i + 1)
+						if (trait.Value.CurrentValue == i + 1)
 						{
 							//when clicking the last pip, reduce value by 1
-							Trait.Value.CurrentValue = i;
+							trait.Value.CurrentValue = i;
 						}
 						else
 						{
-							Trait.Value.CurrentValue = i + 1;
+							trait.Value.CurrentValue = i + 1;
 						}
 					}
 				}
@@ -440,10 +441,10 @@ namespace CofD_Sheet.Sheet_Components
 		void OnMaxValuePossiblyChanged()
 		{
 			int newVisibleMaxValue = maxValue;
-			foreach (Trait Trait in Traits)
+			foreach (Trait trait in Traits)
 			{
-				Trait.Value.maxValue = maxValue;
-				newVisibleMaxValue = Math.Max(newVisibleMaxValue, Trait.Value.CurrentValue);
+				trait.Value.maxValue = maxValue;
+				newVisibleMaxValue = Math.Max(newVisibleMaxValue, trait.Value.CurrentValue);
 			}
 
 			if (newVisibleMaxValue != maxValueVisible)
@@ -459,20 +460,41 @@ namespace CofD_Sheet.Sheet_Components
 
 		void OnValueChanged()
 		{
-			foreach (Trait Trait in Traits)
+			foreach (Trait trait in Traits)
 			{
-				for (int i = 0; i < Trait.pips.Count; i++)
+				for (int i = 0; i < trait.pips.Count; ++i)
 				{
-					Trait.pips[i].Checked = i < Trait.Value.CurrentValue;
+					trait.pips[i].Checked = i < trait.Value.CurrentValue;
 				}
 			}
 
 			OnComponentChanged();
 		}
 
-		override public void ApplyModification(ModificationSetComponent.Modification mod)
+		public override int QueryInt(List<string> path)
 		{
-			if (mod is ModificationSetComponent.IntModification intMod)
+			if (path.Count > 1)
+			{
+				string targetTrait = path[1];
+				foreach (Trait trait in Traits)
+				{
+					if (trait.name == targetTrait)
+					{
+						return trait.Value.CurrentValue;
+					}
+				}
+				if (path[1] == "MaxValue")
+				{
+					return maxValue;
+				}
+			}
+
+			throw new Exception("Component could not complete Query: " + path.ToString());
+		}
+
+		override public void ApplyModification(Modification mod, Sheet sheet)
+		{
+			if (mod is IntModification intMod)
 			{
 				if (mod.path.Count > 1)
 				{
@@ -481,7 +503,7 @@ namespace CofD_Sheet.Sheet_Components
 					{
 						if (Trait.name == targetTrait)
 						{
-							Trait.Value.ApplyModification(intMod.modType, intMod.value);
+							Trait.Value.ApplyModification(intMod, sheet);
 							break;
 						}
 					}

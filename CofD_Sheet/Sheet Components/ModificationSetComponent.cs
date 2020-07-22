@@ -1,4 +1,5 @@
-﻿using CofD_Sheet.Modifyables;
+﻿using CofD_Sheet.Modifications;
+using CofD_Sheet.Modifyables;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,51 +12,7 @@ namespace CofD_Sheet.Sheet_Components
 	[Serializable]
 	public class ModificationSetComponent : ISheetComponent
 	{
-		[XmlInclude(typeof(IntModification))]
-		[XmlInclude(typeof(StringModification))]
-		public class Modification
-		{
-			public Modification()
-			{ }
-			public Modification(List<string> _path)
-			{
-				this.path = _path;
-			}
-
-			[XmlArray]
-			public List<string> path = new List<string>();
-		}
-
-		public class IntModification : Modification
-		{
-			public IntModification()
-			{ }
-			public IntModification(List<string> _path, int _value, IntModificationType _modType) : base(_path)
-			{
-				this.value = _value;
-				this.modType = _modType;
-			}
-
-			[XmlAttribute]
-			public IntModificationType modType = IntModificationType.Delta;
-
-			[XmlAttribute]
-			public int value = 0;
-		}
-
-		public class StringModification : Modification
-		{
-			public StringModification() : base()
-			{ }
-			public StringModification(List<string> _path, string _value) : base(_path)
-			{
-				this.value = _value;
-			}
-
-			[XmlAttribute]
-			public string value = "";
-		}
-
+		[Serializable]
 		public class ModificationSet
 		{
 			public ModificationSet()
@@ -82,7 +39,7 @@ namespace CofD_Sheet.Sheet_Components
 						{
 							if (component.name == targetComponentName)
 							{
-								component.ApplyModification(modification);
+								component.ApplyModification(modification, sheet);
 							}
 						}
 					}
@@ -146,7 +103,7 @@ namespace CofD_Sheet.Sheet_Components
 			OnComponentChanged();
 		}
 
-		override public void ApplyModification(Modification mod)
+		override public void ApplyModification(Modification mod, Sheet sheet)
 		{
 			throw new Exception("trying to modify a modification component");
 		}

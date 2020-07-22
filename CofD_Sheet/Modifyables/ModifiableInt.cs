@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CofD_Sheet.Modifications;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -81,9 +82,9 @@ namespace CofD_Sheet.Modifyables
 			modType = IntModificationType.Delta;
 		}
 
-		public void ApplyModification(IntModificationType newType, int newModifier)
+		public void ApplyModification(IntModification mod, Sheet sheet)
 		{
-			switch (newType)
+			switch (mod.modType)
 			{
 				default:
 					throw new Exception("unhandled IntModificationType");
@@ -92,7 +93,7 @@ namespace CofD_Sheet.Modifyables
 					{
 						throw new Exception("absolute modified int being modified again with delta value.");
 					}
-					modifier += newModifier;
+					modifier += mod.GetValue(sheet);
 					break;
 				case IntModificationType.Absolute:
 					if (modType != IntModificationType.Delta
@@ -100,10 +101,10 @@ namespace CofD_Sheet.Modifyables
 					{
 						throw new Exception("modified int being modified again with absolute value.");
 					}
-					modifier = newModifier;
+					modifier = mod.GetValue(sheet);
 					break;
 			}
-			modType = newType;
+			modType = mod.modType;
 		}
 	}
 }

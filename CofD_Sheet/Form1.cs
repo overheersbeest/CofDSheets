@@ -62,7 +62,7 @@ namespace CofD_Sheet
 
 		FileSystemWatcher watcher = new FileSystemWatcher();
 
-		DrawingHelper drawingHelper;
+		public DrawingHelper drawingHelper;
 
 		public Form1()
 		{
@@ -246,6 +246,8 @@ namespace CofD_Sheet
 
 			int amountOfRows = Convert.ToInt32(Math.Ceiling(sheet.components.Count / 2.0F));
 
+			sheet.allowRefreshingMods = false;
+
 			for (int i = 0; i < sheet.components.Count; i++)
 			{
 				ISheetComponent component = sheet.components[i];
@@ -277,30 +279,32 @@ namespace CofD_Sheet
 				if (component.column == ColumnId.Left)
 				{
 					LeftComponentTable.Controls.Add(componentUIElement);
-					LeftComponentTable.RowCount++;
+					++LeftComponentTable.RowCount;
 				}
 				else if (component.column == ColumnId.Middle)
 				{
 					MiddleComponentTable.Controls.Add(componentUIElement);
-					MiddleComponentTable.RowCount++;
+					++MiddleComponentTable.RowCount;
 				}
 				else
 				{
 					RightComponentTable.Controls.Add(componentUIElement);
-					RightComponentTable.RowCount++;
+					++RightComponentTable.RowCount;
 				}
 			}
 
+			sheet.allowRefreshingMods = true;
+
 			//all components refreshed, now apply modification sets
-			sheet.RefreshModifications();
+			sheet.RefreshModifications(false);
 
 			//add empty tables to be used for padding out each column
 			LeftComponentTable.Controls.Add(new TableLayoutPanel());
-			LeftComponentTable.RowCount++;
+			++LeftComponentTable.RowCount;
 			MiddleComponentTable.Controls.Add(new TableLayoutPanel());
-			MiddleComponentTable.RowCount++;
+			++MiddleComponentTable.RowCount;
 			RightComponentTable.Controls.Add(new TableLayoutPanel());
-			RightComponentTable.RowCount++;
+			++RightComponentTable.RowCount;
 
 			ResizeColumn(LeftComponentTable);
 			ResizeColumn(MiddleComponentTable);

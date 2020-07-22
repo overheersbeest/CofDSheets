@@ -77,7 +77,7 @@ namespace CofD_Sheet_WPF.ViewModels
 
 		public RelayCommand onSaveSheetButtonPressed => new RelayCommand(saveSheetClicked);
 
-		public RelayCommand onLoadSheetButtonPressed => new RelayCommand(loadSheetClicked);
+		public RelayCommand onLoadSheetButtonPressed => new RelayCommand(LoadSheetClicked);
 
 		private void saveSheetClicked()
 		{

@@ -69,10 +69,10 @@ namespace CofD_Sheet.Sheet_Components
 			beatBoxes.Clear();
 			float separatorWidth = 100F / (checkBoxRows * separatorProportion + columnSeparatorCount);
 
-			for (int r = 0; r < rowAmount; r++)
+			for (int r = 0; r < rowAmount; ++r)
 			{
 				beatElement.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / rowAmount));
-				for (int c = 0; c < columnAmount; c++)
+				for (int c = 0; c < columnAmount; ++c)
 				{
 					if ((c + 1) % 6 == 0)
 					{
@@ -138,7 +138,7 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				if (beatBoxes[i].Checked)
 				{
-					beats++;
+					++beats;
 				}
 			}
 
@@ -158,6 +158,23 @@ namespace CofD_Sheet.Sheet_Components
 			}
 
 			OnComponentChanged();
+		}
+
+		public override int QueryInt(List<string> path)
+		{
+			if (path.Count > 1)
+			{
+				if (path[1] == "experience")
+				{
+					return experience;
+				}
+				if (path[1] == "beats")
+				{
+					return beats;
+				}
+			}
+
+			throw new Exception("Component could not complete Query: " + path.ToString());
 		}
 	}
 }

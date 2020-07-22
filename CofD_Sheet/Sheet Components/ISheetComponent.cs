@@ -1,4 +1,6 @@
-﻿using System.Windows.Forms;
+﻿using CofD_Sheet.Modifications;
+using System.Collections.Generic;
+using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -73,9 +75,16 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				Form1.instance.sheet.ChangedSinceSave = true;
 			}
+
+			Form1.instance.sheet.RefreshModifications();
 		}
 
-		virtual public void ApplyModification(ModificationSetComponent.Modification mod)
+		virtual public int QueryInt(List<string> path)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		virtual public void ApplyModification(Modification mod, Sheet sheet)
 		{
 			throw new System.NotImplementedException();
 		}
