@@ -36,7 +36,7 @@ namespace CofD_Sheet.Sheet_Components
 		public const int filledInputBoxHeight = 26;
 
 		[XmlIgnore]
-		public const int componentWidth = 315;
+		public const int componentWidth = 303;
 
 		[XmlIgnore]
 		protected TableLayoutPanel uiElement = new TableLayoutPanel();
