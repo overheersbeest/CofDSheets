@@ -319,7 +319,7 @@ namespace CofD_Sheet.Sheet_Components
 				Label label = new Label
 				{
 					Anchor = AnchorStyles.Left,
-					Text = advantage.name + ": "
+					Text = advantage.name.Replace('_', ' ') + ": "
 				};
 				advantageElement.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize, label.Width));
 				advantageElement.Controls.Add(label, 0, 0);
@@ -352,6 +352,7 @@ namespace CofD_Sheet.Sheet_Components
 				{
 					if (advantage.name == targetAdvantage)
 					{
+						isCurrentlyIncludedInModFormula = true;
 						if (advantage is NumericAdvantage numericAdvantage)
 						{
 							return numericAdvantage.Value.CurrentValue;
@@ -409,6 +410,7 @@ namespace CofD_Sheet.Sheet_Components
 									}
 								}
 							}
+							isCurrentlyModified = true;
 							break;
 						}
 					}
@@ -418,6 +420,7 @@ namespace CofD_Sheet.Sheet_Components
 
 		override public void ResetModifications()
 		{
+			base.ResetModifications();
 			foreach (Advantage advantage in advantages)
 			{
 				if (advantage is NumericAdvantage numericAdvantage)
@@ -434,7 +437,10 @@ namespace CofD_Sheet.Sheet_Components
 
 		override public void OnModificationsComplete()
 		{
-			OnValueChanged();
+			if (isCurrentlyModified)
+			{
+				OnValueChanged();
+			}
 		}
 	}
 }

@@ -33,10 +33,19 @@ namespace CofD_Sheet.Sheet_Components
 		public const int inputBoxHeight = 35;
 
 		[XmlIgnore]
+		public const int filledInputBoxHeight = 26;
+
+		[XmlIgnore]
 		public const int componentWidth = 315;
 
 		[XmlIgnore]
 		protected TableLayoutPanel uiElement = new TableLayoutPanel();
+
+		[XmlIgnore]
+		protected bool isCurrentlyModified = false;
+
+		[XmlIgnore]
+		protected bool isCurrentlyIncludedInModFormula = false;
 
 		[XmlAttribute]
 		public string name;
@@ -76,7 +85,10 @@ namespace CofD_Sheet.Sheet_Components
 				Form1.instance.sheet.ChangedSinceSave = true;
 			}
 
-			Form1.instance.sheet.RefreshModifications();
+			if (isCurrentlyIncludedInModFormula)
+			{
+				Form1.instance.sheet.RefreshModifications();
+			}
 		}
 
 		virtual public int QueryInt(List<string> path)
@@ -91,7 +103,8 @@ namespace CofD_Sheet.Sheet_Components
 
 		virtual public void ResetModifications()
 		{
-			//do nothing
+			isCurrentlyModified = false;
+			isCurrentlyIncludedInModFormula = false;
 		}
 
 		virtual public void OnModificationsComplete()

@@ -33,7 +33,7 @@ namespace CofD_Sheet.Sheet_Components
 			uiElement.RowCount = maxAspirations;
 			uiElement.ColumnCount = 1;
 			uiElement.Dock = DockStyle.Fill;
-			uiElement.Size = new Size(componentWidth, inputBoxHeight * maxAspirations);
+			uiElement.Size = new Size(componentWidth, filledInputBoxHeight * maxAspirations);
 			uiElement.TabIndex = 0;
 			textBoxes.Clear();
 

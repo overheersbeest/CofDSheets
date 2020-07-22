@@ -281,18 +281,22 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				if (path[1] == "MaxValue")
 				{
+					isCurrentlyIncludedInModFormula = true;
 					return MaxValue.CurrentValue;
 				}
 				if (path[1] == "bashing")
 				{
+					isCurrentlyIncludedInModFormula = true;
 					return bashing;
 				}
 				if (path[1] == "lethal")
 				{
+					isCurrentlyIncludedInModFormula = true;
 					return lethal;
 				}
 				if (path[1] == "aggrivated")
 				{
+					isCurrentlyIncludedInModFormula = true;
 					return aggrivated;
 				}
 			}
@@ -309,6 +313,7 @@ namespace CofD_Sheet.Sheet_Components
 					if (mod.path[1] == "MaxValue")
 					{
 						MaxValue.ApplyModification(intMod, sheet);
+						isCurrentlyModified = true;
 					}
 				}
 			}
@@ -316,12 +321,16 @@ namespace CofD_Sheet.Sheet_Components
 
 		override public void ResetModifications()
 		{
+			base.ResetModifications();
 			MaxValue.Reset();
 		}
 
 		override public void OnModificationsComplete()
 		{
-			OnMaxValueChanged();
+			if (isCurrentlyModified)
+			{
+				OnMaxValueChanged();
+			}
 		}
 	}
 }

@@ -270,7 +270,12 @@ namespace CofD_Sheet
 			retVal.Add(new AdvantagesComponent.NumericAdvantage("Speed"));
 			retVal.Add(new AdvantagesComponent.NumericAdvantage("Defense"));
 			retVal.Add(new AdvantagesComponent.ArmorAdvantage("Armor"));
-			retVal.Add(new AdvantagesComponent.NumericAdvantage("Initiative Mod"));
+			retVal.Add(new AdvantagesComponent.NumericAdvantage("Initiative_Mod"));
+
+			if (type == SheetType.Werewolf)
+			{
+				retVal.Add(new AdvantagesComponent.NumericAdvantage("Wolf_Senses"));
+			}
 
 			return retVal;
 		}
@@ -279,21 +284,21 @@ namespace CofD_Sheet
 		{
 			ModificationSetComponent FormsComponent = new ModificationSetComponent("Forms", new List<string> { "Hishu", "Dalu", "Gauru", "Urshul", "Urhan" }, ColumnId.Left);
 			//hishu
-			//default, no modifications made
+			FormsComponent.sets[0].modifications.Add(new IntModification(new List<string>() { "Advantages", "Wolf_Senses" }, 1, "", IntModificationType.Delta));
 
 			//dalu
 			FormsComponent.sets[1].modifications.Add(new IntModification(new List<string>() { "Physical_Attributes", "Strength" }, 1, "", IntModificationType.Delta));
 			FormsComponent.sets[1].modifications.Add(new IntModification(new List<string>() { "Physical_Attributes", "Stamina" }, 1, "", IntModificationType.Delta));
 			FormsComponent.sets[1].modifications.Add(new IntModification(new List<string>() { "Social_Attributes", "Manipulation" }, -1, "", IntModificationType.Delta));
 			FormsComponent.sets[1].modifications.Add(new IntModification(new List<string>() { "Advantages", "Size" }, 1, "", IntModificationType.Delta));
-			FormsComponent.sets[1].modifications.Add(new IntModification(new List<string>() { "Advantages", "Perception" }, 2, "", IntModificationType.Delta));
+			FormsComponent.sets[1].modifications.Add(new IntModification(new List<string>() { "Advantages", "Wolf_Senses" }, 2, "", IntModificationType.Delta));
 
 			//gauru
 			FormsComponent.sets[2].modifications.Add(new IntModification(new List<string>() { "Physical_Attributes", "Strength" }, 3, "", IntModificationType.Delta));
 			FormsComponent.sets[2].modifications.Add(new IntModification(new List<string>() { "Physical_Attributes", "Dexterity" }, 1, "", IntModificationType.Delta));
 			FormsComponent.sets[2].modifications.Add(new IntModification(new List<string>() { "Physical_Attributes", "Stamina" }, 2, "", IntModificationType.Delta));
 			FormsComponent.sets[2].modifications.Add(new IntModification(new List<string>() { "Advantages", "Size" }, 2, "", IntModificationType.Delta));
-			FormsComponent.sets[2].modifications.Add(new IntModification(new List<string>() { "Advantages", "Perception" }, 3, "", IntModificationType.Delta));
+			FormsComponent.sets[2].modifications.Add(new IntModification(new List<string>() { "Advantages", "Wolf_Senses" }, 3, "", IntModificationType.Delta));
 
 			//urshul
 			FormsComponent.sets[3].modifications.Add(new IntModification(new List<string>() { "Physical_Attributes", "Strength" }, 2, "", IntModificationType.Delta));
@@ -302,7 +307,7 @@ namespace CofD_Sheet
 			FormsComponent.sets[3].modifications.Add(new IntModification(new List<string>() { "Social_Attributes", "Manipulation" }, -1, "", IntModificationType.Delta));
 			FormsComponent.sets[3].modifications.Add(new IntModification(new List<string>() { "Advantages", "Size" }, 1, "", IntModificationType.Delta));
 			FormsComponent.sets[3].modifications.Add(new IntModification(new List<string>() { "Advantages", "Speed" }, 2, "", IntModificationType.Delta));
-			FormsComponent.sets[3].modifications.Add(new IntModification(new List<string>() { "Advantages", "Perception" }, 3, "", IntModificationType.Delta));
+			FormsComponent.sets[3].modifications.Add(new IntModification(new List<string>() { "Advantages", "Wolf_Senses" }, 3, "", IntModificationType.Delta));
 
 			//urhan
 			FormsComponent.sets[4].modifications.Add(new IntModification(new List<string>() { "Physical_Attributes", "Dexterity" }, 2, "", IntModificationType.Delta));
@@ -310,7 +315,7 @@ namespace CofD_Sheet
 			FormsComponent.sets[4].modifications.Add(new IntModification(new List<string>() { "Social_Attributes", "Manipulation" }, -1, "", IntModificationType.Delta));
 			FormsComponent.sets[4].modifications.Add(new IntModification(new List<string>() { "Advantages", "Size" }, -1, "", IntModificationType.Delta));
 			FormsComponent.sets[4].modifications.Add(new IntModification(new List<string>() { "Advantages", "Speed" }, 4, "", IntModificationType.Delta));
-			FormsComponent.sets[4].modifications.Add(new IntModification(new List<string>() { "Advantages", "Perception" }, 4, "", IntModificationType.Delta));
+			FormsComponent.sets[4].modifications.Add(new IntModification(new List<string>() { "Advantages", "Wolf_Senses" }, 4, "", IntModificationType.Delta));
 
 			return FormsComponent;
 		}

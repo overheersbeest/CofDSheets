@@ -242,11 +242,11 @@ namespace CofD_Sheet.Sheet_Components
 		{
 			if (Trait.specialties.Count > 0)
 			{
-				label.Text = Trait.name + " (" + string.Join(", ", Trait.specialties) + ")";
+				label.Text = (Trait.name + " (" + string.Join(", ", Trait.specialties) + ")").Replace('_', ' ');
 			}
 			else
 			{
-				label.Text = Trait.name;
+				label.Text = Trait.name.Replace('_', ' ');
 			}
 
 			ContextMenuStrip contextMenu = new ContextMenuStrip();
@@ -475,17 +475,19 @@ namespace CofD_Sheet.Sheet_Components
 		{
 			if (path.Count > 1)
 			{
+				if (path[1] == "MaxValue")
+				{
+					isCurrentlyIncludedInModFormula = true;
+					return maxValue;
+				}
 				string targetTrait = path[1];
 				foreach (Trait trait in Traits)
 				{
 					if (trait.name == targetTrait)
 					{
+						isCurrentlyIncludedInModFormula = true;
 						return trait.Value.CurrentValue;
 					}
-				}
-				if (path[1] == "MaxValue")
-				{
-					return maxValue;
 				}
 			}
 
@@ -504,6 +506,7 @@ namespace CofD_Sheet.Sheet_Components
 						if (Trait.name == targetTrait)
 						{
 							Trait.Value.ApplyModification(intMod, sheet);
+							isCurrentlyModified = true;
 							break;
 						}
 					}
@@ -513,6 +516,7 @@ namespace CofD_Sheet.Sheet_Components
 
 		override public void ResetModifications()
 		{
+			base.ResetModifications();
 			foreach (Trait Trait in Traits)
 			{
 				Trait.Value.Reset();
@@ -521,7 +525,10 @@ namespace CofD_Sheet.Sheet_Components
 
 		override public void OnModificationsComplete()
 		{
-			OnMaxValuePossiblyChanged();
+			if (isCurrentlyModified)
+			{
+				OnMaxValuePossiblyChanged();
+			}
 		}
 	}
 }

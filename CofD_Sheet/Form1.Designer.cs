@@ -323,7 +323,7 @@
 			this.Controls.Add(this.menuStrip1);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MainMenuStrip = this.menuStrip1;
-			this.MaximumSize = new System.Drawing.Size(971, 1158);
+			this.MaximumSize = new System.Drawing.Size(971, 1440);
 			this.MinimumSize = new System.Drawing.Size(971, 39);
 			this.Name = "Form1";
 			this.Text = "CofD Sheet";

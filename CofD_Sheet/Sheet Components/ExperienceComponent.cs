@@ -166,10 +166,12 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				if (path[1] == "experience")
 				{
+					isCurrentlyIncludedInModFormula = true;
 					return experience;
 				}
 				if (path[1] == "beats")
 				{
+					isCurrentlyIncludedInModFormula = true;
 					return beats;
 				}
 			}
