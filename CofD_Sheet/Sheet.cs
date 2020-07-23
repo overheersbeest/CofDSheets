@@ -114,9 +114,7 @@ namespace CofD_Sheet
 					components.Add(new ResourceComponent("Harmony", false, false, 7, 10, ColumnId.Right));
 					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right));
 					components.Add(new AspirationsComponent("Aspirations", 4, ColumnId.Right));
-					components.Add(new TraitsComponent("Moon Gifts", false, "note", true, "moon gift", false, new List<string>(), 0, 5, ColumnId.Right));
-					components.Add(new TraitsComponent("Shadow Gifts", true, "facet", true, "shadow gift", false, new List<string>(), 0, 0, ColumnId.Right));
-					components.Add(new TraitsComponent("Wolf Gifts", true, "facet", true, "wolf gift", false, new List<string>(), 0, 0, ColumnId.Right));
+					components.Add(new TraitsComponent("Gifts", true, "facet", true, "gift", false, new List<string>(), 0, 0, ColumnId.Right));
 					components.Add(new TraitsComponent("Equipment", true, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right));
 					break;
 				case SheetType.Vampire:

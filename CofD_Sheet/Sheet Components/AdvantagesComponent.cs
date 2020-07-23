@@ -86,6 +86,7 @@ namespace CofD_Sheet.Sheet_Components
 				bool confirmed = false;
 
 				NumericUpDown inputBox = new NumericUpDown() { Left = 5, Top = 5, Width = 300 };
+				inputBox.Minimum = Math.Min(0, Value.CurrentValue);
 				inputBox.Value = Value.CurrentValue;
 				inputBox.TabIndex = 0;
 				inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { confirmed = true; prompt.Close(); } };
@@ -248,6 +249,7 @@ namespace CofD_Sheet.Sheet_Components
 				bool confirmed = false;
 
 				NumericUpDown inputBoxGeneral = new NumericUpDown() { Left = 5, Top = 5, Width = 120 };
+				inputBoxGeneral.Minimum = Math.Min(0, General.CurrentValue);
 				inputBoxGeneral.Value = General.CurrentValue;
 				inputBoxGeneral.TabIndex = 0;
 				inputBoxGeneral.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { confirmed = true; prompt.Close(); } };
@@ -257,15 +259,16 @@ namespace CofD_Sheet.Sheet_Components
 				label.Text = "/";
 
 				NumericUpDown inputBoxBallistic = new NumericUpDown() { Left = 185, Top = 5, Width = 120 };
+				inputBoxBallistic.Minimum = Math.Min(0, Ballistic.CurrentValue);
 				inputBoxBallistic.Value = Ballistic.CurrentValue;
-				inputBoxBallistic.TabIndex = 0;
+				inputBoxBallistic.TabIndex = 1;
 				inputBoxBallistic.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { confirmed = true; prompt.Close(); } };
 
 				Button confirmation = new Button() { Text = "Confirm", Left = 205, Width = 100, Top = 30 };
-				confirmation.TabIndex = 1;
+				confirmation.TabIndex = 2;
 				confirmation.Click += (sender2, e2) => { confirmed = true; prompt.Close(); };
 				Button cancel = new Button() { Text = "Cancel", Left = 100, Width = 100, Top = 30 };
-				cancel.TabIndex = 2;
+				cancel.TabIndex = 3;
 				cancel.Click += (sender2, e2) => { prompt.Close(); };
 
 				prompt.Controls.Add(inputBoxGeneral);

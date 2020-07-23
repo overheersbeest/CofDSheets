@@ -80,6 +80,7 @@ namespace CofD_Sheet.Sheet_Components
 			bool confirmed = false;
 
 			NumericUpDown inputBox = new NumericUpDown() { Left = 5, Top = 5, Width = 300 };
+			inputBox.Minimum = Math.Min(0, MaxValue.CurrentValue);
 			inputBox.Value = MaxValue.CurrentValue;
 			inputBox.TabIndex = 0;
 			inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { confirmed = true; prompt.Close(); } };

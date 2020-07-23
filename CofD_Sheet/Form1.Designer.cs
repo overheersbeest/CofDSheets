@@ -270,6 +270,7 @@
 			// SubSplitContainer
 			// 
 			this.SubSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.SubSplitContainer.IsSplitterFixed = true;
 			this.SubSplitContainer.Location = new System.Drawing.Point(0, 0);
 			this.SubSplitContainer.Margin = new System.Windows.Forms.Padding(0);
 			this.SubSplitContainer.Name = "SubSplitContainer";
