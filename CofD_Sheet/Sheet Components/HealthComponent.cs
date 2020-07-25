@@ -328,10 +328,11 @@ namespace CofD_Sheet.Sheet_Components
 
 		override public void OnModificationsComplete()
 		{
-			if (isCurrentlyModified)
+			if (isCurrentlyModified || wasPreviouslyModified)
 			{
 				OnMaxValueChanged();
 			}
+			base.OnModificationsComplete();
 		}
 	}
 }

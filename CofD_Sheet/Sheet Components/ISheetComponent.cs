@@ -45,6 +45,9 @@ namespace CofD_Sheet.Sheet_Components
 		protected bool isCurrentlyModified = false;
 
 		[XmlIgnore]
+		protected bool wasPreviouslyModified = false;
+
+		[XmlIgnore]
 		protected bool isCurrentlyIncludedInModFormula = false;
 
 		[XmlAttribute]
@@ -103,13 +106,14 @@ namespace CofD_Sheet.Sheet_Components
 
 		virtual public void ResetModifications()
 		{
+			wasPreviouslyModified = isCurrentlyModified;
 			isCurrentlyModified = false;
 			isCurrentlyIncludedInModFormula = false;
 		}
 
 		virtual public void OnModificationsComplete()
 		{
-			//do nothing
+			wasPreviouslyModified = false;
 		}
 	}
 }
