@@ -55,7 +55,7 @@ namespace CofD_Sheet.Sheet_Components
 
 		override public Control ConstructUIElement()
 		{
-			OnMaxValueChanged();
+			OnMaxValueChanged(false);
 			return uiElement;
 		}
 
@@ -91,13 +91,16 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				MaxValue.CurrentValue = (int)inputBox.Value;
 
-				OnMaxValueChanged();
+				OnMaxValueChanged(true);
 			}
 		}
 
-		void OnMaxValueChanged()
+		void OnMaxValueChanged(bool CanChangeValue)
 		{
-			HandleDamageRollover();
+			if (CanChangeValue)
+			{
+				HandleDamageRollover();
+			}
 
 			int rowAmount = Convert.ToInt32(Math.Ceiling(MaxValue.CurrentValue / Convert.ToSingle(maxPerRow)));
 			int checkBoxRows = Math.Min(MaxValue.CurrentValue, maxPerRow);
@@ -330,7 +333,7 @@ namespace CofD_Sheet.Sheet_Components
 		{
 			if (isCurrentlyModified || wasPreviouslyModified)
 			{
-				OnMaxValueChanged();
+				OnMaxValueChanged(true);
 			}
 			base.OnModificationsComplete();
 		}

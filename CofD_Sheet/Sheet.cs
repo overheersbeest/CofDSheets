@@ -251,8 +251,8 @@ namespace CofD_Sheet
 					retVal.Add(new AdvantagesComponent.StringAdvantage("Vice"));
 					break;
 				case SheetType.Werewolf:
-					retVal.Add(new AdvantagesComponent.StringAdvantage("Bone"));
 					retVal.Add(new AdvantagesComponent.StringAdvantage("Blood"));
+					retVal.Add(new AdvantagesComponent.StringAdvantage("Bone"));
 					break;
 				case SheetType.Vampire:
 					retVal.Add(new AdvantagesComponent.StringAdvantage("Mask"));
@@ -330,14 +330,14 @@ namespace CofD_Sheet
 				case SheetType.WolfBlooded:
 					DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Health", "MaxValue" }, 0, "(Advantages.Size+Physical_Attributes.Stamina)", IntModificationType.Delta));
 					DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Willpower", "MaxValue" }, 0, "[Min,10,(Mental_Attributes.Resolve+Social_Attributes.Composure)]", IntModificationType.Delta));
-					DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Advantages", "Initiative Mod" }, 0, "(Physical_Attributes.Dexterity+Social_Attributes.Composure)", IntModificationType.Delta));
+					DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Advantages", "Initiative_Mod" }, 0, "(Physical_Attributes.Dexterity+Social_Attributes.Composure)", IntModificationType.Delta));
 					DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Advantages", "Defense" }, 0, "([Min,Physical_Attributes.Dexterity,Mental_Attributes.Wits]+Physical_Skills.Athletics)", IntModificationType.Delta));
 					DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Advantages", "Speed" }, 0, "(Advantages.Size+(Physical_Attributes.Strength+Physical_Attributes.Dexterity))", IntModificationType.Delta));
 					break;
 				case SheetType.Spirit:
 					DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Corpus", "MaxValue" }, 0, "(Advantages.Size+Attributes.Resistance)", IntModificationType.Delta));
 					DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Willpower", "MaxValue" }, 0, "[Min,10,(Attributes.Finesse+Attributes.Resistance)]", IntModificationType.Delta));
-					DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Advantages", "Initiative Mod" }, 0, "(Attributes.Finesse+Attributes.Resistance)", IntModificationType.Delta));
+					DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Advantages", "Initiative_Mod" }, 0, "(Attributes.Finesse+Attributes.Resistance)", IntModificationType.Delta));
 					DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Advantages", "Defense" }, 0, "[Min,Attributes.Power,Attributes.Finesse]", IntModificationType.Delta));
 					DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Advantages", "Speed" }, 0, "(Attributes.Power+Attributes.Finesse)", IntModificationType.Delta));
 					break;

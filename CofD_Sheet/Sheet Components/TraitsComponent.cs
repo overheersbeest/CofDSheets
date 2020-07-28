@@ -156,8 +156,8 @@ namespace CofD_Sheet.Sheet_Components
 		{
 			ContextMenuStrip owner = (sender as ToolStripItem).Owner as ContextMenuStrip;
 			Label TraitLabel = owner.SourceControl as Label;
-			Trait Trait = Traits.Find(x => TraitLabel.Text.StartsWith(x.name));
-			if (Trait == null)
+			Trait trait = Traits.Find(x => TraitLabel.Text.Replace(' ', '_').StartsWith(x.name));
+			if (trait == null)
 			{
 				return;
 			}
@@ -184,12 +184,12 @@ namespace CofD_Sheet.Sheet_Components
 			if (confirmed)
 			{
 				string newSpecialty = inputBox.Text;
-				if (!Trait.specialties.Contains(newSpecialty))
+				if (!trait.specialties.Contains(newSpecialty))
 				{
-					Trait.specialties.Add(newSpecialty);
+					trait.specialties.Add(newSpecialty);
 				}
 
-				OnSpecialtiesChanged(TraitLabel, Trait);
+				OnSpecialtiesChanged(TraitLabel, trait);
 			}
 		}
 
@@ -197,8 +197,8 @@ namespace CofD_Sheet.Sheet_Components
 		{
 			ContextMenuStrip owner = (sender as ToolStripItem).Owner as ContextMenuStrip;
 			Label TraitLabel = owner.SourceControl as Label;
-			Trait Trait = Traits.Find(x => TraitLabel.Text.StartsWith(x.name));
-			if (Trait == null)
+			Trait trait = Traits.Find(x => TraitLabel.Text.Replace(' ', '_').StartsWith(x.name));
+			if (trait == null)
 			{
 				return;
 			}
@@ -213,7 +213,7 @@ namespace CofD_Sheet.Sheet_Components
 			bool confirmed = false;
 
 			ComboBox inputBox = new ComboBox() { Left = 5, Top = 5, Width = 300 };
-			foreach (string specialty in Trait.specialties)
+			foreach (string specialty in trait.specialties)
 			{
 				inputBox.Items.Add(specialty);
 			}
@@ -229,12 +229,12 @@ namespace CofD_Sheet.Sheet_Components
 			if (confirmed)
 			{
 				string specialtytoRemove = inputBox.SelectedItem as string;
-				if (Trait.specialties.Contains(specialtytoRemove))
+				if (trait.specialties.Contains(specialtytoRemove))
 				{
-					Trait.specialties.Remove(specialtytoRemove);
+					trait.specialties.Remove(specialtytoRemove);
 				}
 
-				OnSpecialtiesChanged(TraitLabel, Trait);
+				OnSpecialtiesChanged(TraitLabel, trait);
 			}
 		}
 
