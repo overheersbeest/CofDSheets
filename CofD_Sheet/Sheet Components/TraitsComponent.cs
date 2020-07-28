@@ -156,7 +156,8 @@ namespace CofD_Sheet.Sheet_Components
 		{
 			ContextMenuStrip owner = (sender as ToolStripItem).Owner as ContextMenuStrip;
 			Label TraitLabel = owner.SourceControl as Label;
-			Trait trait = Traits.Find(x => TraitLabel.Text.Replace(' ', '_').StartsWith(x.name));
+			//we use StartsWith to exclude specialties
+			Trait trait = Traits.Find(x => TraitLabel.Text.StartsWith(x.name) || TraitLabel.Text.Replace(' ', '_').StartsWith(x.name));
 			if (trait == null)
 			{
 				return;
@@ -197,7 +198,8 @@ namespace CofD_Sheet.Sheet_Components
 		{
 			ContextMenuStrip owner = (sender as ToolStripItem).Owner as ContextMenuStrip;
 			Label TraitLabel = owner.SourceControl as Label;
-			Trait trait = Traits.Find(x => TraitLabel.Text.Replace(' ', '_').StartsWith(x.name));
+			//we use StartsWith to exclude specialties
+			Trait trait = Traits.Find(x => TraitLabel.Text.StartsWith(x.name) || TraitLabel.Text.Replace(' ', '_').StartsWith(x.name));
 			if (trait == null)
 			{
 				return;
