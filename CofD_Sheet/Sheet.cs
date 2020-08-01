@@ -10,12 +10,34 @@ namespace CofD_Sheet
 {
 	public enum SheetType
 	{
+		//major splats
 		Mortal,
 		Mage,
 		Werewolf,
 		Vampire,
-		WolfBlooded,
-		Spirit
+
+		//minor splats
+		Proximi,
+		Wolf_Blooded,
+		Ghoul,
+
+		//ephemeral entities
+		Spirit,
+		Ghost,
+		Angel,
+		Goetia,
+
+		//other
+		Supernal_Entity,
+		Acamoth,//abyssal entity
+		Gulmoth,//abyssal entity
+
+		//special cases, not actual sheet types, but categories for child types
+		Count,
+		None,
+		Ephemeral_Entity,
+		Abyssal_Entity,
+		Other
 	}
 
 	[XmlRoot]
@@ -63,6 +85,7 @@ namespace CofD_Sheet
 		{
 			switch (type)
 			{
+				//major splats
 				case SheetType.Mortal:
 					AddMortalSkillsAndAttributes();
 
@@ -135,7 +158,27 @@ namespace CofD_Sheet
 					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
 					components.Add(new TraitsComponent("Equipment", false, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right));
 					break;
-				case SheetType.WolfBlooded:
+
+				//minor splats
+				case SheetType.Proximi:
+					AddMortalSkillsAndAttributes();
+
+					components.Add(new TraitsComponent("Merits", true, "subtype", true, "merit", false, new List<string>(), 0, 5, ColumnId.Middle));
+					components.Add(new TraitsComponent("Blessing Arcana", false, "note", true, "blessing arcana", false, new List<string>(), 0, 0, ColumnId.Middle));
+					components.Add(new TraitsComponent("Blessings", false, "note", true, "blessing", false, new List<string>(), 0, 3, ColumnId.Middle));
+					components.Add(new AdvantagesComponent("Advantages", GetGetAdvantages(type), ColumnId.Middle));
+					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
+					components.Add(new ExperienceComponent("Arcane_Experience", "Arcane_Beats", ColumnId.Middle));
+
+					components.Add(new HealthComponent("Health", ColumnId.Right));
+					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right));
+					components.Add(new ResourceComponent("Mana", true, true, 0, 5, ColumnId.Right));
+					components.Add(new ResourceComponent("Integrity", false, false, 7, 10, ColumnId.Right));
+					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right));
+					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
+					components.Add(new TraitsComponent("Equipment", false, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right));
+					break;
+				case SheetType.Wolf_Blooded:
 					AddMortalSkillsAndAttributes();
 
 					components.Add(new TraitsComponent("Merits", true, "subtype", true, "merit", false, new List<string>(), 0, 5, ColumnId.Middle));
@@ -151,15 +194,95 @@ namespace CofD_Sheet
 					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
 					components.Add(new TraitsComponent("Equipment", false, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right));
 					break;
+				case SheetType.Ghoul:
+					AddMortalSkillsAndAttributes();
+
+					components.Add(new TraitsComponent("Merits", true, "subtype", true, "merit", false, new List<string>(), 0, 5, ColumnId.Middle));
+					components.Add(new TraitsComponent("Disciplines", false, "note", true, "discipline", false, new List<string>(), 0, 5, ColumnId.Middle));
+					components.Add(new AdvantagesComponent("Advantages", GetGetAdvantages(type), ColumnId.Middle));
+					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
+
+					components.Add(new HealthComponent("Health", ColumnId.Right));
+					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right));
+					components.Add(new ResourceComponent("Vitae", true, true, 0, 0, ColumnId.Right));
+					components.Add(new ResourceComponent("Integrity", false, false, 7, 10, ColumnId.Right));
+					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right));
+					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
+					components.Add(new TraitsComponent("Equipment", false, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right));
+					break;
+
+					//ephemeral entities / others
 				case SheetType.Spirit:
+				case SheetType.Gulmoth:
 					components.Add(new TraitsComponent("Attributes", false, "note", false, "attribute", true, new List<string> { "Power", "Finesse", "Resistance" }, 1, 15, ColumnId.Left));
 
 					components.Add(new TraitsComponent("Influences", false, "note", true, "influence", false, new List<string>(), 0, 5, ColumnId.Middle));
 					components.Add(new AdvantagesComponent("Advantages", GetGetAdvantages(type), ColumnId.Middle));
+					components.Add(new TraitsComponent("Numina", true, "note", true, "numina", false, new List<string>(), 0, 0, ColumnId.Middle));
+					components.Add(new TraitsComponent("Manifestations", true, "note", true, "manifestation", false, new List<string>() { "Twilight Form" }, 0, 0, ColumnId.Middle));
 
 					components.Add(new HealthComponent("Corpus", ColumnId.Right));
 					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right));
 					components.Add(new ResourceComponent("Essence", true, true, 0, 10, ColumnId.Right));
+					components.Add(new ResourceComponent("Rank", false, false, 0, 5, ColumnId.Right));
+					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right));
+					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
+					break;
+				case SheetType.Ghost:
+					components.Add(new TraitsComponent("Attributes", false, "note", false, "attribute", true, new List<string> { "Power", "Finesse", "Resistance" }, 1, 15, ColumnId.Left));
+
+					components.Add(new TraitsComponent("Influences", false, "note", true, "influence", false, new List<string>(), 0, 5, ColumnId.Middle));
+					components.Add(new AdvantagesComponent("Advantages", GetGetAdvantages(type), ColumnId.Middle));
+					components.Add(new TraitsComponent("Numina", true, "note", true, "numina", false, new List<string>(), 0, 0, ColumnId.Middle));
+					components.Add(new TraitsComponent("Manifestations", true, "note", true, "manifestation", false, new List<string>() { "Twilight Form" }, 0, 0, ColumnId.Middle));
+
+					components.Add(new HealthComponent("Corpus", ColumnId.Right));
+					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right));
+					components.Add(new ResourceComponent("Essence", true, true, 0, 10, ColumnId.Right));
+					components.Add(new ResourceComponent("Rank", false, false, 0, 5, ColumnId.Right));
+					components.Add(new ResourceComponent("Integrity", false, false, 7, 10, ColumnId.Right));
+					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right));
+					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
+					break;
+				case SheetType.Angel:
+					components.Add(new TraitsComponent("Attributes", false, "note", false, "attribute", true, new List<string> { "Power", "Finesse", "Resistance" }, 1, 15, ColumnId.Left));
+
+					components.Add(new TraitsComponent("Influences", false, "note", true, "influence", false, new List<string>(), 0, 5, ColumnId.Middle));
+					components.Add(new AdvantagesComponent("Advantages", GetGetAdvantages(type), ColumnId.Middle));
+					components.Add(new TraitsComponent("Numina", true, "note", true, "numina", false, new List<string>(), 0, 0, ColumnId.Middle));
+					components.Add(new TraitsComponent("Manifestations", true, "note", true, "manifestation", false, new List<string>() { "Twilight Form" }, 0, 0, ColumnId.Middle));
+
+					components.Add(new HealthComponent("Corpus", ColumnId.Right));
+					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right));
+					components.Add(new ResourceComponent("Essence", true, true, 0, 10, ColumnId.Right));
+					components.Add(new ResourceComponent("Rank", false, false, 0, 5, ColumnId.Right));
+					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right));
+					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
+					break;
+				case SheetType.Goetia:
+				case SheetType.Acamoth:
+					components.Add(new TraitsComponent("Attributes", false, "note", false, "attribute", true, new List<string> { "Power", "Finesse", "Resistance" }, 1, 15, ColumnId.Left));
+
+					components.Add(new TraitsComponent("Influences", false, "note", true, "influence", false, new List<string>(), 0, 5, ColumnId.Middle));
+					components.Add(new AdvantagesComponent("Advantages", GetGetAdvantages(type), ColumnId.Middle));
+					components.Add(new TraitsComponent("Numina", true, "note", true, "numina", false, new List<string>(), 0, 0, ColumnId.Middle));
+
+					components.Add(new HealthComponent("Corpus", ColumnId.Right));
+					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right));
+					components.Add(new ResourceComponent("Essence", true, true, 0, 10, ColumnId.Right));
+					components.Add(new ResourceComponent("Rank", false, false, 0, 5, ColumnId.Right));
+					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right));
+					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
+					break;
+				case SheetType.Supernal_Entity:
+					components.Add(new TraitsComponent("Attributes", false, "note", false, "attribute", true, new List<string> { "Power", "Finesse", "Resistance" }, 1, 15, ColumnId.Left));
+
+					components.Add(new TraitsComponent("Arcana", false, "note", false, "arcanum", false, new List<string> { "Death", "Fate", "Forces", "Life", "Matter", "Mind", "Prime", "Space", "Spirit", "Time" }, 0, 5, ColumnId.Middle));
+					components.Add(new AdvantagesComponent("Advantages", GetGetAdvantages(type), ColumnId.Middle));
+
+					components.Add(new HealthComponent("Corpus", ColumnId.Right));
+					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right));
+					components.Add(new ResourceComponent("Mana", true, true, 0, 10, ColumnId.Right));
 					components.Add(new ResourceComponent("Rank", false, false, 0, 5, ColumnId.Right));
 					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right));
 					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
@@ -245,8 +368,12 @@ namespace CofD_Sheet
 			switch (type)
 			{
 				case SheetType.Mortal:
-				case SheetType.WolfBlooded:
+				case SheetType.Wolf_Blooded:
+				case SheetType.Ghoul:
 				case SheetType.Mage:
+				case SheetType.Ghost:
+				case SheetType.Angel:
+				case SheetType.Supernal_Entity:
 					retVal.Add(new AdvantagesComponent.StringAdvantage("Virtue"));
 					retVal.Add(new AdvantagesComponent.StringAdvantage("Vice"));
 					break;
@@ -259,8 +386,7 @@ namespace CofD_Sheet
 					retVal.Add(new AdvantagesComponent.StringAdvantage("Dirge"));
 					break;
 				case SheetType.Spirit:
-					retVal.Add(new AdvantagesComponent.StringAdvantage("Ban"));
-					retVal.Add(new AdvantagesComponent.StringAdvantage("Bane"));
+					//nothing unique
 					break;
 			}
 
@@ -273,6 +399,11 @@ namespace CofD_Sheet
 			if (type == SheetType.Werewolf)
 			{
 				retVal.Add(new AdvantagesComponent.NumericAdvantage("Wolf_Senses"));
+			}
+			else if (IsEpehemeralEntity(type, true))
+			{
+				retVal.Add(new AdvantagesComponent.StringAdvantage("Ban"));
+				retVal.Add(new AdvantagesComponent.StringAdvantage("Bane"));
 			}
 
 			return retVal;
@@ -321,27 +452,45 @@ namespace CofD_Sheet
 		private void SetDefaultModSet(SheetType type)
 		{
 			DefaultModSet = new ModificationSetComponent.ModificationSet("DefaultModSet");
+			if (IsEpehemeralEntity(type, true))
+			{
+				DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Corpus", "MaxValue" }, 0, "(Advantages.Size+Attributes.Resistance)", IntModificationType.Delta));
+				DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Willpower", "MaxValue" }, 0, "[Min,10,(Attributes.Finesse+Attributes.Resistance)]", IntModificationType.Delta));
+				DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Advantages", "Initiative_Mod" }, 0, "(Attributes.Finesse+Attributes.Resistance)", IntModificationType.Delta));
+				DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Advantages", "Defense" }, 0, "[Min,Attributes.Power,Attributes.Finesse]", IntModificationType.Delta));
+				DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Advantages", "Speed" }, 0, "(Attributes.Power+Attributes.Finesse)", IntModificationType.Delta));
+			}
+			else
+			{
+				DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Health", "MaxValue" }, 0, "(Advantages.Size+Physical_Attributes.Stamina)", IntModificationType.Delta));
+				DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Willpower", "MaxValue" }, 0, "[Min,10,(Mental_Attributes.Resolve+Social_Attributes.Composure)]", IntModificationType.Delta));
+				DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Advantages", "Initiative_Mod" }, 0, "(Physical_Attributes.Dexterity+Social_Attributes.Composure)", IntModificationType.Delta));
+				DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Advantages", "Defense" }, 0, "([Min,Physical_Attributes.Dexterity,Mental_Attributes.Wits]+Physical_Skills.Athletics)", IntModificationType.Delta));
+				DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Advantages", "Speed" }, 0, "(Advantages.Size+(Physical_Attributes.Strength+Physical_Attributes.Dexterity))", IntModificationType.Delta));
+			}
+
+			//custom logic
 			switch (type)
 			{
-				case SheetType.Mortal:
-				case SheetType.Mage:
-				case SheetType.Werewolf:
-				case SheetType.Vampire:
-				case SheetType.WolfBlooded:
-					DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Health", "MaxValue" }, 0, "(Advantages.Size+Physical_Attributes.Stamina)", IntModificationType.Delta));
-					DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Willpower", "MaxValue" }, 0, "[Min,10,(Mental_Attributes.Resolve+Social_Attributes.Composure)]", IntModificationType.Delta));
-					DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Advantages", "Initiative_Mod" }, 0, "(Physical_Attributes.Dexterity+Social_Attributes.Composure)", IntModificationType.Delta));
-					DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Advantages", "Defense" }, 0, "([Min,Physical_Attributes.Dexterity,Mental_Attributes.Wits]+Physical_Skills.Athletics)", IntModificationType.Delta));
-					DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Advantages", "Speed" }, 0, "(Advantages.Size+(Physical_Attributes.Strength+Physical_Attributes.Dexterity))", IntModificationType.Delta));
-					break;
-				case SheetType.Spirit:
-					DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Corpus", "MaxValue" }, 0, "(Advantages.Size+Attributes.Resistance)", IntModificationType.Delta));
-					DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Willpower", "MaxValue" }, 0, "[Min,10,(Attributes.Finesse+Attributes.Resistance)]", IntModificationType.Delta));
-					DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Advantages", "Initiative_Mod" }, 0, "(Attributes.Finesse+Attributes.Resistance)", IntModificationType.Delta));
-					DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Advantages", "Defense" }, 0, "[Min,Attributes.Power,Attributes.Finesse]", IntModificationType.Delta));
-					DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Advantages", "Speed" }, 0, "(Attributes.Power+Attributes.Finesse)", IntModificationType.Delta));
+				case SheetType.Ghoul:
+					DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Vitae", "MaxValue" }, 0, "Physical_Attributes.Stamina", IntModificationType.Delta));
 					break;
 			}
+		}
+
+		public bool IsEpehemeralEntity(SheetType Type, bool IncludeSupernal)
+		{
+			if (Form1.SheetTypeParentage.TryGetValue(SheetType.Ephemeral_Entity, out List<SheetType> EpehemeralEntities))
+			{
+				return EpehemeralEntities.Contains(Type);
+			}
+			if (IncludeSupernal)
+			{
+				return Type == SheetType.Supernal_Entity
+					|| Type == SheetType.Acamoth
+					|| Type == SheetType.Gulmoth;
+			}
+			return false;
 		}
 	}
 }

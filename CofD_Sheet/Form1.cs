@@ -1,5 +1,6 @@
 ﻿using CofD_Sheet.Sheet_Components;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -60,25 +61,32 @@ namespace CofD_Sheet
 			}
 		}
 
-		FileSystemWatcher watcher = new FileSystemWatcher();
+		readonly FileSystemWatcher watcher = new FileSystemWatcher();
 
 		public DrawingHelper drawingHelper;
+
+		static public Dictionary<SheetType, List<SheetType>> SheetTypeParentage = new Dictionary<SheetType, List<SheetType>>()
+		{
+			{ SheetType.None, new List<SheetType>() { SheetType.Mortal, SheetType.Mage, SheetType.Vampire, SheetType.Werewolf, SheetType.Ephemeral_Entity, SheetType.Other } },
+			{ SheetType.Mage, new List<SheetType>() { SheetType.Proximi } },
+			{ SheetType.Vampire, new List<SheetType>() { SheetType.Ghoul} },
+			{ SheetType.Werewolf, new List<SheetType>() { SheetType.Wolf_Blooded} },
+			{ SheetType.Ephemeral_Entity, new List<SheetType>() { SheetType.Angel, SheetType.Ghost, SheetType.Spirit, SheetType.Goetia } },
+			{ SheetType.Other, new List<SheetType>() { SheetType.Abyssal_Entity, SheetType.Supernal_Entity } },
+			{ SheetType.Abyssal_Entity, new List<SheetType>() { SheetType.Acamoth, SheetType.Gulmoth} }
+		};
 
 		public Form1()
 		{
 			instance = this;
 			InitializeComponent();
 
-			foreach (SheetType type in Enum.GetValues(typeof(SheetType)))
+			if (SheetTypeParentage.TryGetValue(SheetType.None, out List<SheetType> RootTypes))
 			{
-				System.Windows.Forms.ToolStripMenuItem newButton = new ToolStripMenuItem
+				foreach (SheetType RootType in RootTypes)
 				{
-					Name = "New" + type.ToString() + "Button",
-					Size = new System.Drawing.Size(152, 22),
-					Text = type.ToString()
-				};
-				newButton.Click += new System.EventHandler(this.NewSheetButtonClicked);
-				this.newToolStripMenuItem.DropDownItems.Add(newButton);
+					AddToolStripMenuItemsForSheetType(RootType, ref newToolStripMenuItem);
+				}
 			}
 
 			watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
@@ -87,6 +95,28 @@ namespace CofD_Sheet
 			autoLoadToolStripMenuItem.Checked = AutoLoad;
 
 			drawingHelper = new DrawingHelper(this);
+		}
+
+		private void AddToolStripMenuItemsForSheetType(SheetType SheetTypeToAdd, ref ToolStripMenuItem ParentMenuItem)
+		{
+			System.Windows.Forms.ToolStripMenuItem NewButton = new ToolStripMenuItem
+			{
+				Name = "New" + SheetTypeToAdd.ToString() + "Button",
+				Size = new System.Drawing.Size(152, 22),
+				Text = SheetTypeToAdd.ToString().Replace("_", " ")
+			};
+			if (SheetTypeToAdd < SheetType.Count)
+			{
+				NewButton.Click += new System.EventHandler(this.NewSheetButtonClicked);
+			}
+			ParentMenuItem.DropDownItems.Add(NewButton);
+			if (SheetTypeParentage.TryGetValue(SheetTypeToAdd, out List<SheetType> ChildTypes))
+			{
+				foreach (SheetType ChildType in ChildTypes)
+				{
+					AddToolStripMenuItemsForSheetType(ChildType, ref NewButton);
+				}
+			}
 		}
 
 		private void LoadToolStripMenuItem_Click(object sender, EventArgs e)
@@ -275,6 +305,9 @@ namespace CofD_Sheet
 				componentUIElement.Controls.Add(nameLabel, 0, 0);
 				Control componentValueElement = component.ConstructUIElement();
 				componentUIElement.Controls.Add(componentValueElement, 0, 1);
+				//pass on context menu strip to other components as well
+				componentUIElement.ContextMenuStrip = componentValueElement.ContextMenuStrip;
+				nameLabel.ContextMenuStrip = componentValueElement.ContextMenuStrip;
 
 				if (component.column == ColumnId.Left)
 				{
@@ -397,7 +430,7 @@ namespace CofD_Sheet
 		private void NewSheetButtonClicked(object sender, EventArgs e)
 		{
 			AssosiatedFile = "";
-			sheet = new Sheet((SheetType)Enum.Parse(typeof(SheetType), sender.ToString()));
+			sheet = new Sheet((SheetType)Enum.Parse(typeof(SheetType), sender.ToString().Replace(" ", "_")));
 			RefreshSheet();
 		}
 
