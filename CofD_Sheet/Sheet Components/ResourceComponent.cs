@@ -259,12 +259,12 @@ namespace CofD_Sheet.Sheet_Components
 		{
 			if (path.Count > 1)
 			{
-				if (path[1] == "MaxValue")
+				if (String.Equals(path[1], "MaxValue", StringComparison.OrdinalIgnoreCase))
 				{
 					isCurrentlyIncludedInModFormula = true;
 					return MaxValue.CurrentValue;
 				}
-				if (path[1] == "Value")
+				if (String.Equals(path[1], "Value", StringComparison.OrdinalIgnoreCase))
 				{
 					isCurrentlyIncludedInModFormula = true;
 					return currentValue;
@@ -280,7 +280,7 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				if (mod.path.Count > 1)
 				{
-					if (mod.path[1] == "MaxValue")
+					if (String.Equals(mod.path[1], "MaxValue", StringComparison.OrdinalIgnoreCase))
 					{
 						MaxValue.ApplyModification(intMod, sheet);
 						isCurrentlyModified = true;

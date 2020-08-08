@@ -164,12 +164,12 @@ namespace CofD_Sheet.Sheet_Components
 		{
 			if (path.Count > 1)
 			{
-				if (path[1] == "experience")
+				if (String.Equals(path[1], "Experience", StringComparison.OrdinalIgnoreCase))
 				{
 					isCurrentlyIncludedInModFormula = true;
 					return experience;
 				}
-				if (path[1] == "beats")
+				if (String.Equals(path[1], "Beats", StringComparison.OrdinalIgnoreCase))
 				{
 					isCurrentlyIncludedInModFormula = true;
 					return beats;

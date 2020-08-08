@@ -477,7 +477,7 @@ namespace CofD_Sheet.Sheet_Components
 		{
 			if (path.Count > 1)
 			{
-				if (path[1] == "MaxValue")
+				if (String.Equals(path[1], "MaxValue", StringComparison.OrdinalIgnoreCase))
 				{
 					isCurrentlyIncludedInModFormula = true;
 					return maxValue;
@@ -485,7 +485,7 @@ namespace CofD_Sheet.Sheet_Components
 				string targetTrait = path[1];
 				foreach (Trait trait in Traits)
 				{
-					if (trait.name == targetTrait)
+					if (String.Equals(trait.name, targetTrait, StringComparison.OrdinalIgnoreCase))
 					{
 						isCurrentlyIncludedInModFormula = true;
 						return trait.Value.CurrentValue;

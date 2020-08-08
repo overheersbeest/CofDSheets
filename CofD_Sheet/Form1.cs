@@ -81,11 +81,14 @@ namespace CofD_Sheet
 			instance = this;
 			InitializeComponent();
 
-			if (SheetTypeParentage.TryGetValue(SheetType.None, out List<SheetType> RootTypes))
+			if (SheetTypeParentage.TryGetValue(SheetType.None, out List<SheetType> rootTypes))
 			{
-				foreach (SheetType RootType in RootTypes)
+#if DEBUG
+				rootTypes.Insert(0, SheetType.Test);
+#endif
+				foreach (SheetType rootType in rootTypes)
 				{
-					AddToolStripMenuItemsForSheetType(RootType, ref newToolStripMenuItem);
+					AddToolStripMenuItemsForSheetType(rootType, ref newToolStripMenuItem);
 				}
 			}
 
@@ -250,6 +253,8 @@ namespace CofD_Sheet
 
 		public delegate void refreshSheetCallback();
 
+		Dictionary<Control, List<Control>> contextMenuDuplicators = new Dictionary<Control, List<Control>>();
+
 		public void RefreshSheet()
 		{
 			//in case we're being called from another thread
@@ -277,6 +282,8 @@ namespace CofD_Sheet
 			int amountOfRows = Convert.ToInt32(Math.Ceiling(sheet.components.Count / 2.0F));
 
 			sheet.allowRefreshingMods = false;
+
+			contextMenuDuplicators.Clear();
 
 			for (int i = 0; i < sheet.components.Count; i++)
 			{
@@ -306,8 +313,7 @@ namespace CofD_Sheet
 				Control componentValueElement = component.ConstructUIElement();
 				componentUIElement.Controls.Add(componentValueElement, 0, 1);
 				//pass on context menu strip to other components as well
-				componentUIElement.ContextMenuStrip = componentValueElement.ContextMenuStrip;
-				nameLabel.ContextMenuStrip = componentValueElement.ContextMenuStrip;
+				contextMenuDuplicators.Add(componentValueElement, new List<Control> { componentUIElement, nameLabel });
 
 				if (component.column == ColumnId.Left)
 				{
@@ -345,6 +351,17 @@ namespace CofD_Sheet
 
 			drawingHelper.ResumeDrawing(true);
 			autoSaveDisabled = false;
+		}
+
+		public static void TransferContextMenuForControl(Control source)
+		{
+			if (instance.contextMenuDuplicators.TryGetValue(source, out List<Control> destinations))
+			{
+				foreach (Control dest in destinations)
+				{
+					dest.ContextMenuStrip = source.ContextMenuStrip;
+				}
+			}
 		}
 
 		private void NameChanged(object sender, EventArgs e)

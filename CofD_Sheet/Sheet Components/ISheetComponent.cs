@@ -24,6 +24,7 @@ namespace CofD_Sheet.Sheet_Components
 	[XmlInclude(typeof(ModificationSetComponent))]
 	[XmlInclude(typeof(ResourceComponent))]
 	[XmlInclude(typeof(TraitsComponent))]
+	[XmlInclude(typeof(TableComponent))]
 	public abstract class ISheetComponent
 	{
 		[XmlIgnore]

@@ -49,7 +49,6 @@ namespace CofD_Sheet
 				RedrawWindowFlags.NoErase | RedrawWindowFlags.Invalidate | RedrawWindowFlags.InternalPaint);
 		}
 
-		[CLSCompliant(false)]
 		public void ResumeDrawing(RedrawWindowFlags flags)
 		{
 			Interlocked.Decrement(ref suspendCounter);
@@ -106,7 +105,6 @@ namespace CofD_Sheet
 
 	#region RedrawWindowFlags
 
-	[Flags(), CLSCompliant(false)]
 	public enum RedrawWindowFlags : uint
 	{
 		///<summary>Invalidates lprcUpdate or hrgnUpdate (only one may be non-NULL). 

@@ -353,7 +353,7 @@ namespace CofD_Sheet.Sheet_Components
 				string targetAdvantage = path[1];
 				foreach (Advantage advantage in advantages)
 				{
-					if (advantage.name == targetAdvantage)
+					if (String.Equals(advantage.name, targetAdvantage, StringComparison.OrdinalIgnoreCase))
 					{
 						isCurrentlyIncludedInModFormula = true;
 						if (advantage is NumericAdvantage numericAdvantage)
@@ -365,11 +365,11 @@ namespace CofD_Sheet.Sheet_Components
 							if (path.Count > 2)
 							{
 								string targetType = path[2];
-								if (targetType == "general")
+								if (String.Equals(targetType, "General", StringComparison.OrdinalIgnoreCase))
 								{
 									return armorAdvantage.General.CurrentValue;
 								}
-								else if (targetType == "ballistic")
+								else if (String.Equals(targetType, "Ballistic", StringComparison.OrdinalIgnoreCase))
 								{
 									return armorAdvantage.Ballistic.CurrentValue;
 								}
@@ -403,11 +403,11 @@ namespace CofD_Sheet.Sheet_Components
 								if (mod.path.Count > 2)
 								{
 									string targetType = mod.path[2];
-									if (targetType == "general")
+									if (String.Equals(targetType, "General", StringComparison.OrdinalIgnoreCase))
 									{
 										armorAdvantage.General.ApplyModification(intMod, sheet);
 									}
-									else if (targetType == "ballistic")
+									else if (String.Equals(targetType, "Ballistic", StringComparison.OrdinalIgnoreCase))
 									{
 										armorAdvantage.Ballistic.ApplyModification(intMod, sheet);
 									}
