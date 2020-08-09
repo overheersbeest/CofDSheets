@@ -113,6 +113,9 @@ namespace CofD_Sheet.Sheet_Components
 		}
 
 		virtual public void OnModificationsComplete()
+		{ }
+
+		public void PostModificationsComplete()
 		{
 			wasPreviouslyModified = false;
 		}

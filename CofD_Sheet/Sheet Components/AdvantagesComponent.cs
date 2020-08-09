@@ -444,7 +444,6 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				OnValueChanged();
 			}
-			base.OnModificationsComplete();
 		}
 	}
 }

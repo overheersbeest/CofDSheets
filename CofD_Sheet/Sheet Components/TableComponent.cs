@@ -520,7 +520,8 @@ namespace CofD_Sheet.Sheet_Components
 
 				Label columnTitle = new Label
 				{
-					Anchor = AnchorStyles.None,
+					Anchor = AnchorStyles.Top,
+					Dock = DockStyle.Fill,
 					AutoSize = true,
 					Name = "ColumnTitle" + column.name,
 					Text = column.name,
@@ -740,7 +741,6 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				OnTableChanged();
 			}
-			base.OnModificationsComplete();
 		}
 	}
 }

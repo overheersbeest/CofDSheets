@@ -531,7 +531,6 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				OnMaxValuePossiblyChanged();
 			}
-			base.OnModificationsComplete();
 		}
 	}
 }

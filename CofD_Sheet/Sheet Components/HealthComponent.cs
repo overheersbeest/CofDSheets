@@ -335,7 +335,6 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				OnMaxValueChanged(true);
 			}
-			base.OnModificationsComplete();
 		}
 	}
 }
