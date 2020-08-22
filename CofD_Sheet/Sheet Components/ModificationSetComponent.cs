@@ -27,9 +27,8 @@ namespace CofD_Sheet.Sheet_Components
 				this.modifications = _modifications;
 			}
 
-			public void Apply()
+			public void Apply(Sheet sheet)
 			{
-				Sheet sheet = Form1.instance.sheet;
 				foreach (Modification modification in modifications)
 				{
 					if (modification.path.Count > 0)
@@ -65,12 +64,14 @@ namespace CofD_Sheet.Sheet_Components
 		public ModificationSetComponent() : base("ModificationSetComponent", ColumnId.Undefined)
 		{ }
 
-		public ModificationSetComponent(string componentName, List<string> ModificationSetNames, ColumnId _column) : base(componentName, _column)
+		public ModificationSetComponent(string componentName, List<string> ModificationSetNames, ColumnId _column, Sheet parentSheet) : base(componentName, _column)
 		{
 			foreach (string advantageName in ModificationSetNames)
 			{
 				sets.Add(new ModificationSet(advantageName));
 			}
+
+			Init(parentSheet);
 		}
 
 		override public Control ConstructUIElement()
@@ -98,7 +99,7 @@ namespace CofD_Sheet.Sheet_Components
 		void OnValueChanged(object sender = null, EventArgs e = null)
 		{
 			ActiveIndex = selectionComboBox.SelectedIndex;
-			Form1.instance.sheet.RefreshModifications();
+			sheet.RefreshModifications();
 
 			OnComponentChanged();
 		}

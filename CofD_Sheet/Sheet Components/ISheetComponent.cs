@@ -40,7 +40,7 @@ namespace CofD_Sheet.Sheet_Components
 		public const int componentWidth = 303;
 
 		[XmlIgnore]
-		protected TableLayoutPanel uiElement = new TableLayoutPanel();
+		public TableLayoutPanel uiElement = new TableLayoutPanel();
 
 		[XmlIgnore]
 		protected bool isCurrentlyModified = false;
@@ -57,15 +57,18 @@ namespace CofD_Sheet.Sheet_Components
 		[XmlAttribute]
 		public ColumnId column = ColumnId.Undefined;
 
+		[XmlIgnore]
+		public Sheet sheet = null;
+
 		public ISheetComponent(string componentName, ColumnId _column)
 		{
 			name = componentName;
 			column = _column;
 		}
 
-		virtual public void Init()
+		virtual public void Init(Sheet parentSheet)
 		{
-			//do nothing
+			sheet = parentSheet;
 		}
 
 		abstract public Control ConstructUIElement();
@@ -77,23 +80,23 @@ namespace CofD_Sheet.Sheet_Components
 
 		protected void OnComponentChanged()
 		{
-			if (Form1.instance is Form1 instance)
+			if (sheet.form is Form1 sheetForm)
 			{
-				if (instance.AutoSave)
+				if (sheetForm.AutoSave)
 				{
-					if (instance.AssosiatedFile.Length != 0)
+					if (sheetForm.AssosiatedFile.Length != 0)
 					{
-						instance.SaveAgain();
+						sheetForm.SaveAgain();
 					}
 				}
 				else
 				{
-					instance.sheet.ChangedSinceSave = true;
+					sheet.ChangedSinceSave = true;
 				}
 
 				if (isCurrentlyIncludedInModFormula)
 				{
-					instance.sheet.RefreshModifications();
+					sheet.RefreshModifications();
 				}
 			}
 		}

@@ -40,14 +40,15 @@ namespace CofD_Sheet.Sheet_Components
 		public ExperienceComponent() : base("ExperienceComponent", ColumnId.Undefined)
 		{ }
 
-		public ExperienceComponent(string majorName, string minorName, ColumnId _column) : base(majorName, _column)
+		public ExperienceComponent(string majorName, string minorName, ColumnId _column, Sheet parentSheet) : base(majorName, _column)
 		{
 			beatName = minorName;
-			Init();
+			Init(parentSheet);
 		}
 
-		override public void Init()
+		override public void Init(Sheet parentSheet)
 		{
+			base.Init(parentSheet);
 			uiElement.RowCount = 1;
 			uiElement.ColumnCount = 2;
 			uiElement.Dock = DockStyle.Fill;
@@ -57,7 +58,7 @@ namespace CofD_Sheet.Sheet_Components
 			ToolStripItem changeMaxValueItem = contextMenu.Items.Add("Change maximum beats");
 			changeMaxValueItem.Click += new EventHandler(OpenChangeMaxBeatsDialog);
 			uiElement.ContextMenuStrip = contextMenu;
-			Form1.TransferContextMenuForControl(uiElement);
+			Form1.TransferContextMenuForControl(this);
 
 			beatElement = new TableLayoutPanel
 			{

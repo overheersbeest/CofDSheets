@@ -10,8 +10,6 @@ namespace CofD_Sheet
 {
 	public partial class Form1 : Form
 	{
-		public static Form1 instance = null;
-
 		public Sheet sheet = new Sheet();
 
 		private bool _autoSave = true;
@@ -78,8 +76,9 @@ namespace CofD_Sheet
 
 		public Form1()
 		{
-			instance = this;
 			InitializeComponent();
+
+			sheet.form = this;
 
 			if (SheetTypeParentage.TryGetValue(SheetType.None, out List<SheetType> rootTypes))
 			{
@@ -102,13 +101,13 @@ namespace CofD_Sheet
 
 		private void AddToolStripMenuItemsForSheetType(SheetType SheetTypeToAdd, ref ToolStripMenuItem ParentMenuItem)
 		{
-			System.Windows.Forms.ToolStripMenuItem NewButton = new ToolStripMenuItem
+			ToolStripMenuItem NewButton = new ToolStripMenuItem
 			{
 				Name = "New" + SheetTypeToAdd.ToString() + "Button",
-				Size = new System.Drawing.Size(152, 22),
+				Size = new Size(152, 22),
 				Text = SheetTypeToAdd.ToString().Replace("_", " ")
 			};
-			if (SheetTypeToAdd < SheetType.Count)
+			if (SheetTypeToAdd < SheetType.None)
 			{
 				NewButton.Click += new System.EventHandler(this.NewSheetButtonClicked);
 			}
@@ -230,7 +229,7 @@ namespace CofD_Sheet
 				sheet = (Sheet)serializer.Deserialize(reader);
 				foreach (ISheetComponent component in sheet.components)
 				{
-					component.Init();
+					component.Init(sheet);
 				}
 				reader.Close();
 				AssosiatedFile = path;
@@ -353,14 +352,15 @@ namespace CofD_Sheet
 			autoSaveDisabled = false;
 		}
 
-		public static void TransferContextMenuForControl(Control source)
+		public static void TransferContextMenuForControl(ISheetComponent source)
 		{
-			if (instance!= null
-				&& instance.contextMenuDuplicators.TryGetValue(source, out List<Control> destinations))
+			if (source.sheet != null
+				&& source.sheet.form != null
+				&& source.sheet.form.contextMenuDuplicators.TryGetValue(source.uiElement, out List<Control> destinations))
 			{
 				foreach (Control dest in destinations)
 				{
-					dest.ContextMenuStrip = source.ContextMenuStrip;
+					dest.ContextMenuStrip = source.uiElement.ContextMenuStrip;
 				}
 			}
 		}
@@ -449,6 +449,7 @@ namespace CofD_Sheet
 		{
 			AssosiatedFile = "";
 			sheet = new Sheet((SheetType)Enum.Parse(typeof(SheetType), sender.ToString().Replace(" ", "_")));
+			sheet.form = this;
 			RefreshSheet();
 		}
 

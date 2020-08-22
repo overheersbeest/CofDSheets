@@ -332,7 +332,7 @@ namespace CofD_Sheet.Sheet_Components
 		public TableComponent() : base("TableComponent", ColumnId.Undefined)
 		{ }
 
-		public TableComponent(string componentName, bool _canModifyRows, string _singulairRowName, List<Tuple<string, TableValue>> _columns, ColumnId _column) : base(componentName, _column)
+		public TableComponent(string componentName, bool _canModifyRows, string _singulairRowName, List<Tuple<string, TableValue>> _columns, ColumnId _column, Sheet parentSheet) : base(componentName, _column)
 		{
 			canModifyRows = _canModifyRows;
 			rowName = _singulairRowName;
@@ -342,11 +342,12 @@ namespace CofD_Sheet.Sheet_Components
 				columns.Add(new TableColumn(Column.Item1, Column.Item2));
 			}
 			
-			Init();
+			Init(parentSheet);
 		}
 
-		override public void Init()
+		override public void Init(Sheet parentSheet)
 		{
+			base.Init(parentSheet);
 			uiElement.Dock = DockStyle.Fill;
 
 			UpdateContextMenu();
@@ -366,7 +367,7 @@ namespace CofD_Sheet.Sheet_Components
 				}
 			}
 			uiElement.ContextMenuStrip = contextMenu;
-			Form1.TransferContextMenuForControl(uiElement);
+			Form1.TransferContextMenuForControl(this);
 		}
 
 		override public Control ConstructUIElement()
@@ -572,9 +573,16 @@ namespace CofD_Sheet.Sheet_Components
 				{
 					Label valueLabel = new Label
 					{
-						Anchor = AnchorStyles.None,
 						AutoSize = true
 					};
+					if (c == 0)
+					{
+						valueLabel.Anchor = AnchorStyles.Left;
+					}
+					else
+					{
+						valueLabel.Anchor = AnchorStyles.None;
+					}
 
 					ContextMenuStrip contextMenu = new ContextMenuStrip();
 					if (canModifyRows

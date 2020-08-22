@@ -22,10 +22,12 @@ namespace CofD_Sheet.Sheet_Components
 		public AspirationsComponent() : base("AspirationsComponent", ColumnId.Undefined)
 		{ }
 
-		public AspirationsComponent(string componentName, int amountAllowed, ColumnId _column) : base(componentName, _column)
+		public AspirationsComponent(string componentName, int amountAllowed, ColumnId _column, Sheet parentSheet) : base(componentName, _column)
 		{
 			maxAspirations = amountAllowed;
 			aspirations = new List<string>(new string[maxAspirations]);
+
+			Init(parentSheet);
 		}
 
 		override public Control ConstructUIElement()
@@ -44,9 +46,9 @@ namespace CofD_Sheet.Sheet_Components
 
 				TextBox textBox = new TextBox
 				{
-					Anchor = System.Windows.Forms.AnchorStyles.None,
+					Anchor = AnchorStyles.None,
 					AutoSize = true,
-					Size = new System.Drawing.Size(15, 14),
+					Size = new Size(15, 14),
 					Dock = DockStyle.Fill,
 					TabIndex = 0,
 					Text = aspirations[r]

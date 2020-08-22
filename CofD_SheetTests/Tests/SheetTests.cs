@@ -23,7 +23,7 @@ namespace CofD_SheetTests.Tests
 			sheetOut = (Sheet)serializer.Deserialize(reader);
 			foreach (ISheetComponent component in sheetOut.components)
 			{
-				component.Init();
+				component.Init(sheetOut);
 			}
 			reader.Close();
 		}

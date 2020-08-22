@@ -14,7 +14,7 @@ namespace CofD_SheetTests
 		{
 			Sheet sheet = new Sheet();
 
-			HealthComponent component = new HealthComponent("Health", ColumnId.Undefined);
+			HealthComponent component = new HealthComponent("Health", ColumnId.Undefined, sheet);
 			sheet.components.Add(component);
 
 			int aggTestValue = 1;
@@ -37,7 +37,7 @@ namespace CofD_SheetTests
 		{
 			Sheet sheet = new Sheet();
 
-			HealthComponent component = new HealthComponent("Health", ColumnId.Undefined);
+			HealthComponent component = new HealthComponent("Health", ColumnId.Undefined, sheet);
 			sheet.components.Add(component);
 
 			int aggTestValue = 1;

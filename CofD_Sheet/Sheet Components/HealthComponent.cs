@@ -37,13 +37,14 @@ namespace CofD_Sheet.Sheet_Components
 		public HealthComponent() : base("HealthComponent", ColumnId.Undefined)
 		{ }
 
-		public HealthComponent(string componentName, ColumnId _column) : base(componentName, _column)
+		public HealthComponent(string componentName, ColumnId _column, Sheet parentSheet) : base(componentName, _column)
 		{
-			Init();
+			Init(parentSheet);
 		}
 
-		override public void Init()
+		override public void Init(Sheet parentSheet)
 		{
+			base.Init(parentSheet);
 			uiElement.Dock = DockStyle.Fill;
 			uiElement.TabIndex = 0;
 
@@ -51,7 +52,7 @@ namespace CofD_Sheet.Sheet_Components
 			ToolStripItem changeMaxValueItem = contextMenu.Items.Add("Change maximum value");
 			changeMaxValueItem.Click += new EventHandler(OpenChangeMaxValueDialog);
 			uiElement.ContextMenuStrip = contextMenu;
-			Form1.TransferContextMenuForControl(uiElement);
+			Form1.TransferContextMenuForControl(this);
 		}
 
 		override public Control ConstructUIElement()
@@ -147,9 +148,9 @@ namespace CofD_Sheet.Sheet_Components
 						{
 							TextBox slot = new TextBox
 							{
-								Anchor = System.Windows.Forms.AnchorStyles.None,
+								Anchor = AnchorStyles.None,
 								AutoSize = true,
-								Size = new System.Drawing.Size(15, 14),
+								Size = new Size(15, 14),
 								TabIndex = 0
 							};
 							slot.KeyDown += new KeyEventHandler(OnKeyDown);

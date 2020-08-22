@@ -14,7 +14,7 @@ namespace CofD_SheetTests
 		{
 			Sheet sheet = new Sheet();
 
-			HealthComponent component = new HealthComponent("Health", ColumnId.Undefined);
+			HealthComponent component = new HealthComponent("Health", ColumnId.Undefined, sheet);
 			int testValue = 10;
 			component.MaxValue.CurrentValue = testValue;
 			sheet.components.Add(component);
@@ -32,7 +32,7 @@ namespace CofD_SheetTests
 			int testValue1 = 1;
 			int testValue2 = 2;
 			int testValue3 = 3;
-			AdvantagesComponent component = new AdvantagesComponent("Advantages", new List<AdvantagesComponent.Advantage>() { new AdvantagesComponent.NumericAdvantage("Numeric", testValue1), new AdvantagesComponent.ArmorAdvantage("Armor", testValue2, testValue3) }, ColumnId.Undefined);
+			AdvantagesComponent component = new AdvantagesComponent("Advantages", new List<AdvantagesComponent.Advantage>() { new AdvantagesComponent.NumericAdvantage("Numeric", testValue1), new AdvantagesComponent.ArmorAdvantage("Armor", testValue2, testValue3) }, ColumnId.Undefined, sheet);
 			sheet.components.Add(component);
 
 			Assert.AreEqual(testValue1, sheet.QueryInt("Advantages.Numeric"));
@@ -51,7 +51,7 @@ namespace CofD_SheetTests
 			Sheet sheet = new Sheet();
 
 			string testValue = "testValue";
-			AdvantagesComponent component = new AdvantagesComponent("Advantages", new List<AdvantagesComponent.Advantage>() { new AdvantagesComponent.StringAdvantage("String", testValue) }, ColumnId.Undefined);
+			AdvantagesComponent component = new AdvantagesComponent("Advantages", new List<AdvantagesComponent.Advantage>() { new AdvantagesComponent.StringAdvantage("String", testValue) }, ColumnId.Undefined, sheet);
 			sheet.components.Add(component);
 
 			Assert.AreEqual(testValue, sheet.QueryString("Advantages.String"));

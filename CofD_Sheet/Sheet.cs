@@ -1,5 +1,4 @@
 ﻿using CofD_Sheet.Modifications;
-using CofD_Sheet.Modifyables;
 using CofD_Sheet.Sheet_Components;
 using System;
 using System.Collections.Generic;
@@ -36,7 +35,6 @@ namespace CofD_Sheet
 		Gulmoth,//abyssal entity
 
 		//special cases, not actual sheet types, but categories for child types
-		Count,
 		None,
 		Ephemeral_Entity,
 		Abyssal_Entity,
@@ -46,6 +44,9 @@ namespace CofD_Sheet
 	[XmlRoot]
 	public class Sheet
 	{
+		[XmlIgnore]
+		public Form1 form = null;
+
 		[XmlAttribute]
 		public string name = "";
 
@@ -67,13 +68,13 @@ namespace CofD_Sheet
 		[XmlIgnore]
 		public bool ChangedSinceSave
 		{
-			get { return this._changedSinceSave; }
+			get { return _changedSinceSave; }
 			set
 			{
-				this._changedSinceSave = value;
-				if (Form1.instance != null)
+				_changedSinceSave = value;
+				if (form != null)
 				{
-					Form1.instance.RefreshFormTitle();
+					form.RefreshFormTitle();
 				}
 			}
 		}
@@ -92,235 +93,235 @@ namespace CofD_Sheet
 				case SheetType.Mortal:
 					AddMortalSkillsAndAttributes();
 
-					components.Add(new TraitsComponent("Merits", true, "subtype", true, "merit", false, new List<string>(), 0, 5, ColumnId.Middle));
-					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle));
-					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
-					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle));
+					components.Add(new TraitsComponent("Merits", true, "subtype", true, "merit", false, new List<string>(), 0, 5, ColumnId.Middle, this));
+					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle, this));
+					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle, this));
+					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle, this));
 
-					components.Add(new HealthComponent("Health", ColumnId.Right));
-					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right));
-					components.Add(new ResourceComponent("Integrity", false, false, 7, 10, ColumnId.Right));
-					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right));
-					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
-					components.Add(new TraitsComponent("Equipment", false, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right));
+					components.Add(new HealthComponent("Health", ColumnId.Right, this));
+					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Integrity", false, false, 7, 10, ColumnId.Right, this));
+					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right, this));
+					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right, this));
+					components.Add(new TraitsComponent("Equipment", false, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right, this));
 					break;
 				case SheetType.Mage:
 					AddMortalSkillsAndAttributes();
 
-					components.Add(new TraitsComponent("Merits", true, "subtype", true, "merit", false, new List<string>(), 0, 5, ColumnId.Middle));
-					components.Add(new TraitsComponent("Arcana", false, "note", false, "arcanum", false, new List<string> { "Death", "Fate", "Forces", "Life", "Matter", "Mind", "Prime", "Space", "Spirit", "Time" }, 0, 5, ColumnId.Middle));
-					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle));
-					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
-					components.Add(new ExperienceComponent("Arcane_Experience", "Arcane_Beats", ColumnId.Middle));
-					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle));
+					components.Add(new TraitsComponent("Merits", true, "subtype", true, "merit", false, new List<string>(), 0, 5, ColumnId.Middle, this));
+					components.Add(new TraitsComponent("Arcana", false, "note", false, "arcanum", false, new List<string> { "Death", "Fate", "Forces", "Life", "Matter", "Mind", "Prime", "Space", "Spirit", "Time" }, 0, 5, ColumnId.Middle, this));
+					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle, this));
+					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle, this));
+					components.Add(new ExperienceComponent("Arcane_Experience", "Arcane_Beats", ColumnId.Middle, this));
+					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle, this));
 
-					components.Add(new HealthComponent("Health", ColumnId.Right));
-					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right));
-					components.Add(new ResourceComponent("Gnosis", false, false, 1, 10, ColumnId.Right));
-					components.Add(new ResourceComponent("Mana", true, true, 0, 10, ColumnId.Right));
-					components.Add(new ResourceComponent("Wisdom", false, false, 7, 10, ColumnId.Right));
-					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right));
-					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
-					components.Add(new AspirationsComponent("Obsessions", 1, ColumnId.Right));
-					components.Add(new TraitsComponent("Equipment", false, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right));
+					components.Add(new HealthComponent("Health", ColumnId.Right, this));
+					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Gnosis", false, false, 1, 10, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Mana", true, true, 0, 10, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Wisdom", false, false, 7, 10, ColumnId.Right, this));
+					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right, this));
+					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right, this));
+					components.Add(new AspirationsComponent("Obsessions", 1, ColumnId.Right, this));
+					components.Add(new TraitsComponent("Equipment", false, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right, this));
 					break;
 				case SheetType.Werewolf:
 					AddMortalSkillsAndAttributes();
 
 					components.Add(GetWerewolfFormModSetComponent());
 
-					components.Add(new TraitsComponent("Merits", true, "subtype", true, "merit", false, new List<string>(), 0, 5, ColumnId.Middle));
-					components.Add(new TraitsComponent("Renown", false, "note", false, "renown", false, new List<string> { "Cunning", "Glory", "Honor", "Purity", "Wisdom" }, 0, 5, ColumnId.Middle));
-					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle));
-					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
-					components.Add(new TraitsComponent("Rites", true, "symbol", true, "rite", false, new List<string>(), 0, 0, ColumnId.Middle));
-					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle));
+					components.Add(new TraitsComponent("Merits", true, "subtype", true, "merit", false, new List<string>(), 0, 5, ColumnId.Middle, this));
+					components.Add(new TraitsComponent("Renown", false, "note", false, "renown", false, new List<string> { "Cunning", "Glory", "Honor", "Purity", "Wisdom" }, 0, 5, ColumnId.Middle, this));
+					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle, this));
+					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle, this));
+					components.Add(new TraitsComponent("Rites", true, "symbol", true, "rite", false, new List<string>(), 0, 0, ColumnId.Middle, this));
+					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle, this));
 
-					components.Add(new HealthComponent("Health", ColumnId.Right));
-					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right));
-					components.Add(new ResourceComponent("Primal_Urge", false, false, 1, 10, ColumnId.Right));
-					components.Add(new ResourceComponent("Essence", true, true, 0, 10, ColumnId.Right));
-					components.Add(new ResourceComponent("Harmony", false, false, 7, 10, ColumnId.Right));
-					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right));
-					components.Add(new AspirationsComponent("Aspirations", 4, ColumnId.Right));
-					components.Add(new TraitsComponent("Gifts", true, "facet", true, "gift", false, new List<string>(), 0, 0, ColumnId.Right));
-					components.Add(new TraitsComponent("Equipment", true, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right));
+					components.Add(new HealthComponent("Health", ColumnId.Right, this));
+					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Primal_Urge", false, false, 1, 10, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Essence", true, true, 0, 10, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Harmony", false, false, 7, 10, ColumnId.Right, this));
+					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right, this));
+					components.Add(new AspirationsComponent("Aspirations", 4, ColumnId.Right, this));
+					components.Add(new TraitsComponent("Gifts", true, "facet", true, "gift", false, new List<string>(), 0, 0, ColumnId.Right, this));
+					components.Add(new TraitsComponent("Equipment", true, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right, this));
 					break;
 				case SheetType.Vampire:
 					AddMortalSkillsAndAttributes();
 
-					components.Add(new TraitsComponent("Merits", true, "subtype", true, "merit", false, new List<string>(), 0, 5, ColumnId.Middle));
-					components.Add(new TraitsComponent("Disciplines", false, "note", true, "discipline", false, new List<string>(), 0, 5, ColumnId.Middle));
-					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle));
-					components.Add(new TraitsComponent("Banes", false, "note", true, "bane", false, new List<string>(), 0, 0, ColumnId.Middle));
-					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
-					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle));
+					components.Add(new TraitsComponent("Merits", true, "subtype", true, "merit", false, new List<string>(), 0, 5, ColumnId.Middle, this));
+					components.Add(new TraitsComponent("Disciplines", false, "note", true, "discipline", false, new List<string>(), 0, 5, ColumnId.Middle, this));
+					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle, this));
+					components.Add(new TraitsComponent("Banes", false, "note", true, "bane", false, new List<string>(), 0, 0, ColumnId.Middle, this));
+					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle, this));
+					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle, this));
 
-					components.Add(new HealthComponent("Health", ColumnId.Right));
-					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right));
-					components.Add(new ResourceComponent("Blood Potency", false, false, 1, 10, ColumnId.Right));
-					components.Add(new ResourceComponent("Vitae", true, true, 0, 10, ColumnId.Right));
-					components.Add(new ResourceComponent("Humanity", false, false, 7, 10, ColumnId.Right));
-					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right));
-					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
-					components.Add(new TraitsComponent("Equipment", false, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right));
+					components.Add(new HealthComponent("Health", ColumnId.Right, this));
+					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Blood Potency", false, false, 1, 10, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Vitae", true, true, 0, 10, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Humanity", false, false, 7, 10, ColumnId.Right, this));
+					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right, this));
+					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right, this));
+					components.Add(new TraitsComponent("Equipment", false, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right, this));
 					break;
 
 				//minor splats
 				case SheetType.Proximi:
 					AddMortalSkillsAndAttributes();
 
-					components.Add(new TraitsComponent("Merits", true, "subtype", true, "merit", false, new List<string>(), 0, 5, ColumnId.Middle));
-					components.Add(new TraitsComponent("Blessing Arcana", false, "note", true, "blessing arcana", false, new List<string>(), 0, 0, ColumnId.Middle));
-					components.Add(new TraitsComponent("Blessings", false, "note", true, "blessing", false, new List<string>(), 0, 3, ColumnId.Middle));
-					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle));
-					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
-					components.Add(new ExperienceComponent("Arcane_Experience", "Arcane_Beats", ColumnId.Middle));
-					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle));
+					components.Add(new TraitsComponent("Merits", true, "subtype", true, "merit", false, new List<string>(), 0, 5, ColumnId.Middle, this));
+					components.Add(new TraitsComponent("Blessing Arcana", false, "note", true, "blessing arcana", false, new List<string>(), 0, 0, ColumnId.Middle, this));
+					components.Add(new TraitsComponent("Blessings", false, "note", true, "blessing", false, new List<string>(), 0, 3, ColumnId.Middle, this));
+					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle, this));
+					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle, this));
+					components.Add(new ExperienceComponent("Arcane_Experience", "Arcane_Beats", ColumnId.Middle, this));
+					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle, this));
 
-					components.Add(new HealthComponent("Health", ColumnId.Right));
-					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right));
-					components.Add(new ResourceComponent("Mana", true, true, 0, 5, ColumnId.Right));
-					components.Add(new ResourceComponent("Integrity", false, false, 7, 10, ColumnId.Right));
-					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right));
-					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
-					components.Add(new TraitsComponent("Equipment", false, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right));
+					components.Add(new HealthComponent("Health", ColumnId.Right, this));
+					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Mana", true, true, 0, 5, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Integrity", false, false, 7, 10, ColumnId.Right, this));
+					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right, this));
+					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right, this));
+					components.Add(new TraitsComponent("Equipment", false, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right, this));
 					break;
 				case SheetType.Wolf_Blooded:
 					AddMortalSkillsAndAttributes();
 
-					components.Add(new TraitsComponent("Merits", true, "subtype", true, "merit", false, new List<string>(), 0, 5, ColumnId.Middle));
-					components.Add(new TraitsComponent("Tells", false, "note", true, "tell", false, new List<string>(), 0, 0, ColumnId.Middle));
-					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle));
-					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
-					components.Add(new TraitsComponent("Rites", true, "symbol", true, "rite", false, new List<string>(), 0, 0, ColumnId.Middle));
-					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle));
+					components.Add(new TraitsComponent("Merits", true, "subtype", true, "merit", false, new List<string>(), 0, 5, ColumnId.Middle, this));
+					components.Add(new TraitsComponent("Tells", false, "note", true, "tell", false, new List<string>(), 0, 0, ColumnId.Middle, this));
+					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle, this));
+					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle, this));
+					components.Add(new TraitsComponent("Rites", true, "symbol", true, "rite", false, new List<string>(), 0, 0, ColumnId.Middle, this));
+					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle, this));
 
-					components.Add(new HealthComponent("Health", ColumnId.Right));
-					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right));
-					components.Add(new ResourceComponent("Integrity", false, false, 7, 10, ColumnId.Right));
-					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right));
-					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
-					components.Add(new TraitsComponent("Equipment", false, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right));
+					components.Add(new HealthComponent("Health", ColumnId.Right, this));
+					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Integrity", false, false, 7, 10, ColumnId.Right, this));
+					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right, this));
+					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right, this));
+					components.Add(new TraitsComponent("Equipment", false, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right, this));
 					break;
 				case SheetType.Ghoul:
 					AddMortalSkillsAndAttributes();
 
-					components.Add(new TraitsComponent("Merits", true, "subtype", true, "merit", false, new List<string>(), 0, 5, ColumnId.Middle));
-					components.Add(new TraitsComponent("Disciplines", false, "note", true, "discipline", false, new List<string>(), 0, 5, ColumnId.Middle));
-					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle));
-					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
-					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle));
+					components.Add(new TraitsComponent("Merits", true, "subtype", true, "merit", false, new List<string>(), 0, 5, ColumnId.Middle, this));
+					components.Add(new TraitsComponent("Disciplines", false, "note", true, "discipline", false, new List<string>(), 0, 5, ColumnId.Middle, this));
+					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle, this));
+					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle, this));
+					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle, this));
 
-					components.Add(new HealthComponent("Health", ColumnId.Right));
-					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right));
-					components.Add(new ResourceComponent("Vitae", true, true, 0, 0, ColumnId.Right));
-					components.Add(new ResourceComponent("Integrity", false, false, 7, 10, ColumnId.Right));
-					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right));
-					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
-					components.Add(new TraitsComponent("Equipment", false, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right));
+					components.Add(new HealthComponent("Health", ColumnId.Right, this));
+					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Vitae", true, true, 0, 0, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Integrity", false, false, 7, 10, ColumnId.Right, this));
+					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right, this));
+					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right, this));
+					components.Add(new TraitsComponent("Equipment", false, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right, this));
 					break;
 
 					//ephemeral entities / others
 				case SheetType.Spirit:
 				case SheetType.Gulmoth:
-					components.Add(new TraitsComponent("Attributes", false, "note", false, "attribute", true, new List<string> { "Power", "Finesse", "Resistance" }, 1, 15, ColumnId.Left));
+					components.Add(new TraitsComponent("Attributes", false, "note", false, "attribute", true, new List<string> { "Power", "Finesse", "Resistance" }, 1, 15, ColumnId.Left, this));
 
-					components.Add(new TraitsComponent("Influences", false, "note", true, "influence", false, new List<string>(), 0, 5, ColumnId.Middle));
-					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle));
-					components.Add(new TraitsComponent("Numina", true, "note", true, "numina", false, new List<string>(), 0, 0, ColumnId.Middle));
-					components.Add(new TraitsComponent("Manifestations", true, "note", true, "manifestation", false, new List<string>() { "Twilight Form" }, 0, 0, ColumnId.Middle));
+					components.Add(new TraitsComponent("Influences", false, "note", true, "influence", false, new List<string>(), 0, 5, ColumnId.Middle, this));
+					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle, this));
+					components.Add(new TraitsComponent("Numina", true, "note", true, "numina", false, new List<string>(), 0, 0, ColumnId.Middle, this));
+					components.Add(new TraitsComponent("Manifestations", true, "note", true, "manifestation", false, new List<string>() { "Twilight Form" }, 0, 0, ColumnId.Middle, this));
 
-					components.Add(new HealthComponent("Corpus", ColumnId.Right));
-					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right));
-					components.Add(new ResourceComponent("Essence", true, true, 0, 10, ColumnId.Right));
-					components.Add(new ResourceComponent("Rank", false, false, 0, 5, ColumnId.Right));
-					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right));
-					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
+					components.Add(new HealthComponent("Corpus", ColumnId.Right, this));
+					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Essence", true, true, 0, 10, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Rank", false, false, 0, 5, ColumnId.Right, this));
+					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right, this));
+					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right, this));
 					break;
 				case SheetType.Ghost:
-					components.Add(new TraitsComponent("Attributes", false, "note", false, "attribute", true, new List<string> { "Power", "Finesse", "Resistance" }, 1, 15, ColumnId.Left));
+					components.Add(new TraitsComponent("Attributes", false, "note", false, "attribute", true, new List<string> { "Power", "Finesse", "Resistance" }, 1, 15, ColumnId.Left, this));
 
-					components.Add(new TraitsComponent("Influences", false, "note", true, "influence", false, new List<string>(), 0, 5, ColumnId.Middle));
-					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle));
-					components.Add(new TraitsComponent("Numina", true, "note", true, "numina", false, new List<string>(), 0, 0, ColumnId.Middle));
-					components.Add(new TraitsComponent("Manifestations", true, "note", true, "manifestation", false, new List<string>() { "Twilight Form" }, 0, 0, ColumnId.Middle));
+					components.Add(new TraitsComponent("Influences", false, "note", true, "influence", false, new List<string>(), 0, 5, ColumnId.Middle, this));
+					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle, this));
+					components.Add(new TraitsComponent("Numina", true, "note", true, "numina", false, new List<string>(), 0, 0, ColumnId.Middle, this));
+					components.Add(new TraitsComponent("Manifestations", true, "note", true, "manifestation", false, new List<string>() { "Twilight Form" }, 0, 0, ColumnId.Middle, this));
 
-					components.Add(new HealthComponent("Corpus", ColumnId.Right));
-					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right));
-					components.Add(new ResourceComponent("Essence", true, true, 0, 10, ColumnId.Right));
-					components.Add(new ResourceComponent("Rank", false, false, 0, 5, ColumnId.Right));
-					components.Add(new ResourceComponent("Integrity", false, false, 7, 10, ColumnId.Right));
-					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right));
-					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
+					components.Add(new HealthComponent("Corpus", ColumnId.Right, this));
+					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Essence", true, true, 0, 10, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Rank", false, false, 0, 5, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Integrity", false, false, 7, 10, ColumnId.Right, this));
+					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right, this));
+					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right, this));
 					break;
 				case SheetType.Angel:
-					components.Add(new TraitsComponent("Attributes", false, "note", false, "attribute", true, new List<string> { "Power", "Finesse", "Resistance" }, 1, 15, ColumnId.Left));
+					components.Add(new TraitsComponent("Attributes", false, "note", false, "attribute", true, new List<string> { "Power", "Finesse", "Resistance" }, 1, 15, ColumnId.Left, this));
 
-					components.Add(new TraitsComponent("Influences", false, "note", true, "influence", false, new List<string>(), 0, 5, ColumnId.Middle));
-					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle));
-					components.Add(new TraitsComponent("Numina", true, "note", true, "numina", false, new List<string>(), 0, 0, ColumnId.Middle));
-					components.Add(new TraitsComponent("Manifestations", true, "note", true, "manifestation", false, new List<string>() { "Twilight Form" }, 0, 0, ColumnId.Middle));
+					components.Add(new TraitsComponent("Influences", false, "note", true, "influence", false, new List<string>(), 0, 5, ColumnId.Middle, this));
+					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle, this));
+					components.Add(new TraitsComponent("Numina", true, "note", true, "numina", false, new List<string>(), 0, 0, ColumnId.Middle, this));
+					components.Add(new TraitsComponent("Manifestations", true, "note", true, "manifestation", false, new List<string>() { "Twilight Form" }, 0, 0, ColumnId.Middle, this));
 
-					components.Add(new HealthComponent("Corpus", ColumnId.Right));
-					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right));
-					components.Add(new ResourceComponent("Essence", true, true, 0, 10, ColumnId.Right));
-					components.Add(new ResourceComponent("Rank", false, false, 0, 5, ColumnId.Right));
-					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right));
-					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
+					components.Add(new HealthComponent("Corpus", ColumnId.Right, this));
+					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Essence", true, true, 0, 10, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Rank", false, false, 0, 5, ColumnId.Right, this));
+					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right, this));
+					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right, this));
 					break;
 				case SheetType.Goetia:
 				case SheetType.Acamoth:
-					components.Add(new TraitsComponent("Attributes", false, "note", false, "attribute", true, new List<string> { "Power", "Finesse", "Resistance" }, 1, 15, ColumnId.Left));
+					components.Add(new TraitsComponent("Attributes", false, "note", false, "attribute", true, new List<string> { "Power", "Finesse", "Resistance" }, 1, 15, ColumnId.Left, this));
 
-					components.Add(new TraitsComponent("Influences", false, "note", true, "influence", false, new List<string>(), 0, 5, ColumnId.Middle));
-					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle));
-					components.Add(new TraitsComponent("Numina", true, "note", true, "numina", false, new List<string>(), 0, 0, ColumnId.Middle));
+					components.Add(new TraitsComponent("Influences", false, "note", true, "influence", false, new List<string>(), 0, 5, ColumnId.Middle, this));
+					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle, this));
+					components.Add(new TraitsComponent("Numina", true, "note", true, "numina", false, new List<string>(), 0, 0, ColumnId.Middle, this));
 
-					components.Add(new HealthComponent("Corpus", ColumnId.Right));
-					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right));
-					components.Add(new ResourceComponent("Essence", true, true, 0, 10, ColumnId.Right));
-					components.Add(new ResourceComponent("Rank", false, false, 0, 5, ColumnId.Right));
-					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right));
-					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
+					components.Add(new HealthComponent("Corpus", ColumnId.Right, this));
+					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Essence", true, true, 0, 10, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Rank", false, false, 0, 5, ColumnId.Right, this));
+					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right, this));
+					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right, this));
 					break;
 				case SheetType.Supernal_Entity:
-					components.Add(new TraitsComponent("Attributes", false, "note", false, "attribute", true, new List<string> { "Power", "Finesse", "Resistance" }, 1, 15, ColumnId.Left));
+					components.Add(new TraitsComponent("Attributes", false, "note", false, "attribute", true, new List<string> { "Power", "Finesse", "Resistance" }, 1, 15, ColumnId.Left, this));
 
-					components.Add(new TraitsComponent("Arcana", false, "note", false, "arcanum", false, new List<string> { "Death", "Fate", "Forces", "Life", "Matter", "Mind", "Prime", "Space", "Spirit", "Time" }, 0, 5, ColumnId.Middle));
-					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle));
+					components.Add(new TraitsComponent("Arcana", false, "note", false, "arcanum", false, new List<string> { "Death", "Fate", "Forces", "Life", "Matter", "Mind", "Prime", "Space", "Spirit", "Time" }, 0, 5, ColumnId.Middle, this));
+					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle, this));
 
-					components.Add(new HealthComponent("Corpus", ColumnId.Right));
-					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right));
-					components.Add(new ResourceComponent("Mana", true, true, 0, 10, ColumnId.Right));
-					components.Add(new ResourceComponent("Rank", false, false, 0, 5, ColumnId.Right));
-					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right));
-					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
+					components.Add(new HealthComponent("Corpus", ColumnId.Right, this));
+					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Mana", true, true, 0, 10, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Rank", false, false, 0, 5, ColumnId.Right, this));
+					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right, this));
+					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right, this));
 					break;
 #if DEBUG
 				case SheetType.Test:
-					components.Add(new TraitsComponent("Mental_Attributes", false, "note", false, "attribute", true, new List<string> { "Intelligence", "Wits", "Resolve" }, 1, 5, ColumnId.Left));
-					components.Add(new TraitsComponent("Physical_Attributes", false, "note", false, "attribute", true, new List<string> { "Strength", "Dexterity", "Stamina" }, 1, 5, ColumnId.Middle));
-					components.Add(new TraitsComponent("Social_Attributes", false, "note", false, "attribute", true, new List<string> { "Presence", "Manipulation", "Composure" }, 1, 5, ColumnId.Right));
+					components.Add(new TraitsComponent("Mental_Attributes", false, "note", false, "attribute", true, new List<string> { "Intelligence", "Wits", "Resolve" }, 1, 5, ColumnId.Left, this));
+					components.Add(new TraitsComponent("Physical_Attributes", false, "note", false, "attribute", true, new List<string> { "Strength", "Dexterity", "Stamina" }, 1, 5, ColumnId.Middle, this));
+					components.Add(new TraitsComponent("Social_Attributes", false, "note", false, "attribute", true, new List<string> { "Presence", "Manipulation", "Composure" }, 1, 5, ColumnId.Right, this));
 
-					components.Add(new TraitsComponent("Physical_Skills", true, "specialty", false, "skill", true, new List<string> { "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry" }, 0, 5, ColumnId.Left));
+					components.Add(new TraitsComponent("Physical_Skills", true, "specialty", false, "skill", true, new List<string> { "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry" }, 0, 5, ColumnId.Left, this));
 					
 					components.Add(GetTestModSetComponent());
 
-					components.Add(new TraitsComponent("Merits", true, "subtype", true, "merit", false, new List<string>(), 0, 5, ColumnId.Middle));
-					components.Add(new TraitsComponent("Renown", false, "note", false, "renown", false, new List<string> { "Cunning", "Glory", "Honor", "Purity", "Wisdom" }, 0, 5, ColumnId.Middle));
-					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle));
-					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
-					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle));
+					components.Add(new TraitsComponent("Merits", true, "subtype", true, "merit", false, new List<string>(), 0, 5, ColumnId.Middle, this));
+					components.Add(new TraitsComponent("Renown", false, "note", false, "renown", false, new List<string> { "Cunning", "Glory", "Honor", "Purity", "Wisdom" }, 0, 5, ColumnId.Middle, this));
+					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle, this));
+					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle, this));
+					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle, this));
 
-					components.Add(new HealthComponent("Health", ColumnId.Right));
-					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right));
-					components.Add(new ResourceComponent("Power_Stat", false, false, 1, 10, ColumnId.Right));
-					components.Add(new ResourceComponent("Juice", true, true, 0, 10, ColumnId.Right));
-					components.Add(new ResourceComponent("Morality", false, false, 7, 10, ColumnId.Right));
-					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right));
-					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
-					components.Add(new TraitsComponent("Equipment", true, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right));
+					components.Add(new HealthComponent("Health", ColumnId.Right, this));
+					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Power_Stat", false, false, 1, 10, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Juice", true, true, 0, 10, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Morality", false, false, 7, 10, ColumnId.Right, this));
+					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right, this));
+					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right, this));
+					components.Add(new TraitsComponent("Equipment", true, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right, this));
 					break;
 #endif
 			}
@@ -334,9 +335,10 @@ namespace CofD_Sheet
 				return;
 			}
 			allowRefreshingMods = false;
-			if (supressDrawing)
+			if (supressDrawing
+				&& form != null)
 			{
-				Form1.instance.drawingHelper.SuspendDrawing();
+				form.drawingHelper.SuspendDrawing();
 			}
 
 			List<ModificationSetComponent.ModificationSet> modSets = new List<ModificationSetComponent.ModificationSet>();
@@ -356,7 +358,7 @@ namespace CofD_Sheet
 
 			foreach (ModificationSetComponent.ModificationSet modSet in modSets)
 			{
-				modSet.Apply();
+				modSet.Apply(this);
 			}
 			foreach (ISheetComponent component in components)
 			{
@@ -364,9 +366,10 @@ namespace CofD_Sheet
 				component.PostModificationsComplete();
 			}
 
-			if (supressDrawing)
+			if (supressDrawing
+				&& form != null)
 			{
-				Form1.instance.drawingHelper.ResumeDrawing(true);
+				form.drawingHelper.ResumeDrawing(true);
 			}
 			allowRefreshingMods = true;
 		}
@@ -407,13 +410,13 @@ namespace CofD_Sheet
 
 		private void AddMortalSkillsAndAttributes()
 		{
-			components.Add(new TraitsComponent("Mental_Attributes", false, "note", false, "attribute", true, new List<string> { "Intelligence", "Wits", "Resolve" }, 1, 5, ColumnId.Left));
-			components.Add(new TraitsComponent("Physical_Attributes", false, "note", false, "attribute", true, new List<string> { "Strength", "Dexterity", "Stamina" }, 1, 5, ColumnId.Middle));
-			components.Add(new TraitsComponent("Social_Attributes", false, "note", false, "attribute", true, new List<string> { "Presence", "Manipulation", "Composure" }, 1, 5, ColumnId.Right));
+			components.Add(new TraitsComponent("Mental_Attributes", false, "note", false, "attribute", true, new List<string> { "Intelligence", "Wits", "Resolve" }, 1, 5, ColumnId.Left, this));
+			components.Add(new TraitsComponent("Physical_Attributes", false, "note", false, "attribute", true, new List<string> { "Strength", "Dexterity", "Stamina" }, 1, 5, ColumnId.Middle, this));
+			components.Add(new TraitsComponent("Social_Attributes", false, "note", false, "attribute", true, new List<string> { "Presence", "Manipulation", "Composure" }, 1, 5, ColumnId.Right, this));
 
-			components.Add(new TraitsComponent("Mental_Skills", true, "specialty", false, "skill", true, new List<string> { "Academics", "Computer", "Crafts", "Investigation", "Medicine", "Occult", "Politics", "Science" }, 0, 5, ColumnId.Left));
-			components.Add(new TraitsComponent("Physical_Skills", true, "specialty", false, "skill", true, new List<string> { "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry" }, 0, 5, ColumnId.Left));
-			components.Add(new TraitsComponent("Social_Skills", true, "specialty", false, "skill", true, new List<string> { "Animal_Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge" }, 0, 5, ColumnId.Left));
+			components.Add(new TraitsComponent("Mental_Skills", true, "specialty", false, "skill", true, new List<string> { "Academics", "Computer", "Crafts", "Investigation", "Medicine", "Occult", "Politics", "Science" }, 0, 5, ColumnId.Left, this));
+			components.Add(new TraitsComponent("Physical_Skills", true, "specialty", false, "skill", true, new List<string> { "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry" }, 0, 5, ColumnId.Left, this));
+			components.Add(new TraitsComponent("Social_Skills", true, "specialty", false, "skill", true, new List<string> { "Animal_Ken", "Empathy", "Expression", "Intimidation", "Persuasion", "Socialize", "Streetwise", "Subterfuge" }, 0, 5, ColumnId.Left, this));
 		}
 
 		private List<AdvantagesComponent.Advantage> GetAdvantages(SheetType type)
@@ -490,7 +493,7 @@ namespace CofD_Sheet
 
 		private ModificationSetComponent GetWerewolfFormModSetComponent()
 		{
-			ModificationSetComponent FormsComponent = new ModificationSetComponent("Forms", new List<string> { "Hishu", "Dalu", "Gauru", "Urshul", "Urhan" }, ColumnId.Left);
+			ModificationSetComponent FormsComponent = new ModificationSetComponent("Forms", new List<string> { "Hishu", "Dalu", "Gauru", "Urshul", "Urhan" }, ColumnId.Left, this);
 			//hishu
 			FormsComponent.sets[0].modifications.Add(new IntModification(new List<string>() { "Advantages", "Wolf_Senses" }, 1, "", IntModificationType.Delta));
 
@@ -546,7 +549,7 @@ namespace CofD_Sheet
 #if DEBUG
 		private ModificationSetComponent GetTestModSetComponent()
 		{
-			ModificationSetComponent FormsComponent = new ModificationSetComponent("Forms", new List<string> { "Off", "On"}, ColumnId.Left);
+			ModificationSetComponent FormsComponent = new ModificationSetComponent("Forms", new List<string> { "Off", "On"}, ColumnId.Left, this);
 
 			FormsComponent.sets[1].modifications.Add(new StringModification(new List<string>() { "Weapons" }, "Bite", "", StringModificationType.AddElement));
 			FormsComponent.sets[1].modifications.Add(new IntModification(new List<string>() { "Weapons", "Bite", "Dmg" }, 2, "", IntModificationType.Delta));
@@ -589,7 +592,10 @@ namespace CofD_Sheet
 		{
 			if (Form1.SheetTypeParentage.TryGetValue(SheetType.Ephemeral_Entity, out List<SheetType> EpehemeralEntities))
 			{
-				return EpehemeralEntities.Contains(Type);
+				if (EpehemeralEntities.Contains(Type))
+				{
+					return true;
+				}
 			}
 			if (IncludeSupernal)
 			{

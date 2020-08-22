@@ -294,9 +294,11 @@ namespace CofD_Sheet.Sheet_Components
 		public AdvantagesComponent() : base("AdvantagesComponent", ColumnId.Undefined)
 		{ }
 
-		public AdvantagesComponent(string componentName, List<Advantage> _advantages, ColumnId _column) : base(componentName, _column)
+		public AdvantagesComponent(string componentName, List<Advantage> _advantages, ColumnId _column, Sheet parentSheet) : base(componentName, _column)
 		{
-			this.advantages = _advantages;
+			advantages = _advantages;
+
+			Init(parentSheet);
 		}
 
 		override public Control ConstructUIElement()

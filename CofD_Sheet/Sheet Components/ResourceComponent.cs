@@ -36,18 +36,19 @@ namespace CofD_Sheet.Sheet_Components
 		public ResourceComponent() : base("SimpleComponent", ColumnId.Undefined)
 		{ }
 
-		public ResourceComponent(string componentName, bool _canMultistep, bool _canModifyMaxValue, int _startValue, int _maxValue, ColumnId _column) : base(componentName, _column)
+		public ResourceComponent(string componentName, bool _canMultistep, bool _canModifyMaxValue, int _startValue, int _maxValue, ColumnId _column, Sheet parentSheet) : base(componentName, _column)
 		{
 			canMultistep = _canMultistep;
 			canModifyMaxValue = _canModifyMaxValue;
 			MaxValue.CurrentValue = _maxValue;
 			currentValue = _startValue;
 
-			Init();
+			Init(parentSheet);
 		}
 
-		override public void Init()
+		override public void Init(Sheet parentSheet)
 		{
+			base.Init(parentSheet);
 			uiElement.Dock = DockStyle.Fill;
 			uiElement.TabIndex = 0;
 
@@ -58,7 +59,7 @@ namespace CofD_Sheet.Sheet_Components
 				changeMaxValueItem.Click += new EventHandler(OpenChangeMaxValueDialog);
 			}
 			uiElement.ContextMenuStrip = contextMenu;
-			Form1.TransferContextMenuForControl(uiElement);
+			Form1.TransferContextMenuForControl(this);
 		}
 
 		override public Control ConstructUIElement()
@@ -193,9 +194,9 @@ namespace CofD_Sheet.Sheet_Components
 								{
 									newControl = new CheckBox
 									{
-										Anchor = System.Windows.Forms.AnchorStyles.None,
+										Anchor = AnchorStyles.None,
 										AutoSize = true,
-										Size = new System.Drawing.Size(15, 14),
+										Size = new Size(15, 14),
 										Dock = DockStyle.None,
 										TabIndex = 0,
 										UseVisualStyleBackColor = true,
@@ -207,9 +208,9 @@ namespace CofD_Sheet.Sheet_Components
 								{
 									newControl = new RadioButton
 									{
-										Anchor = System.Windows.Forms.AnchorStyles.None,
+										Anchor = AnchorStyles.None,
 										AutoSize = true,
-										Size = new System.Drawing.Size(15, 14),
+										Size = new Size(15, 14),
 										Dock = DockStyle.None,
 										TabIndex = 0,
 										UseVisualStyleBackColor = true,
