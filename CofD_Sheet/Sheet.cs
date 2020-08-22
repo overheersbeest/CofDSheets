@@ -299,8 +299,12 @@ namespace CofD_Sheet
 					break;
 #if DEBUG
 				case SheetType.Test:
-					AddMortalSkillsAndAttributes();
+					components.Add(new TraitsComponent("Mental_Attributes", false, "note", false, "attribute", true, new List<string> { "Intelligence", "Wits", "Resolve" }, 1, 5, ColumnId.Left));
+					components.Add(new TraitsComponent("Physical_Attributes", false, "note", false, "attribute", true, new List<string> { "Strength", "Dexterity", "Stamina" }, 1, 5, ColumnId.Middle));
+					components.Add(new TraitsComponent("Social_Attributes", false, "note", false, "attribute", true, new List<string> { "Presence", "Manipulation", "Composure" }, 1, 5, ColumnId.Right));
 
+					components.Add(new TraitsComponent("Physical_Skills", true, "specialty", false, "skill", true, new List<string> { "Athletics", "Brawl", "Drive", "Firearms", "Larceny", "Stealth", "Survival", "Weaponry" }, 0, 5, ColumnId.Left));
+					
 					components.Add(GetTestModSetComponent());
 
 					components.Add(new TraitsComponent("Merits", true, "subtype", true, "merit", false, new List<string>(), 0, 5, ColumnId.Middle));
@@ -377,6 +381,23 @@ namespace CofD_Sheet
 					if (String.Equals(component.name, path[0], StringComparison.OrdinalIgnoreCase))
 					{
 						return component.QueryInt(path);
+					}
+				}
+			}
+
+			throw new Exception("Query could not find component: " + query);
+		}
+
+		public string QueryString(string query)
+		{
+			List<string> path = new List<string>(query.Split('.'));
+			if (path.Count > 0)
+			{
+				foreach (ISheetComponent component in components)
+				{
+					if (String.Equals(component.name, path[0], StringComparison.OrdinalIgnoreCase))
+					{
+						return component.QueryString(path);
 					}
 				}
 			}
@@ -479,6 +500,8 @@ namespace CofD_Sheet
 			FormsComponent.sets[1].modifications.Add(new IntModification(new List<string>() { "Social_Attributes", "Manipulation" }, -1, "", IntModificationType.Delta));
 			FormsComponent.sets[1].modifications.Add(new IntModification(new List<string>() { "Advantages", "Size" }, 1, "", IntModificationType.Delta));
 			FormsComponent.sets[1].modifications.Add(new IntModification(new List<string>() { "Advantages", "Wolf_Senses" }, 2, "", IntModificationType.Delta));
+			FormsComponent.sets[1].modifications.Add(new StringModification(new List<string>() { "Weapons" }, "Teeth/Claws", "", StringModificationType.AddElement));
+			FormsComponent.sets[1].modifications.Add(new StringModification(new List<string>() { "Weapons", "Teeth/Claws", "Dmg", "Suffix" }, "L", "", StringModificationType.Replace));
 
 			//gauru
 			FormsComponent.sets[2].modifications.Add(new IntModification(new List<string>() { "Physical_Attributes", "Strength" }, 3, "", IntModificationType.Delta));
@@ -486,6 +509,10 @@ namespace CofD_Sheet
 			FormsComponent.sets[2].modifications.Add(new IntModification(new List<string>() { "Physical_Attributes", "Stamina" }, 2, "", IntModificationType.Delta));
 			FormsComponent.sets[2].modifications.Add(new IntModification(new List<string>() { "Advantages", "Size" }, 2, "", IntModificationType.Delta));
 			FormsComponent.sets[2].modifications.Add(new IntModification(new List<string>() { "Advantages", "Wolf_Senses" }, 3, "", IntModificationType.Delta));
+			FormsComponent.sets[2].modifications.Add(new StringModification(new List<string>() { "Weapons" }, "Teeth/Claws", "", StringModificationType.AddElement));
+			FormsComponent.sets[2].modifications.Add(new IntModification(new List<string>() { "Weapons", "Teeth/Claws", "Dmg" }, 2, "", IntModificationType.Delta));
+			FormsComponent.sets[2].modifications.Add(new StringModification(new List<string>() { "Weapons", "Teeth/Claws", "Dmg", "Suffix" }, "L", "", StringModificationType.Replace));
+			FormsComponent.sets[2].modifications.Add(new IntModification(new List<string>() { "Weapons", "Teeth/Claws", "Init" }, 3, "", IntModificationType.Delta));
 
 			//urshul
 			FormsComponent.sets[3].modifications.Add(new IntModification(new List<string>() { "Physical_Attributes", "Strength" }, 2, "", IntModificationType.Delta));
@@ -495,6 +522,12 @@ namespace CofD_Sheet
 			FormsComponent.sets[3].modifications.Add(new IntModification(new List<string>() { "Advantages", "Size" }, 1, "", IntModificationType.Delta));
 			FormsComponent.sets[3].modifications.Add(new IntModification(new List<string>() { "Advantages", "Speed" }, 2, "", IntModificationType.Delta));
 			FormsComponent.sets[3].modifications.Add(new IntModification(new List<string>() { "Advantages", "Wolf_Senses" }, 3, "", IntModificationType.Delta));
+			FormsComponent.sets[3].modifications.Add(new StringModification(new List<string>() { "Weapons" }, "Teeth", "", StringModificationType.AddElement));
+			FormsComponent.sets[3].modifications.Add(new IntModification(new List<string>() { "Weapons", "Teeth", "Dmg" }, 2, "", IntModificationType.Delta));
+			FormsComponent.sets[3].modifications.Add(new StringModification(new List<string>() { "Weapons", "Teeth", "Dmg", "Suffix" }, "L", "", StringModificationType.Replace));
+			FormsComponent.sets[3].modifications.Add(new StringModification(new List<string>() { "Weapons" }, "Claws", "", StringModificationType.AddElement));
+			FormsComponent.sets[3].modifications.Add(new IntModification(new List<string>() { "Weapons", "Claws", "Dmg" }, 1, "", IntModificationType.Delta));
+			FormsComponent.sets[3].modifications.Add(new StringModification(new List<string>() { "Weapons", "Claws", "Dmg", "Suffix" }, "L", "", StringModificationType.Replace));
 
 			//urhan
 			FormsComponent.sets[4].modifications.Add(new IntModification(new List<string>() { "Physical_Attributes", "Dexterity" }, 2, "", IntModificationType.Delta));
@@ -503,6 +536,9 @@ namespace CofD_Sheet
 			FormsComponent.sets[4].modifications.Add(new IntModification(new List<string>() { "Advantages", "Size" }, -1, "", IntModificationType.Delta));
 			FormsComponent.sets[4].modifications.Add(new IntModification(new List<string>() { "Advantages", "Speed" }, 4, "", IntModificationType.Delta));
 			FormsComponent.sets[4].modifications.Add(new IntModification(new List<string>() { "Advantages", "Wolf_Senses" }, 4, "", IntModificationType.Delta));
+			FormsComponent.sets[4].modifications.Add(new StringModification(new List<string>() { "Weapons" }, "Teeth/Claws", "", StringModificationType.AddElement));
+			FormsComponent.sets[4].modifications.Add(new IntModification(new List<string>() { "Weapons", "Teeth/Claws", "Dmg" }, 1, "", IntModificationType.Delta));
+			FormsComponent.sets[4].modifications.Add(new StringModification(new List<string>() { "Weapons", "Teeth/Claws", "Dmg", "Suffix" }, "L", "", StringModificationType.Replace));
 
 			return FormsComponent;
 		}
@@ -512,8 +548,10 @@ namespace CofD_Sheet
 		{
 			ModificationSetComponent FormsComponent = new ModificationSetComponent("Forms", new List<string> { "Off", "On"}, ColumnId.Left);
 
-			FormsComponent.sets[1].modifications.Add(new IntModification(new List<string>() { "Advantages", "Test" }, 0, "Weapons.Bite.Range.Short", IntModificationType.Delta));
-			
+			FormsComponent.sets[1].modifications.Add(new StringModification(new List<string>() { "Weapons" }, "Bite", "", StringModificationType.AddElement));
+			FormsComponent.sets[1].modifications.Add(new IntModification(new List<string>() { "Weapons", "Bite", "Dmg" }, 2, "", IntModificationType.Delta));
+			FormsComponent.sets[1].modifications.Add(new StringModification(new List<string>() { "Weapons", "Bite", "Dmg", "Suffix" }, "L", "", StringModificationType.Replace));
+
 			return FormsComponent;
 		}
 #endif

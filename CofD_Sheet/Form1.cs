@@ -355,7 +355,8 @@ namespace CofD_Sheet
 
 		public static void TransferContextMenuForControl(Control source)
 		{
-			if (instance.contextMenuDuplicators.TryGetValue(source, out List<Control> destinations))
+			if (instance!= null
+				&& instance.contextMenuDuplicators.TryGetValue(source, out List<Control> destinations))
 			{
 				foreach (Control dest in destinations)
 				{

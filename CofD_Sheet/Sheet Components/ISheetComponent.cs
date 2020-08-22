@@ -100,6 +100,11 @@ namespace CofD_Sheet.Sheet_Components
 			throw new System.NotImplementedException();
 		}
 
+		virtual public string QueryString(List<string> path)
+		{
+			throw new System.NotImplementedException();
+		}
+
 		virtual public void ApplyModification(Modification mod, Sheet sheet)
 		{
 			throw new System.NotImplementedException();

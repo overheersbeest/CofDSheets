@@ -107,6 +107,7 @@ namespace CofD_Sheet.Sheet_Components
 			}
 
 			uiElement.ContextMenuStrip = contextMenu;
+			Form1.TransferContextMenuForControl(uiElement);
 		}
 
 		override public Control ConstructUIElement()

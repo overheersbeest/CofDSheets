@@ -70,6 +70,8 @@
     <Compile Include="Modifications\Modification.cs" />
     <Compile Include="Modifications\StringModification.cs" />
     <Compile Include="Modifyables\ModifiableInt.cs" />
+    <Compile Include="Modifyables\ModifiableString.cs" />
+    <Compile Include="Modifyables\ModificationFunctions.cs" />
     <Compile Include="Sheet Components\AdvantagesComponent.cs" />
     <Compile Include="Sheet Components\AspirationsComponent.cs" />
     <Compile Include="Sheet Components\ExperienceComponent.cs" />

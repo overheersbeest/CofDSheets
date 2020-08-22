@@ -30,6 +30,7 @@ namespace CofD_Sheet.Sheet_Components
 			public TableValue defaultValue;
 		}
 
+		[Serializable]
 		[XmlInclude(typeof(TableValue_String))]
 		[XmlInclude(typeof(TableValue_Numeric))]
 		[XmlInclude(typeof(TableValue_NumericSuffix))]
@@ -47,6 +48,7 @@ namespace CofD_Sheet.Sheet_Components
 			abstract public override string ToString();
 		}
 
+		[Serializable]
 		public class TableValue_String : TableValue
 		{
 			public TableValue_String()
@@ -85,6 +87,7 @@ namespace CofD_Sheet.Sheet_Components
 			}
 		}
 
+		[Serializable]
 		public class TableValue_Numeric : TableValue
 		{
 			public TableValue_Numeric()
@@ -149,6 +152,7 @@ namespace CofD_Sheet.Sheet_Components
 			}
 		}
 
+		[Serializable]
 		public class TableValue_NumericSuffix : TableValue_Numeric
 		{
 			public TableValue_NumericSuffix()
@@ -156,11 +160,11 @@ namespace CofD_Sheet.Sheet_Components
 
 			public TableValue_NumericSuffix(int _value, bool _alwaysIncludeSign, bool _negativeSignOnZero, string _suffix) : base(_value, _alwaysIncludeSign, _negativeSignOnZero)
 			{
-				suffix = _suffix;
+				suffix = new ModifiableString(_suffix);
 			}
 
-			[XmlAttribute]
-			public string suffix = "";
+			[XmlElement]
+			public ModifiableString suffix = new ModifiableString();
 
 			override public void BuildValueControls(string valueName, int left, int width, ref List<Control> valueControls, ref List<Control> nonValueControls, ref int valueControlsHeight, ref int tabIndexCounter)
 			{
@@ -169,7 +173,7 @@ namespace CofD_Sheet.Sheet_Components
 				int controlWidth = (width - uiMargin) / 2;
 				Label suffixLabel = new Label() { Left = left, Top = valueControlsHeight, Width = controlWidth, Text = "suffix" };
 				nonValueControls.Add(suffixLabel);
-				TextBox suffixInputBox = new TextBox() { Left = left + controlWidth + uiMargin, Top = valueControlsHeight, Width = controlWidth, Text = suffix, TabIndex = tabIndexCounter++ };
+				TextBox suffixInputBox = new TextBox() { Left = left + controlWidth + uiMargin, Top = valueControlsHeight, Width = controlWidth, Text = suffix.CurrentValue, TabIndex = tabIndexCounter++ };
 				valueControls.Add(suffixInputBox);
 				valueControlsHeight += rowHeight;
 			}
@@ -180,16 +184,17 @@ namespace CofD_Sheet.Sheet_Components
 					&& valueControls[1] is TextBox suffixInputBox)
 				{
 					value.CurrentValue = (int)valueInputBox.Value;
-					suffix = suffixInputBox.Text;
+					suffix.CurrentValue = suffixInputBox.Text;
 				}
 			}
 
 			public override string ToString()
 			{
-				return base.ToString() + suffix;
+				return base.ToString() + suffix.CurrentValue;
 			}
 		}
 
+		[Serializable]
 		public class TableValue_Range : TableValue
 		{
 			public TableValue_Range()
@@ -218,14 +223,14 @@ namespace CofD_Sheet.Sheet_Components
 				Label columnNameLabel = new Label() { Left = left, Top = valueControlsHeight, Width = nameWidth, Text = valueName, Font = new Font(Label.DefaultFont, FontStyle.Bold) };
 				nonValueControls.Add(columnNameLabel);
 
-				NumericUpDown shortInputBox = new NumericUpDown() { Left = left + nameWidth + uiMargin, Top = valueControlsHeight, Width = inputWidth, Value = shortRange.CurrentValue, TabIndex = tabIndexCounter++ };
+				NumericUpDown shortInputBox = new NumericUpDown() { Left = left + nameWidth + uiMargin, Top = valueControlsHeight, Width = inputWidth, Maximum = 10000, Value = shortRange.CurrentValue, TabIndex = tabIndexCounter++ };
 				valueControls.Add(shortInputBox);
 
-				NumericUpDown mediumInputBox = new NumericUpDown() { Left = left + nameWidth + (2 * uiMargin) + inputWidth, Top = valueControlsHeight, Width = inputWidth, Value = mediumRange.CurrentValue, TabIndex = tabIndexCounter++ };
+				NumericUpDown mediumInputBox = new NumericUpDown() { Left = left + nameWidth + (2 * uiMargin) + inputWidth, Top = valueControlsHeight, Width = inputWidth, Maximum = 10000, Value = mediumRange.CurrentValue, TabIndex = tabIndexCounter++ };
 				shortInputBox.ValueChanged += (sender2, e2) => { mediumInputBox.Value = shortInputBox.Value * 2; };
 				valueControls.Add(mediumInputBox);
 
-				NumericUpDown longInputBox = new NumericUpDown() { Left = left + width - inputWidth, Top = valueControlsHeight, Width = inputWidth, Value = longRange.CurrentValue, TabIndex = tabIndexCounter++ };
+				NumericUpDown longInputBox = new NumericUpDown() { Left = left + width - inputWidth, Top = valueControlsHeight, Width = inputWidth, Maximum = 10000, Value = longRange.CurrentValue, TabIndex = tabIndexCounter++ };
 				mediumInputBox.ValueChanged += (sender2, e2) => { longInputBox.Value = mediumInputBox.Value * 2; };
 				valueControls.Add(longInputBox);
 				valueControlsHeight += rowHeight;
@@ -276,6 +281,9 @@ namespace CofD_Sheet.Sheet_Components
 			[XmlIgnore]
 			public List<Label> labels = new List<Label>();
 
+			[XmlIgnore]
+			public bool isModInsert = false;
+
 			public override string ToString()
 			{
 				string retVal = "";
@@ -300,8 +308,23 @@ namespace CofD_Sheet.Sheet_Components
 		[XmlArray]
 		public List<TableColumn> columns = new List<TableColumn>();
 
+		[XmlIgnore]
+		public List<TableRow> AllRows
+		{
+			get
+			{
+				List<TableRow> retVal = new List<TableRow>();
+				retVal.AddRange(rows);
+				retVal.AddRange(modInsertedRows);
+				return retVal;
+			}
+		}
+
 		[XmlArray]
 		public List<TableRow> rows = new List<TableRow>();
+
+		[XmlIgnore]
+		public List<TableRow> modInsertedRows = new List<TableRow>();
 
 		[XmlIgnore]
 		private const int minColumnWidth = 25;
@@ -336,7 +359,7 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				ToolStripItem addTraitItem = contextMenu.Items.Add("Add " + rowName);
 				addTraitItem.Click += new EventHandler(OpenAddRowDialog);
-				if (rows.Count > 0)
+				if (AllRows.Count > 0)
 				{
 					ToolStripItem removeTraitItem = contextMenu.Items.Add("Remove " + rowName);
 					removeTraitItem.Click += new EventHandler(OpenRemoveRowDialog);
@@ -401,7 +424,7 @@ namespace CofD_Sheet.Sheet_Components
 				TableRow newRow = new TableRow();
 				for (int i = 0; i < columns.Count; ++i)
 				{
-					TableValue newValue = columns[i].defaultValue;
+					TableValue newValue = Program.DeepClone(columns[i].defaultValue);
 					newValue.SetValueWithControls(valueControls[i]);
 					newRow.values.Add(newValue);
 				}
@@ -464,6 +487,11 @@ namespace CofD_Sheet.Sheet_Components
 			int c = position.Column;
 			int r = position.Row;
 
+			if (r > rows.Count)
+			{
+				return;
+			}
+
 			List<Control> valueControls = new List<Control>();
 			List<Control> nonValueControls = new List<Control>();
 			int valueControlsHeight = 5;
@@ -510,7 +538,7 @@ namespace CofD_Sheet.Sheet_Components
 			uiElement.RowStyles.Clear();
 			uiElement.ColumnStyles.Clear();
 			uiElement.Controls.Clear();
-			uiElement.RowCount = rows.Count + 1;
+			uiElement.RowCount = AllRows.Count + 1;
 			uiElement.ColumnCount = columns.Count;
 
 			List<float> columnWidths = new List<float>();
@@ -536,9 +564,9 @@ namespace CofD_Sheet.Sheet_Components
 			}
 
 			uiElement.RowStyles.Add(new RowStyle(SizeType.Absolute, rowHeight));
-			for (int r = 0; r < rows.Count; ++r)
+			for (int r = 0; r < AllRows.Count; ++r)
 			{
-				TableRow row = rows[r];
+				TableRow row = AllRows[r];
 				row.labels.Clear();
 				for (int c = 0; c < row.values.Count; ++c)
 				{
@@ -549,7 +577,8 @@ namespace CofD_Sheet.Sheet_Components
 					};
 
 					ContextMenuStrip contextMenu = new ContextMenuStrip();
-					if (canModifyRows)
+					if (canModifyRows
+						&& r < rows.Count)
 					{
 						ToolStripItem addTraitItem = contextMenu.Items.Add("Change value");
 						addTraitItem.Click += new EventHandler(OpenChangeValueDialog);
@@ -569,7 +598,7 @@ namespace CofD_Sheet.Sheet_Components
 			float widthSum = 0;
 			for (int c = 0; c < columnWidths.Count; ++c)
 			{
-				foreach (TableRow row in rows)
+				foreach (TableRow row in AllRows)
 				{
 					columnWidths[c] = Math.Max(columnWidths[c], (float)Math.Ceiling(row.labels[c].CreateGraphics().MeasureString(row.labels[c].Text, row.labels[c].Font).Width));
 				}
@@ -581,7 +610,7 @@ namespace CofD_Sheet.Sheet_Components
 				uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, columnWidths[c] * columnScalar));
 			}
 
-			uiElement.Size = new Size(componentWidth, inputBoxHeight + (rowHeight * rows.Count));
+			uiElement.Size = new Size(componentWidth, inputBoxHeight + (rowHeight * AllRows.Count));
 
 			ResizeParentColumn();
 			UpdateContextMenu();
@@ -589,7 +618,7 @@ namespace CofD_Sheet.Sheet_Components
 
 		void OnValueChanged()
 		{
-			foreach (TableRow row in rows)
+			foreach (TableRow row in AllRows)
 			{
 				for (int i = 0; i < row.labels.Count; ++i)
 				{
@@ -614,9 +643,9 @@ namespace CofD_Sheet.Sheet_Components
 					TableColumn column = columns[c];
 					if (String.Equals(column.name, targetColumn, StringComparison.OrdinalIgnoreCase))
 					{
-						for (int r = 0; r < rows.Count; ++r)
+						for (int r = 0; r < AllRows.Count; ++r)
 						{
-							TableRow row = rows[r];
+							TableRow row = AllRows[r];
 							if (row.values[0] is TableValue_String rowName)
 							{
 								if (String.Equals(rowName.value, targetRow, StringComparison.OrdinalIgnoreCase))
@@ -662,63 +691,93 @@ namespace CofD_Sheet.Sheet_Components
 		override public void ApplyModification(Modification mod, Sheet sheet)
 		{
 			//only allow this operation if the first column contains string values, so we can use them as a key to find the row we want to modify
-			if (mod.path.Count > 2
-				&& columns.Count > 0
+			if (columns.Count > 0
 				&& columns[0].defaultValue is TableValue_String)
 			{
-				string targetRow = mod.path[1];
-				string targetColumn = mod.path[2];
-				for (int c = 0; c < columns.Count; ++c)
+				if (mod.path.Count > 2)
 				{
-					TableColumn column = columns[c];
-					if (column.name == targetColumn)
+					string targetRow = mod.path[1];
+					string targetColumn = mod.path[2];
+					for (int c = 0; c < columns.Count; ++c)
 					{
-						for (int r = 0; r < rows.Count; ++r)
+						TableColumn column = columns[c];
+						if (column.name == targetColumn)
 						{
-							TableRow row = rows[r];
-							if (row.values[0] is TableValue_String rowName)
+							//found the correct column
+							for (int r = 0; r < AllRows.Count; ++r)
 							{
-								if (rowName.value == targetRow)
+								TableRow row = AllRows[r];
+								if (row.values[0] is TableValue_String rowName)
 								{
-									if (row.values[c] is TableValue_Numeric targetValue)
+									if (rowName.value == targetRow)
 									{
-										if (mod is IntModification intMod)
+										//found the correct row
+										if (row.values[c] is TableValue_Numeric targetNumericValue)
 										{
-											targetValue.value.ApplyModification(intMod, sheet);
-											isCurrentlyModified = true;
-										}
-									}
-									else if (row.values[c] is TableValue_Range targetRangeValue)
-									{
-										if (mod is IntModification intMod)
-										{
-											if (mod.path.Count > 3)
+											if (mod is IntModification intMod)
 											{
-												string targetValueName = mod.path[3];
-												if (String.Equals(targetValueName, "Short", StringComparison.OrdinalIgnoreCase))
+												targetNumericValue.value.ApplyModification(intMod, sheet);
+												isCurrentlyModified = true;
+											}
+											else if (mod is StringModification stringMod
+												&& targetNumericValue is TableValue_NumericSuffix targetNumericSuffixValue)
+											{
+												if (mod.path.Count > 3)
 												{
-													targetRangeValue.shortRange.ApplyModification(intMod, sheet);
-													isCurrentlyModified = true;
-												}
-												else if (String.Equals(targetValueName, "Medium", StringComparison.OrdinalIgnoreCase))
-												{
-													targetRangeValue.mediumRange.ApplyModification(intMod, sheet);
-													isCurrentlyModified = true;
-												}
-												else if (String.Equals(targetValueName, "Long", StringComparison.OrdinalIgnoreCase))
-												{
-													targetRangeValue.longRange.ApplyModification(intMod, sheet);
-													isCurrentlyModified = true;
+													if (String.Equals(mod.path[3], "Suffix", StringComparison.OrdinalIgnoreCase))
+													{
+														targetNumericSuffixValue.suffix.ApplyModification(stringMod, sheet);
+														isCurrentlyModified = true;
+													}
 												}
 											}
 										}
+										else if (row.values[c] is TableValue_Range targetRangeValue)
+										{
+											if (mod is IntModification intMod)
+											{
+												if (mod.path.Count > 3)
+												{
+													string targetValueName = mod.path[3];
+													if (String.Equals(targetValueName, "Short", StringComparison.OrdinalIgnoreCase))
+													{
+														targetRangeValue.shortRange.ApplyModification(intMod, sheet);
+														isCurrentlyModified = true;
+													}
+													else if (String.Equals(targetValueName, "Medium", StringComparison.OrdinalIgnoreCase))
+													{
+														targetRangeValue.mediumRange.ApplyModification(intMod, sheet);
+														isCurrentlyModified = true;
+													}
+													else if (String.Equals(targetValueName, "Long", StringComparison.OrdinalIgnoreCase))
+													{
+														targetRangeValue.longRange.ApplyModification(intMod, sheet);
+														isCurrentlyModified = true;
+													}
+												}
+											}
+										}
+										break;
 									}
-									break;
 								}
 							}
+							break;
 						}
-						break;
 					}
+				}
+				else if (mod is StringModification stringMod
+					&& stringMod.modType == StringModificationType.AddElement)
+				{
+					TableRow newRow = new TableRow
+					{
+						isModInsert = true
+					};
+					newRow.values.Add(new TableValue_String(stringMod.GetValue(sheet)));
+					for (int i = 1; i < columns.Count; ++i)
+					{
+						newRow.values.Add(Program.DeepClone(columns[i].defaultValue));
+					}
+					modInsertedRows.Add(newRow);
 				}
 			}
 		}
@@ -726,13 +785,14 @@ namespace CofD_Sheet.Sheet_Components
 		override public void ResetModifications()
 		{
 			base.ResetModifications();
-			foreach (TableRow Row in rows)
+			foreach (TableRow row in rows)
 			{
-				foreach (TableValue Value in Row.values)
+				foreach (TableValue Value in row.values)
 				{
 					Value.ResetModifications();
 				}
 			}
+			modInsertedRows.Clear();
 		}
 
 		override public void OnModificationsComplete()

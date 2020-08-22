@@ -47,10 +47,15 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="QueryTests.cs" />
+    <Compile Include="Tests\HealthComponentTests.cs" />
+    <Compile Include="Tests\ModificationTests.cs" />
+    <Compile Include="Tests\QueryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tests\SheetTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

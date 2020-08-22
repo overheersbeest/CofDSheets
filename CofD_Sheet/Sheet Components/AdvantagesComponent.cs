@@ -383,6 +383,28 @@ namespace CofD_Sheet.Sheet_Components
 			throw new Exception("Component could not complete Query: " + path.ToString());
 		}
 
+		public override string QueryString(List<string> path)
+		{
+			if (path.Count > 1)
+			{
+				string targetAdvantage = path[1];
+				foreach (Advantage advantage in advantages)
+				{
+					if (String.Equals(advantage.name, targetAdvantage, StringComparison.OrdinalIgnoreCase))
+					{
+						isCurrentlyIncludedInModFormula = true;
+						if (advantage is StringAdvantage stringAdvantage)
+						{
+							return stringAdvantage.value;
+						}
+						break;
+					}
+				}
+			}
+
+			throw new Exception("Component could not complete Query: " + path.ToString());
+		}
+
 		override public void ApplyModification(Modification mod, Sheet sheet)
 		{
 			if (mod is IntModification intMod)

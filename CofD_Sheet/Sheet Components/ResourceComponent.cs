@@ -16,7 +16,7 @@ namespace CofD_Sheet.Sheet_Components
 		const int maxPerRow = 15;
 
 		[XmlIgnore]
-		const float separatorProportion = 2F;
+		const float separatorProportion = 0.5F;
 
 		[XmlElement]
 		public ModifiableInt MaxValue = new ModifiableInt(0);
@@ -58,6 +58,7 @@ namespace CofD_Sheet.Sheet_Components
 				changeMaxValueItem.Click += new EventHandler(OpenChangeMaxValueDialog);
 			}
 			uiElement.ContextMenuStrip = contextMenu;
+			Form1.TransferContextMenuForControl(uiElement);
 		}
 
 		override public Control ConstructUIElement()
@@ -151,7 +152,8 @@ namespace CofD_Sheet.Sheet_Components
 			uiElement.RowStyles.Clear();
 			uiElement.ColumnStyles.Clear();
 
-			float separatorWidth = uiElement.Size.Width / (checkBoxRows * separatorProportion + columnSeparatorCount);
+			float columnWidth = 100F / (checkBoxRows + (columnSeparatorCount * separatorProportion));
+			float separatorWidth = columnWidth * separatorProportion;
 
 			if (controls.Count > MaxValue.CurrentValue)
 			{
@@ -173,14 +175,14 @@ namespace CofD_Sheet.Sheet_Components
 						//break, to separate groups of 5
 						if (r == 0)
 						{
-							uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, separatorWidth));
+							uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, separatorWidth));
 						}
 					}
 					else
 					{
 						if (r == 0)
 						{
-							uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, separatorWidth * separatorProportion));
+							uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, columnWidth));
 						}
 						if (controlIter < MaxValue.CurrentValue)
 						{

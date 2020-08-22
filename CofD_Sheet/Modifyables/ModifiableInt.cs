@@ -1,22 +1,9 @@
 ﻿using CofD_Sheet.Modifications;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace CofD_Sheet.Modifyables
 {
-	[Serializable]
-	public enum IntModificationType
-	{
-		[XmlEnum(Name = "Delta")]
-		Delta,
-		[XmlEnum(Name = "Absolute")]
-		Absolute
-	}
-
 	[Serializable]
 	public class ModifiableInt
 	{
@@ -72,8 +59,8 @@ namespace CofD_Sheet.Modifyables
 						defaultValue = Math.Min(defaultValue, maxValue);
 						break;
 					case IntModificationType.Absolute:
-						//we can't modify the original value, so we'll set a new absolute value instead
-						modifier = value;
+						//we'll modify the original value, but the modified value won't be updated as it is being overwritten by a modification
+						defaultValue = value;
 						break;
 				}
 			}
@@ -92,22 +79,16 @@ namespace CofD_Sheet.Modifyables
 				default:
 					throw new Exception("unhandled IntModificationType");
 				case IntModificationType.Delta:
-					if (modType == IntModificationType.Absolute)
-					{
-						throw new Exception("absolute modified int being modified again with delta value.");
-					}
 					modifier += mod.GetValue(sheet);
 					break;
 				case IntModificationType.Absolute:
-					if (modType != IntModificationType.Delta
-						&& modifier != 0)
-					{
-						throw new Exception("modified int being modified again with absolute value.");
-					}
 					modifier = mod.GetValue(sheet);
 					break;
 			}
-			modType = mod.modType;
+			if (modType != IntModificationType.Absolute)
+			{
+				modType = mod.modType;
+			}
 		}
 	}
 }
