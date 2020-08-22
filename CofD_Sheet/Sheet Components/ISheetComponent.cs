@@ -77,21 +77,24 @@ namespace CofD_Sheet.Sheet_Components
 
 		protected void OnComponentChanged()
 		{
-			if (Form1.instance.AutoSave)
+			if (Form1.instance is Form1 instance)
 			{
-				if (Form1.instance.AssosiatedFile.Length != 0)
+				if (instance.AutoSave)
 				{
-					Form1.instance.SaveAgain();
+					if (instance.AssosiatedFile.Length != 0)
+					{
+						instance.SaveAgain();
+					}
 				}
-			}
-			else
-			{
-				Form1.instance.sheet.ChangedSinceSave = true;
-			}
+				else
+				{
+					instance.sheet.ChangedSinceSave = true;
+				}
 
-			if (isCurrentlyIncludedInModFormula)
-			{
-				Form1.instance.sheet.RefreshModifications();
+				if (isCurrentlyIncludedInModFormula)
+				{
+					instance.sheet.RefreshModifications();
+				}
 			}
 		}
 

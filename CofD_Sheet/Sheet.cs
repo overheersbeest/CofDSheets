@@ -95,6 +95,7 @@ namespace CofD_Sheet
 					components.Add(new TraitsComponent("Merits", true, "subtype", true, "merit", false, new List<string>(), 0, 5, ColumnId.Middle));
 					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle));
 					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
+					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle));
 
 					components.Add(new HealthComponent("Health", ColumnId.Right));
 					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right));
@@ -102,7 +103,6 @@ namespace CofD_Sheet
 					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right));
 					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
 					components.Add(new TraitsComponent("Equipment", false, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right));
-					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Right));
 					break;
 				case SheetType.Mage:
 					AddMortalSkillsAndAttributes();
@@ -112,6 +112,7 @@ namespace CofD_Sheet
 					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle));
 					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
 					components.Add(new ExperienceComponent("Arcane_Experience", "Arcane_Beats", ColumnId.Middle));
+					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle));
 
 					components.Add(new HealthComponent("Health", ColumnId.Right));
 					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right));
@@ -122,7 +123,6 @@ namespace CofD_Sheet
 					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
 					components.Add(new AspirationsComponent("Obsessions", 1, ColumnId.Right));
 					components.Add(new TraitsComponent("Equipment", false, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right));
-					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Right));
 					break;
 				case SheetType.Werewolf:
 					AddMortalSkillsAndAttributes();
@@ -134,6 +134,7 @@ namespace CofD_Sheet
 					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle));
 					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
 					components.Add(new TraitsComponent("Rites", true, "symbol", true, "rite", false, new List<string>(), 0, 0, ColumnId.Middle));
+					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle));
 
 					components.Add(new HealthComponent("Health", ColumnId.Right));
 					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right));
@@ -144,7 +145,6 @@ namespace CofD_Sheet
 					components.Add(new AspirationsComponent("Aspirations", 4, ColumnId.Right));
 					components.Add(new TraitsComponent("Gifts", true, "facet", true, "gift", false, new List<string>(), 0, 0, ColumnId.Right));
 					components.Add(new TraitsComponent("Equipment", true, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right));
-					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Right));
 					break;
 				case SheetType.Vampire:
 					AddMortalSkillsAndAttributes();
@@ -154,6 +154,7 @@ namespace CofD_Sheet
 					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle));
 					components.Add(new TraitsComponent("Banes", false, "note", true, "bane", false, new List<string>(), 0, 0, ColumnId.Middle));
 					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
+					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle));
 
 					components.Add(new HealthComponent("Health", ColumnId.Right));
 					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right));
@@ -163,7 +164,6 @@ namespace CofD_Sheet
 					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right));
 					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
 					components.Add(new TraitsComponent("Equipment", false, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right));
-					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Right));
 					break;
 
 				//minor splats
@@ -176,6 +176,7 @@ namespace CofD_Sheet
 					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle));
 					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
 					components.Add(new ExperienceComponent("Arcane_Experience", "Arcane_Beats", ColumnId.Middle));
+					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle));
 
 					components.Add(new HealthComponent("Health", ColumnId.Right));
 					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right));
@@ -184,7 +185,6 @@ namespace CofD_Sheet
 					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right));
 					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
 					components.Add(new TraitsComponent("Equipment", false, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right));
-					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Right));
 					break;
 				case SheetType.Wolf_Blooded:
 					AddMortalSkillsAndAttributes();
@@ -194,6 +194,7 @@ namespace CofD_Sheet
 					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle));
 					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
 					components.Add(new TraitsComponent("Rites", true, "symbol", true, "rite", false, new List<string>(), 0, 0, ColumnId.Middle));
+					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle));
 
 					components.Add(new HealthComponent("Health", ColumnId.Right));
 					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right));
@@ -201,7 +202,6 @@ namespace CofD_Sheet
 					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right));
 					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
 					components.Add(new TraitsComponent("Equipment", false, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right));
-					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Right));
 					break;
 				case SheetType.Ghoul:
 					AddMortalSkillsAndAttributes();
@@ -210,6 +210,7 @@ namespace CofD_Sheet
 					components.Add(new TraitsComponent("Disciplines", false, "note", true, "discipline", false, new List<string>(), 0, 5, ColumnId.Middle));
 					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle));
 					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
+					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle));
 
 					components.Add(new HealthComponent("Health", ColumnId.Right));
 					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right));
@@ -218,7 +219,6 @@ namespace CofD_Sheet
 					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right));
 					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
 					components.Add(new TraitsComponent("Equipment", false, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right));
-					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Right));
 					break;
 
 					//ephemeral entities / others
@@ -311,6 +311,7 @@ namespace CofD_Sheet
 					components.Add(new TraitsComponent("Renown", false, "note", false, "renown", false, new List<string> { "Cunning", "Glory", "Honor", "Purity", "Wisdom" }, 0, 5, ColumnId.Middle));
 					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle));
 					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle));
+					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle));
 
 					components.Add(new HealthComponent("Health", ColumnId.Right));
 					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right));
@@ -320,7 +321,6 @@ namespace CofD_Sheet
 					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right));
 					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right));
 					components.Add(new TraitsComponent("Equipment", true, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right));
-					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Right));
 					break;
 #endif
 			}

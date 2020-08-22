@@ -51,9 +51,16 @@ namespace CofD_SheetTests
 			component.ApplyModification(new IntModification(new List<string>() { "Health", "MaxValue" }, 5, "", IntModificationType.Absolute), sheet);
 			component.OnModificationsComplete();
 
-			Assert.AreEqual(aggTestValue, component.aggrivated);
-			Assert.AreEqual(lethalTestValue, component.lethal);
-			Assert.AreEqual(bashTestValue, component.bashing);
+			Assert.AreEqual(component.aggrivated, 1);
+			Assert.AreEqual(component.lethal, 3);
+			Assert.AreEqual(component.bashing, 1);
+
+			component.ApplyModification(new IntModification(new List<string>() { "Health", "MaxValue" }, -1, "", IntModificationType.Delta), sheet);
+			component.OnModificationsComplete();
+
+			Assert.AreEqual(component.aggrivated, 2);
+			Assert.AreEqual(component.lethal, 2);
+			Assert.AreEqual(component.bashing, 0);
 		}
 	}
 }
