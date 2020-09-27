@@ -65,7 +65,7 @@ namespace CofD_Sheet
 
 		static public Dictionary<SheetType, List<SheetType>> SheetTypeParentage = new Dictionary<SheetType, List<SheetType>>()
 		{
-			{ SheetType.None, new List<SheetType>() { SheetType.Mortal, SheetType.Mage, SheetType.Vampire, SheetType.Werewolf, SheetType.Ephemeral_Entity, SheetType.Other } },
+			{ SheetType.None, new List<SheetType>() { SheetType.Mortal, SheetType.Mage, SheetType.Vampire, SheetType.Werewolf, SheetType.Promethean, SheetType.Ephemeral_Entity, SheetType.Other } },
 			{ SheetType.Mage, new List<SheetType>() { SheetType.Proximi } },
 			{ SheetType.Vampire, new List<SheetType>() { SheetType.Ghoul} },
 			{ SheetType.Werewolf, new List<SheetType>() { SheetType.Wolf_Blooded} },
@@ -227,6 +227,7 @@ namespace CofD_Sheet
 				XmlSerializer serializer = new XmlSerializer(typeof(Sheet));
 				StreamReader reader = new StreamReader(path);
 				sheet = (Sheet)serializer.Deserialize(reader);
+				sheet.form = this;
 				foreach (ISheetComponent component in sheet.components)
 				{
 					component.Init(sheet);
@@ -313,6 +314,7 @@ namespace CofD_Sheet
 				componentUIElement.Controls.Add(componentValueElement, 0, 1);
 				//pass on context menu strip to other components as well
 				contextMenuDuplicators.Add(componentValueElement, new List<Control> { componentUIElement, nameLabel });
+				TransferContextMenuForControl(component);
 
 				if (component.column == ColumnId.Left)
 				{
@@ -448,8 +450,7 @@ namespace CofD_Sheet
 		private void NewSheetButtonClicked(object sender, EventArgs e)
 		{
 			AssosiatedFile = "";
-			sheet = new Sheet((SheetType)Enum.Parse(typeof(SheetType), sender.ToString().Replace(" ", "_")));
-			sheet.form = this;
+			sheet = new Sheet((SheetType)Enum.Parse(typeof(SheetType), sender.ToString().Replace(" ", "_")), this);
 			RefreshSheet();
 		}
 

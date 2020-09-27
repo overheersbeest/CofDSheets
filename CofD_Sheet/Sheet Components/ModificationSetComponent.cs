@@ -104,6 +104,20 @@ namespace CofD_Sheet.Sheet_Components
 			OnComponentChanged();
 		}
 
+		public override string QueryString(List<string> path)
+		{
+			if (path.Count > 1)
+			{
+				if (String.Equals(path[1], "ActiveModName", StringComparison.OrdinalIgnoreCase))
+				{
+					isCurrentlyIncludedInModFormula = true;
+					return sets[ActiveIndex].name;
+				}
+			}
+
+			throw new Exception("Component could not complete Query: " + path.ToString());
+		}
+
 		override public void ApplyModification(Modification mod, Sheet sheet)
 		{
 			throw new Exception("trying to modify a modification component");

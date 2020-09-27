@@ -89,6 +89,7 @@
     <Compile Include="Sheet Components\ResourceComponent.cs" />
     <Compile Include="Sheet Components\TableComponent.cs" />
     <Compile Include="Sheet Components\TraitsComponent.cs" />
+    <Compile Include="Sheet Components\TreeComponent.cs" />
     <Compile Include="Sheet.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

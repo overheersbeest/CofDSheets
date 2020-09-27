@@ -17,6 +17,7 @@ namespace CofD_Sheet
 		Mage,
 		Werewolf,
 		Vampire,
+		Promethean,
 
 		//minor splats
 		Proximi,
@@ -85,8 +86,9 @@ namespace CofD_Sheet
 		public Sheet()
 		{ }
 
-		public Sheet(SheetType type)
+		public Sheet(SheetType type, Form1 _form)
 		{
+			form = _form;
 			switch (type)
 			{
 				//major splats
@@ -144,7 +146,26 @@ namespace CofD_Sheet
 					components.Add(new ResourceComponent("Harmony", false, false, 7, 10, ColumnId.Right, this));
 					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right, this));
 					components.Add(new AspirationsComponent("Aspirations", 4, ColumnId.Right, this));
-					components.Add(new TraitsComponent("Gifts", true, "facet", true, "gift", false, new List<string>(), 0, 0, ColumnId.Right, this));
+					components.Add(new TreeComponent("Gifts", new List<string>() { "Gift", "Facet", "Description" }, new List<TreeComponent.TreeNode>(), ColumnId.Right, this));
+					components.Add(new TraitsComponent("Equipment", true, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right, this));
+					break;
+				case SheetType.Promethean:
+					AddMortalSkillsAndAttributes();
+
+					components.Add(new TraitsComponent("Merits", true, "subtype", true, "merit", false, new List<string>(), 0, 5, ColumnId.Middle, this));
+					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle, this));
+					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle, this));
+					components.Add(new ExperienceComponent("Vitriol Experience", "Vitriol Beats", ColumnId.Middle, this));
+					components.Add(new TreeComponent("Transmutations", new List<string>() { "Transmutation", "Alembic", "Distillation", "Description" }, new List<TreeComponent.TreeNode>(), ColumnId.Middle, this));
+					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle, this));
+
+					components.Add(new HealthComponent("Health", ColumnId.Right, this));
+					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Azoth", false, false, 1, 10, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Pyros", true, true, 0, 10, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Pilgrimage", false, false, 7, 10, ColumnId.Right, this));
+					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right, this));
+					components.Add(new AspirationsComponent("Aspirations", 4, ColumnId.Right, this));
 					components.Add(new TraitsComponent("Equipment", true, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right, this));
 					break;
 				case SheetType.Vampire:
@@ -309,10 +330,10 @@ namespace CofD_Sheet
 					components.Add(GetTestModSetComponent());
 
 					components.Add(new TraitsComponent("Merits", true, "subtype", true, "merit", false, new List<string>(), 0, 5, ColumnId.Middle, this));
-					components.Add(new TraitsComponent("Renown", false, "note", false, "renown", false, new List<string> { "Cunning", "Glory", "Honor", "Purity", "Wisdom" }, 0, 5, ColumnId.Middle, this));
 					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle, this));
 					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle, this));
 					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle, this));
+					components.Add(new TreeComponent("Tree", new List<string>() { "Transmutation", "Alembic", "Distillation", "Description" }, new List<TreeComponent.TreeNode>(), ColumnId.Middle, this));
 
 					components.Add(new HealthComponent("Health", ColumnId.Right, this));
 					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
@@ -440,6 +461,10 @@ namespace CofD_Sheet
 				case SheetType.Werewolf:
 					retVal.Add(new AdvantagesComponent.StringAdvantage("Blood"));
 					retVal.Add(new AdvantagesComponent.StringAdvantage("Bone"));
+					break;
+				case SheetType.Promethean:
+					retVal.Add(new AdvantagesComponent.StringAdvantage("Elpis"));
+					retVal.Add(new AdvantagesComponent.StringAdvantage("Torment"));
 					break;
 				case SheetType.Vampire:
 					retVal.Add(new AdvantagesComponent.StringAdvantage("Mask"));

@@ -143,7 +143,7 @@ namespace CofD_Sheet.Sheet_Components
 
 		override public Control ConstructUIElement()
 		{
-			OnMaxValuePossiblyChanged();
+			OnMaxValuePossiblyChanged(false);
 
 			return uiElement;
 		}
@@ -179,11 +179,31 @@ namespace CofD_Sheet.Sheet_Components
 			{
 				maxValue = (int)inputBox.Value;
 
-				OnMaxValuePossiblyChanged();
+				OnMaxValuePossiblyChanged(false);
 			}
 		}
 
-#region Specialties
+		public Trait FindTraitByName(string labelText)
+		{
+			string traitText = labelText;
+			int notesStartIndex = labelText.IndexOf('(');
+			if (notesStartIndex > 0)
+			{
+				traitText = traitText.Substring(0, notesStartIndex);
+			}
+			traitText = traitText.Trim();
+			foreach (Trait trait in Traits)
+			{
+				if (String.Equals(traitText, trait.name, StringComparison.OrdinalIgnoreCase)
+					|| String.Equals(traitText.Replace(' ', '_'), trait.name, StringComparison.OrdinalIgnoreCase))
+				{
+					return trait;
+				}
+			}
+			return null;
+		}
+
+		#region Specialties
 		void OpenAddSpecialtyDialog(object sender, EventArgs e)
 		{
 			if (!(sender is ToolStripItem menuItem))
@@ -194,8 +214,7 @@ namespace CofD_Sheet.Sheet_Components
 			if (traitLabel == null)
 				return;
 
-			//we use StartsWith to exclude specialties
-			Trait trait = Traits.Find(x => traitLabel.Text.StartsWith(x.name) || traitLabel.Text.Replace(' ', '_').StartsWith(x.name));
+			Trait trait = FindTraitByName(traitLabel.Text);
 			if (trait == null)
 			{
 				return;
@@ -242,8 +261,7 @@ namespace CofD_Sheet.Sheet_Components
 			if (traitLabel == null)
 				return;
 
-			//we use StartsWith to exclude specialties
-			Trait trait = Traits.Find(x => traitLabel.Text.StartsWith(x.name) || traitLabel.Text.Replace(' ', '_').StartsWith(x.name));
+			Trait trait = FindTraitByName(traitLabel.Text);
 			if (trait == null)
 			{
 				return;
@@ -363,7 +381,7 @@ namespace CofD_Sheet.Sheet_Components
 			if (traitLabel == null)
 				return;
 
-			Trait trait = Traits.Find(x => traitLabel.Text.StartsWith(x.name));
+			Trait trait = FindTraitByName(traitLabel.Text);
 			if (trait == null)
 			{
 				return;
@@ -494,7 +512,7 @@ namespace CofD_Sheet.Sheet_Components
 			OnValueChanged();
 		}
 
-		void OnMaxValuePossiblyChanged()
+		void OnMaxValuePossiblyChanged(bool forceTraitsChanged)
 		{
 			int newVisibleMaxValue = maxValue;
 			foreach (Trait trait in AllTraits)
@@ -506,8 +524,16 @@ namespace CofD_Sheet.Sheet_Components
 			if (newVisibleMaxValue != maxValueVisible)
 			{
 				maxValueVisible = newVisibleMaxValue;
+				OnTraitsChanged();
 			}
-			OnTraitsChanged();
+			else if (forceTraitsChanged)
+			{
+				OnTraitsChanged();
+			}
+			else
+			{
+				OnValueChanged();
+			}
 		}
 
 		void OnValueChanged()
@@ -604,7 +630,7 @@ namespace CofD_Sheet.Sheet_Components
 		{
 			if (isCurrentlyModified || wasPreviouslyModified)
 			{
-				OnMaxValuePossiblyChanged();
+				OnMaxValuePossiblyChanged(true);
 			}
 		}
 	}

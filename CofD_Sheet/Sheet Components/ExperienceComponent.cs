@@ -172,7 +172,8 @@ namespace CofD_Sheet.Sheet_Components
 							AutoSize = true,
 							Size = new Size(15, 14),
 							TabIndex = 0,
-							UseVisualStyleBackColor = true
+							UseVisualStyleBackColor = true,
+							Checked = checkBoxNr < beats
 						};
 						checkBox.Click += OnValueChanged;
 						beatBoxes.Add(checkBox);
