@@ -1,5 +1,6 @@
 ﻿using CofD_Sheet.Sheet_Components;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -9,45 +10,43 @@ namespace CofD_Sheet
 {
 	public partial class Form1 : Form
 	{
-		public static Form1 instance = null;
-
 		public Sheet sheet = new Sheet();
 
 		private bool _autoSave = true;
-		public bool autoSave
+		public bool AutoSave
 		{
 			get { return _autoSave; }
 			set
 			{
 				_autoSave = value;
-				if (sheet.changedSinceSave)
+				if (sheet.ChangedSinceSave)
 				{
-					saveAgain();
+					SaveAgain();
 				}
 			}
 		}
 		public bool autoSaveDisabled = false;
 
 		private bool _autoLoad = false;
-		public bool autoLoad
+		public bool AutoLoad
 		{
 			get { return _autoLoad; }
 			set
 			{
 				_autoLoad = value;
-				if (assosiatedFile.Length != 0)
+				if (AssosiatedFile.Length != 0)
 				{
 					watcher.EnableRaisingEvents = value;
-					int slashIndex = assosiatedFile.LastIndexOf('\\');
-					string dir = assosiatedFile.Substring(0, slashIndex);
-					string name  = assosiatedFile.Substring(slashIndex + 1, assosiatedFile.Length - slashIndex - 1);
-					loadAgain(this, new FileSystemEventArgs(WatcherChangeTypes.Changed, dir, name));
+					int slashIndex = AssosiatedFile.LastIndexOf('\\');
+					string dir = AssosiatedFile.Substring(0, slashIndex);
+					string name = AssosiatedFile.Substring(slashIndex + 1, AssosiatedFile.Length - slashIndex - 1);
+					LoadAgain(this, new FileSystemEventArgs(WatcherChangeTypes.Changed, dir, name));
 				}
 			}
 		}
 
 		private string _assosiatedFile = "";
-		public string assosiatedFile
+		public string AssosiatedFile
 		{
 			get { return _assosiatedFile; }
 			set
@@ -55,37 +54,74 @@ namespace CofD_Sheet
 				_assosiatedFile = value;
 				if (value.Length > 0)
 				{
-					watcher.EnableRaisingEvents = autoLoad;
+					watcher.EnableRaisingEvents = AutoLoad;
 				}
 			}
 		}
 
-		FileSystemWatcher watcher = new FileSystemWatcher();
+		readonly FileSystemWatcher watcher = new FileSystemWatcher();
+
+		public DrawingHelper drawingHelper;
+
+		static public Dictionary<SheetType, List<SheetType>> SheetTypeParentage = new Dictionary<SheetType, List<SheetType>>()
+		{
+			{ SheetType.None, new List<SheetType>() { SheetType.Mortal, SheetType.Mage, SheetType.Vampire, SheetType.Werewolf, SheetType.Promethean, SheetType.Ephemeral_Entity, SheetType.Other } },
+			{ SheetType.Mage, new List<SheetType>() { SheetType.Proximi } },
+			{ SheetType.Vampire, new List<SheetType>() { SheetType.Ghoul} },
+			{ SheetType.Werewolf, new List<SheetType>() { SheetType.Wolf_Blooded} },
+			{ SheetType.Ephemeral_Entity, new List<SheetType>() { SheetType.Angel, SheetType.Ghost, SheetType.Spirit, SheetType.Goetia } },
+			{ SheetType.Other, new List<SheetType>() { SheetType.Abyssal_Entity, SheetType.Supernal_Entity } },
+			{ SheetType.Abyssal_Entity, new List<SheetType>() { SheetType.Acamoth, SheetType.Gulmoth} }
+		};
 
 		public Form1()
 		{
-			instance = this;
 			InitializeComponent();
 
-			foreach (SheetType type in Enum.GetValues(typeof(SheetType)))
+			sheet.form = this;
+
+			if (SheetTypeParentage.TryGetValue(SheetType.None, out List<SheetType> rootTypes))
 			{
-				System.Windows.Forms.ToolStripMenuItem newButton = new ToolStripMenuItem
+#if DEBUG
+				rootTypes.Insert(0, SheetType.Test);
+#endif
+				foreach (SheetType rootType in rootTypes)
 				{
-					Name = "New" + type.ToString() + "Button",
-					Size = new System.Drawing.Size(152, 22),
-					Text = type.ToString()
-				};
-				newButton.Click += new System.EventHandler(this.NewSheetButtonClicked);
-				this.newToolStripMenuItem.DropDownItems.Add(newButton);
+					AddToolStripMenuItemsForSheetType(rootType, ref newToolStripMenuItem);
+				}
 			}
-			
+
 			watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
-			watcher.Changed += new FileSystemEventHandler(loadAgain);
-			autoSaveToolStripMenuItem.Checked = autoSave;
-			autoLoadToolStripMenuItem.Checked = autoLoad;
+			watcher.Changed += new FileSystemEventHandler(LoadAgain);
+			autoSaveToolStripMenuItem.Checked = AutoSave;
+			autoLoadToolStripMenuItem.Checked = AutoLoad;
+
+			drawingHelper = new DrawingHelper(this);
 		}
 
-		private void loadToolStripMenuItem_Click(object sender, EventArgs e)
+		private void AddToolStripMenuItemsForSheetType(SheetType SheetTypeToAdd, ref ToolStripMenuItem ParentMenuItem)
+		{
+			ToolStripMenuItem NewButton = new ToolStripMenuItem
+			{
+				Name = "New" + SheetTypeToAdd.ToString() + "Button",
+				Size = new Size(152, 22),
+				Text = SheetTypeToAdd.ToString().Replace("_", " ")
+			};
+			if (SheetTypeToAdd < SheetType.None)
+			{
+				NewButton.Click += new System.EventHandler(this.NewSheetButtonClicked);
+			}
+			ParentMenuItem.DropDownItems.Add(NewButton);
+			if (SheetTypeParentage.TryGetValue(SheetTypeToAdd, out List<SheetType> ChildTypes))
+			{
+				foreach (SheetType ChildType in ChildTypes)
+				{
+					AddToolStripMenuItemsForSheetType(ChildType, ref NewButton);
+				}
+			}
+		}
+
+		private void LoadToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			OpenFileDialog openFileDialog1 = new OpenFileDialog
 			{
@@ -98,14 +134,14 @@ namespace CofD_Sheet
 			{
 				string path = openFileDialog1.FileName;
 				watcher.Path = path.Substring(0, path.LastIndexOf('\\'));
-				loadSheet(path);
-				sheet.changedSinceSave = false;
+				LoadSheet(path);
+				sheet.ChangedSinceSave = false;
 			}
 
 			autoSaveDisabled = false;
 		}
 
-		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+		private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			SaveFileDialog saveFileDialog1 = new SaveFileDialog
 			{
@@ -118,41 +154,48 @@ namespace CofD_Sheet
 			{
 				string path = saveFileDialog1.FileName;
 				watcher.Path = path.Substring(0, path.LastIndexOf('\\'));
-				saveSheet(path);
-				sheet.changedSinceSave = false;
+				SaveSheet(path);
+				sheet.ChangedSinceSave = false;
 			}
 		}
 
-		public void saveAgain()
+		public void SaveAgain()
 		{
-			if (assosiatedFile.Length > 0)
+			if (AssosiatedFile.Length > 0)
 			{
 				watcher.EnableRaisingEvents = false;
-				saveSheet(assosiatedFile);
-				sheet.changedSinceSave = false;
+				SaveSheet(AssosiatedFile);
+				sheet.ChangedSinceSave = false;
 			}
 		}
 
-		public void loadAgain(object sender, FileSystemEventArgs e)
+		public void LoadAgain(object sender, FileSystemEventArgs e)
 		{
-			if (e.FullPath == assosiatedFile)
+			if (e.FullPath == AssosiatedFile)
 			{
 				try
 				{
 					bool fileRead = false;
 					while (!fileRead)
 					{
-						fileRead = loadSheet(assosiatedFile);
+						fileRead = LoadSheet(AssosiatedFile);
 					}
 				}
 				catch (Exception ex)
 				{
-					MessageBox.Show("Error: Could not reload file from disk. Original error: " + ex.Message);
+					string ExceptionTrace = "";
+					Exception Inner = ex.InnerException;
+					while (Inner != null)
+					{
+						ExceptionTrace += "\r\n" + Inner.Message;
+						Inner = Inner.InnerException;
+					}
+					MessageBox.Show("Error: Could not reload file from disk. Original error: " + ex.Message + ExceptionTrace);
 				}
 			}
 		}
 
-		public bool saveSheet(string path)
+		public bool SaveSheet(string path)
 		{
 			try
 			{
@@ -160,47 +203,70 @@ namespace CofD_Sheet
 				TextWriter writer = new StreamWriter(path);
 				serializer.Serialize(writer, sheet);
 				writer.Close();
-				assosiatedFile = path;
+				AssosiatedFile = path;
 				return true;
 			}
 			catch (Exception e)
 			{
-				MessageBox.Show("Error: Could not save file to disk. " + e.Message);
+				string ExceptionTrace = "";
+				Exception Inner = e.InnerException;
+				while (Inner != null)
+				{
+					ExceptionTrace += "\r\n" + Inner.Message;
+					Inner = Inner.InnerException;
+				}
+				MessageBox.Show("Error: Could not save file to disk. " + e.Message + ExceptionTrace);
 				return false;
 			}
 		}
 
-		public bool loadSheet(string path)
+		public bool LoadSheet(string path)
 		{
 			try
 			{
 				XmlSerializer serializer = new XmlSerializer(typeof(Sheet));
 				StreamReader reader = new StreamReader(path);
 				sheet = (Sheet)serializer.Deserialize(reader);
+				sheet.form = this;
+				foreach (ISheetComponent component in sheet.components)
+				{
+					component.Init(sheet);
+				}
 				reader.Close();
-				assosiatedFile = path;
-				refreshSheet();
+				AssosiatedFile = path;
+				RefreshSheet();
 				return true;
 			}
 			catch (Exception e)
 			{
-				MessageBox.Show("Error: Could not load file from disk. " + e.Message);
+				string ExceptionTrace = "";
+				Exception Inner = e.InnerException;
+				while (Inner != null)
+				{
+					ExceptionTrace += "\r\n" + Inner.Message;
+					Inner = Inner.InnerException;
+				}
+				MessageBox.Show("Error: Could not load file from disk. " + e.Message + ExceptionTrace);
 				return false;
 			}
 		}
-		
+
 		public delegate void refreshSheetCallback();
 
-		public void refreshSheet()
+		Dictionary<Control, List<Control>> contextMenuDuplicators = new Dictionary<Control, List<Control>>();
+
+		public void RefreshSheet()
 		{
+			//in case we're being called from another thread
 			if (PlayerTextBox.InvokeRequired)
 			{
-				refreshSheetCallback d = new refreshSheetCallback(refreshSheet);
+				refreshSheetCallback d = new refreshSheetCallback(RefreshSheet);
 				this.Invoke(d, new object[] { });
 				return;
 			}
 
 			autoSaveDisabled = true;
+			drawingHelper.SuspendDrawing();
 
 			NameTextBox.Text = sheet.name;
 			PlayerTextBox.Text = sheet.player;
@@ -215,6 +281,10 @@ namespace CofD_Sheet
 
 			int amountOfRows = Convert.ToInt32(Math.Ceiling(sheet.components.Count / 2.0F));
 
+			sheet.allowRefreshingMods = false;
+
+			contextMenuDuplicators.Clear();
+
 			for (int i = 0; i < sheet.components.Count; i++)
 			{
 				ISheetComponent component = sheet.components[i];
@@ -226,8 +296,6 @@ namespace CofD_Sheet
 				componentUIElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
 				componentUIElement.Dock = DockStyle.Fill;
 				componentUIElement.RowCount = 2;
-				componentUIElement.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-				componentUIElement.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 				componentUIElement.TabIndex = 0;
 				componentUIElement.Size = new Size(292, 26);
 
@@ -241,37 +309,62 @@ namespace CofD_Sheet
 				nameLabel.Font = new Font(nameLabel.Font, FontStyle.Bold);
 				nameLabel.Text = component.name.Replace('_', ' ');
 
-				int componentRequiredHeight = 0;
 				componentUIElement.Controls.Add(nameLabel, 0, 0);
-				componentRequiredHeight += nameLabel.Size.Height;
-				Control componentValueElement = component.getUIElement();
+				Control componentValueElement = component.ConstructUIElement();
 				componentUIElement.Controls.Add(componentValueElement, 0, 1);
-				componentRequiredHeight += componentValueElement.Size.Height;
-				componentRequiredHeight += 10;
-				componentUIElement.Size = new Size(292, componentRequiredHeight);
+				//pass on context menu strip to other components as well
+				contextMenuDuplicators.Add(componentValueElement, new List<Control> { componentUIElement, nameLabel });
+				TransferContextMenuForControl(component);
 
 				if (component.column == ColumnId.Left)
 				{
-					LeftComponentTable.RowStyles.Add(new RowStyle(SizeType.AutoSize, componentRequiredHeight));
 					LeftComponentTable.Controls.Add(componentUIElement);
+					++LeftComponentTable.RowCount;
 				}
 				else if (component.column == ColumnId.Middle)
 				{
-					MiddleComponentTable.RowStyles.Add(new RowStyle(SizeType.Absolute, componentRequiredHeight));
 					MiddleComponentTable.Controls.Add(componentUIElement);
+					++MiddleComponentTable.RowCount;
 				}
 				else
 				{
-					RightComponentTable.RowStyles.Add(new RowStyle(SizeType.Absolute, componentRequiredHeight));
 					RightComponentTable.Controls.Add(componentUIElement);
+					++RightComponentTable.RowCount;
 				}
 			}
 
-			LeftComponentTable.RowCount = amountOfRows;
-			MiddleComponentTable.RowCount = amountOfRows;
-			RightComponentTable.RowCount = amountOfRows;
-			
+			sheet.allowRefreshingMods = true;
+
+			//all components refreshed, now apply modification sets
+			sheet.RefreshModifications(false);
+
+			//add empty tables to be used for padding out each column
+			LeftComponentTable.Controls.Add(new TableLayoutPanel());
+			++LeftComponentTable.RowCount;
+			MiddleComponentTable.Controls.Add(new TableLayoutPanel());
+			++MiddleComponentTable.RowCount;
+			RightComponentTable.Controls.Add(new TableLayoutPanel());
+			++RightComponentTable.RowCount;
+
+			ResizeColumn(LeftComponentTable);
+			ResizeColumn(MiddleComponentTable);
+			ResizeColumn(RightComponentTable);
+
+			drawingHelper.ResumeDrawing(true);
 			autoSaveDisabled = false;
+		}
+
+		public static void TransferContextMenuForControl(ISheetComponent source)
+		{
+			if (source.sheet != null
+				&& source.sheet.form != null
+				&& source.sheet.form.contextMenuDuplicators.TryGetValue(source.uiElement, out List<Control> destinations))
+			{
+				foreach (Control dest in destinations)
+				{
+					dest.ContextMenuStrip = source.uiElement.ContextMenuStrip;
+				}
+			}
 		}
 
 		private void NameChanged(object sender, EventArgs e)
@@ -291,25 +384,39 @@ namespace CofD_Sheet
 				this.Text = "CofD Sheet - " + sheet.name;
 			}
 
-			if (sheet.changedSinceSave)
+			if (sheet.ChangedSinceSave)
 			{
 				this.Text += "*";
 			}
 		}
 
-		public static void resizeComponentColumn(Control component)
+		public static void ResizeComponentColumn(Control component)
 		{
-			TableLayoutPanel cell = component.Parent as TableLayoutPanel;
-			if (cell != null)
+			if (component.Parent is TableLayoutPanel cell)
 			{
 				cell.Size = new Size(cell.Size.Width, component.Size.Height);
-				Form1.resizeTableHeight(ref cell);
+				ResizeTableHeight(ref cell);
 				TableLayoutPanel column = cell.Parent as TableLayoutPanel;
-				Form1.resizeTableHeight(ref column);
+				ResizeTableHeight(ref column);
 			}
 		}
 
-		private static void resizeTableHeight(ref TableLayoutPanel table)
+		public static void ResizeColumn(TableLayoutPanel column)
+		{
+			foreach (Control child in column.Controls)
+			{
+				TableLayoutPanel component = child as TableLayoutPanel;
+				foreach (Control componentChild in column.Controls)
+				{
+					TableLayoutPanel componentValue = componentChild as TableLayoutPanel;
+					ResizeTableHeight(ref componentValue);
+				}
+				ResizeTableHeight(ref component);
+			}
+			ResizeTableHeight(ref column);
+		}
+
+		private static void ResizeTableHeight(ref TableLayoutPanel table)
 		{
 			int height = 0;
 			table.RowStyles.Clear();
@@ -342,24 +449,24 @@ namespace CofD_Sheet
 
 		private void NewSheetButtonClicked(object sender, EventArgs e)
 		{
-			assosiatedFile = "";
-			sheet = new Sheet((SheetType)Enum.Parse(typeof(SheetType), sender.ToString()));
-			refreshSheet();
+			AssosiatedFile = "";
+			sheet = new Sheet((SheetType)Enum.Parse(typeof(SheetType), sender.ToString().Replace(" ", "_")), this);
+			RefreshSheet();
 		}
 
-		private void autoSaveToolStripMenuItem_Click(object sender, EventArgs e)
+		private void AutoSaveToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			autoSaveToolStripMenuItem.Checked = !autoSaveToolStripMenuItem.Checked;
-			autoSave = autoSaveToolStripMenuItem.Checked;
+			AutoSave = autoSaveToolStripMenuItem.Checked;
 		}
 
-		private void autoLoadToolStripMenuItem_Click(object sender, EventArgs e)
+		private void AutoLoadToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			autoLoadToolStripMenuItem.Checked = !autoLoadToolStripMenuItem.Checked;
-			autoLoad = autoLoadToolStripMenuItem.Checked;
+			AutoLoad = autoLoadToolStripMenuItem.Checked;
 			if (watcher.Path.Length > 0)
 			{
-				watcher.EnableRaisingEvents = autoLoad;
+				watcher.EnableRaisingEvents = AutoLoad;
 			}
 		}
 	}

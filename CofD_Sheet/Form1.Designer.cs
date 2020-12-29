@@ -31,6 +31,7 @@ namespace CofD_Sheet
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
 			this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -97,14 +98,14 @@ namespace CofD_Sheet
 			this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
 			this.loadToolStripMenuItem.Size = new System.Drawing.Size(45, 20);
 			this.loadToolStripMenuItem.Text = "Load";
-			this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
+			this.loadToolStripMenuItem.Click += new System.EventHandler(this.LoadToolStripMenuItem_Click);
 			// 
 			// saveToolStripMenuItem
 			// 
 			this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
 			this.saveToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
 			this.saveToolStripMenuItem.Text = "Save";
-			this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+			this.saveToolStripMenuItem.Click += new System.EventHandler(this.SaveToolStripMenuItem_Click);
 			// 
 			// BehaviourStripMenuItem
 			// 
@@ -122,14 +123,14 @@ namespace CofD_Sheet
 			this.autoSaveToolStripMenuItem.Name = "autoSaveToolStripMenuItem";
 			this.autoSaveToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
 			this.autoSaveToolStripMenuItem.Text = "AutoSave";
-			this.autoSaveToolStripMenuItem.Click += new System.EventHandler(this.autoSaveToolStripMenuItem_Click);
+			this.autoSaveToolStripMenuItem.Click += new System.EventHandler(this.AutoSaveToolStripMenuItem_Click);
 			// 
 			// autoLoadToolStripMenuItem
 			// 
 			this.autoLoadToolStripMenuItem.Name = "autoLoadToolStripMenuItem";
 			this.autoLoadToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
 			this.autoLoadToolStripMenuItem.Text = "AutoLoad";
-			this.autoLoadToolStripMenuItem.Click += new System.EventHandler(this.autoLoadToolStripMenuItem_Click);
+			this.autoLoadToolStripMenuItem.Click += new System.EventHandler(this.AutoLoadToolStripMenuItem_Click);
 			// 
 			// splitContainer1
 			// 
@@ -147,7 +148,7 @@ namespace CofD_Sheet
 			// splitContainer1.Panel2
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.MainSplitContainer);
-			this.splitContainer1.Size = new System.Drawing.Size(955, 371);
+			this.splitContainer1.Size = new System.Drawing.Size(955, 806);
 			this.splitContainer1.SplitterDistance = 25;
 			this.splitContainer1.TabIndex = 3;
 			// 
@@ -250,28 +251,28 @@ namespace CofD_Sheet
 			// 
 			this.MainSplitContainer.Panel2.Controls.Add(this.SubSplitContainer);
 			this.MainSplitContainer.Panel2MinSize = 634;
-			this.MainSplitContainer.Size = new System.Drawing.Size(953, 340);
+			this.MainSplitContainer.Size = new System.Drawing.Size(953, 775);
 			this.MainSplitContainer.SplitterDistance = 315;
 			this.MainSplitContainer.TabIndex = 0;
 			// 
 			// LeftComponentTable
 			// 
 			this.LeftComponentTable.ColumnCount = 1;
-			this.LeftComponentTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.LeftComponentTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.LeftComponentTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.LeftComponentTable.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.LeftComponentTable.Location = new System.Drawing.Point(0, 0);
 			this.LeftComponentTable.Margin = new System.Windows.Forms.Padding(0);
 			this.LeftComponentTable.Name = "LeftComponentTable";
-			this.LeftComponentTable.RowCount = 2;
-			this.LeftComponentTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.LeftComponentTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.LeftComponentTable.Size = new System.Drawing.Size(315, 340);
+			this.LeftComponentTable.RowCount = 1;
+			this.LeftComponentTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 775F));
+			this.LeftComponentTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 775F));
+			this.LeftComponentTable.Size = new System.Drawing.Size(315, 775);
 			this.LeftComponentTable.TabIndex = 0;
 			// 
 			// SubSplitContainer
 			// 
 			this.SubSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.SubSplitContainer.IsSplitterFixed = true;
 			this.SubSplitContainer.Location = new System.Drawing.Point(0, 0);
 			this.SubSplitContainer.Margin = new System.Windows.Forms.Padding(0);
 			this.SubSplitContainer.Name = "SubSplitContainer";
@@ -285,49 +286,47 @@ namespace CofD_Sheet
 			// 
 			this.SubSplitContainer.Panel2.Controls.Add(this.RightComponentTable);
 			this.SubSplitContainer.Panel2MinSize = 315;
-			this.SubSplitContainer.Size = new System.Drawing.Size(634, 340);
+			this.SubSplitContainer.Size = new System.Drawing.Size(634, 775);
 			this.SubSplitContainer.SplitterDistance = 315;
 			this.SubSplitContainer.TabIndex = 1;
 			// 
 			// MiddleComponentTable
 			// 
 			this.MiddleComponentTable.ColumnCount = 1;
-			this.MiddleComponentTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.MiddleComponentTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.MiddleComponentTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.MiddleComponentTable.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.MiddleComponentTable.Location = new System.Drawing.Point(0, 0);
 			this.MiddleComponentTable.Margin = new System.Windows.Forms.Padding(0);
 			this.MiddleComponentTable.Name = "MiddleComponentTable";
-			this.MiddleComponentTable.RowCount = 2;
-			this.MiddleComponentTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.MiddleComponentTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.MiddleComponentTable.Size = new System.Drawing.Size(315, 340);
+			this.MiddleComponentTable.RowCount = 1;
+			this.MiddleComponentTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 775F));
+			this.MiddleComponentTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 775F));
+			this.MiddleComponentTable.Size = new System.Drawing.Size(315, 775);
 			this.MiddleComponentTable.TabIndex = 1;
 			// 
 			// RightComponentTable
 			// 
 			this.RightComponentTable.ColumnCount = 1;
-			this.RightComponentTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.RightComponentTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.RightComponentTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.RightComponentTable.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.RightComponentTable.Location = new System.Drawing.Point(0, 0);
 			this.RightComponentTable.Margin = new System.Windows.Forms.Padding(0);
 			this.RightComponentTable.Name = "RightComponentTable";
-			this.RightComponentTable.RowCount = 2;
-			this.RightComponentTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.RightComponentTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.RightComponentTable.Size = new System.Drawing.Size(315, 340);
+			this.RightComponentTable.RowCount = 1;
+			this.RightComponentTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 775F));
+			this.RightComponentTable.Size = new System.Drawing.Size(315, 775);
 			this.RightComponentTable.TabIndex = 0;
 			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(955, 395);
+			this.ClientSize = new System.Drawing.Size(955, 830);
 			this.Controls.Add(this.splitContainer1);
 			this.Controls.Add(this.menuStrip1);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MainMenuStrip = this.menuStrip1;
-			this.MaximumSize = new System.Drawing.Size(971, 1158);
+			this.MaximumSize = new System.Drawing.Size(971, 1440);
 			this.MinimumSize = new System.Drawing.Size(971, 39);
 			this.Name = "Form1";
 			this.Text = "CofD Sheet";

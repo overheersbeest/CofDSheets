@@ -45,7 +45,7 @@ namespace CofD_Sheet_WPF.Models.Components
 
 		public Skills(string componentName, List<string> skillNames) : base(componentName)
 		{
-			for (int i = 0; i < skillNames.Count; i++)
+			for (int i = 0; i < skillNames.Count; ++i)
 			{
 				skills.Add(new Skill(skillNames[i]));
 			}

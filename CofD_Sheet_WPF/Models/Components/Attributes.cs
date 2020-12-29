@@ -45,7 +45,7 @@ namespace CofD_Sheet_WPF.Models.Components
 
 		public Attributes(string componentName, List<string> attributeNames) : base(componentName)
 		{
-			for (int i = 0; i < attributeNames.Count; i++)
+			for (int i = 0; i < attributeNames.Count; ++i)
 			{
 				attributes.Add(new Attribute(attributeNames[i]));
 			}

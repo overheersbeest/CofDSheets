@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CofD_Sheet.Modifications;
+using CofD_Sheet.Modifyables;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -14,202 +16,294 @@ namespace CofD_Sheet.Sheet_Components
 		const int maxPerRow = 15;
 
 		[XmlIgnore]
-		const float separatorProportion = 2F;
+		const float separatorProportion = 0.5F;
 
-		[XmlAttribute]
-		public int maxValue = 10;
+		[XmlElement]
+		public ModifiableInt MaxValue = new ModifiableInt(0);
 
 		[XmlAttribute]
 		public int currentValue = 0;
 
+		[XmlAttribute]
+		public bool canMultistep = false;
+
+		[XmlAttribute]
+		public bool canModifyMaxValue = true;
+
 		[XmlIgnore]
-		List<CheckBox> checkBoxes = new List<CheckBox>();
+		private readonly List<Control> controls = new List<Control>();
 
 		public ResourceComponent() : base("SimpleComponent", ColumnId.Undefined)
+		{ }
+
+		public ResourceComponent(string componentName, bool _canMultistep, bool _canModifyMaxValue, int _startValue, int _maxValue, ColumnId _column, Sheet parentSheet) : base(componentName, _column)
 		{
-			init();
+			canMultistep = _canMultistep;
+			canModifyMaxValue = _canModifyMaxValue;
+			MaxValue.CurrentValue = _maxValue;
+			currentValue = _startValue;
+
+			Init(parentSheet);
 		}
 
-		public ResourceComponent(string componentName, ColumnId _column) : base(componentName, _column)
+		override public void Init(Sheet parentSheet)
 		{
-			init();
-		}
-
-		void init()
-		{
+			base.Init(parentSheet);
 			uiElement.Dock = DockStyle.Fill;
 			uiElement.TabIndex = 0;
 
 			ContextMenuStrip contextMenu = new ContextMenuStrip();
-			ToolStripItem addMeritItem = contextMenu.Items.Add("Change maximum value");
-			addMeritItem.Click += new EventHandler(changeMaxValue);
+			if (canModifyMaxValue)
+			{
+				ToolStripItem changeMaxValueItem = contextMenu.Items.Add("Change maximum value");
+				changeMaxValueItem.Click += new EventHandler(OpenChangeMaxValueDialog);
+			}
 			uiElement.ContextMenuStrip = contextMenu;
+			Form1.TransferContextMenuForControl(this);
 		}
 
-		override public Control getUIElement()
+		override public Control ConstructUIElement()
 		{
-			onMaxValueChanged();
+			OnMaxValueChanged(false);
 
 			return uiElement;
 		}
 
-		void changeMaxValue(object sender, EventArgs e)
+		void OpenChangeMaxValueDialog(object sender, EventArgs e)
 		{
-			ContextMenuStrip owner = (sender as ToolStripItem).Owner as ContextMenuStrip;
-			TableLayoutPanel uiElement = owner.SourceControl as TableLayoutPanel;
-
 			Form prompt = new Form
 			{
+				StartPosition = FormStartPosition.CenterParent,
 				Width = 325,
 				Height = 100,
 				Text = "Change maximum value"
 			};
+
+			bool confirmed = false;
+
 			NumericUpDown inputBox = new NumericUpDown() { Left = 5, Top = 5, Width = 300 };
-			inputBox.Value = maxValue;
+			inputBox.Minimum = Math.Min(0, MaxValue.CurrentValue);
+			inputBox.Value = MaxValue.CurrentValue;
+			inputBox.TabIndex = 0;
+			inputBox.KeyDown += (sender2, e2) => { if (e2.KeyCode == Keys.Return) { confirmed = true; prompt.Close(); } };
 			Button confirmation = new Button() { Text = "Confirm", Left = 205, Width = 100, Top = 30 };
-			confirmation.Click += (sender2, e2) => { prompt.Close(); };
+			confirmation.TabIndex = 1;
+			confirmation.Click += (sender2, e2) => { confirmed = true; prompt.Close(); };
 			Button cancel = new Button() { Text = "Cancel", Left = 100, Width = 100, Top = 30 };
-			cancel.Click += (sender2, e2) => { inputBox.Value = maxValue; prompt.Close(); };
+			cancel.TabIndex = 2;
+			cancel.Click += (sender2, e2) => { prompt.Close(); };
 			prompt.Controls.Add(inputBox);
 			prompt.Controls.Add(confirmation);
 			prompt.Controls.Add(cancel);
 			prompt.ShowDialog();
 
-			maxValue = (int)inputBox.Value;
-			onMaxValueChanged();
+			if (confirmed)
+			{
+				MaxValue.CurrentValue = (int)inputBox.Value;
+
+				OnMaxValueChanged(true);
+			}
 		}
 
-		void valueChanged(object sender, EventArgs e)
+		void RecomputeValue(object sender, EventArgs e)
 		{
-			for (int i = 0; i < checkBoxes.Count; i++)
+			for (int i = 0; i < controls.Count; ++i)
 			{
-				if (sender == checkBoxes[i])
+				if (sender == controls[i])
 				{
-					if (currentValue == i + 1)
+					if (canMultistep)
 					{
-						//when clicking the last pip, reduce value by 1
-						currentValue = i;
+						if (currentValue == i + 1)
+						{
+							//when clicking the last pip, reduce value by 1
+							currentValue = i;
+						}
+						else
+						{
+							currentValue = i + 1;
+						}
 					}
 					else
 					{
-						currentValue = i + 1;
+						bool isChecked = currentValue > i;
+						if (isChecked)
+						{
+							--currentValue;
+						}
+						else
+						{
+							++currentValue;
+						}
 					}
 				}
 			}
-			onValueChanged();
+			OnValueChanged();
 		}
 
-		void onMaxValueChanged()
+		void OnMaxValueChanged(bool CanChangeValue)
 		{
-			int rowAmount = Convert.ToInt32(Math.Ceiling(maxValue / Convert.ToSingle(maxPerRow)));
-			int checkBoxRows = Math.Min(maxValue, maxPerRow);
+			int rowAmount = Convert.ToInt32(Math.Ceiling(MaxValue.CurrentValue / Convert.ToSingle(maxPerRow)));
+			int checkBoxRows = Math.Min(MaxValue.CurrentValue, maxPerRow);
 			int columnSeparatorCount = (checkBoxRows - 1) / 5;
 			int columnAmount = checkBoxRows + columnSeparatorCount;
 			uiElement.RowCount = rowAmount;
 			uiElement.ColumnCount = columnAmount;
-			uiElement.Size = new Size(componentWidth, 23 * rowAmount);
-			resizeParentColumn();
+			uiElement.Size = new Size(componentWidth, rowHeight * rowAmount);
+			ResizeParentColumn();
 			uiElement.RowStyles.Clear();
 			uiElement.ColumnStyles.Clear();
 
-			float separatorWidth = uiElement.Size.Width / (checkBoxRows * separatorProportion + columnSeparatorCount);
+			float columnWidth = 100F / (checkBoxRows + (columnSeparatorCount * separatorProportion));
+			float separatorWidth = columnWidth * separatorProportion;
 
-			if (checkBoxes.Count > maxValue)
+			if (controls.Count > MaxValue.CurrentValue)
 			{
-				for (int i = maxValue; i < checkBoxes.Count; ++i)
+				for (int i = MaxValue.CurrentValue; i < controls.Count; ++i)
 				{
-					checkBoxes[i].Dispose();
+					controls[i].Dispose();
 				}
-				checkBoxes.RemoveRange(maxValue, checkBoxes.Count - maxValue);
+				controls.RemoveRange(MaxValue.CurrentValue, controls.Count - MaxValue.CurrentValue);
 			}
 
-			int checkBoxIter = 0;
-			for (int r = 0; r < rowAmount; r++)
+			int controlIter = 0;
+			for (int r = 0; r < rowAmount; ++r)
 			{
 				uiElement.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / rowAmount));
-				for (int c = 0; c < columnAmount; c++)
+				for (int c = 0; c < columnAmount; ++c)
 				{
 					if ((c + 1) % 6 == 0)
 					{
 						//break, to separate groups of 5
 						if (r == 0)
 						{
-							uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, separatorWidth));
+							uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, separatorWidth));
 						}
 					}
 					else
 					{
 						if (r == 0)
 						{
-							uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, separatorWidth * separatorProportion));
+							uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, columnWidth));
 						}
-						if (checkBoxIter < maxValue)
+						if (controlIter < MaxValue.CurrentValue)
 						{
-							if (checkBoxIter >= checkBoxes.Count)
+							if (controlIter >= controls.Count)
 							{
-								CheckBox checkBox = new CheckBox
+								Control newControl;
+								if (canMultistep)
 								{
-									Anchor = System.Windows.Forms.AnchorStyles.None,
-									AutoSize = true,
-									Size = new System.Drawing.Size(15, 14),
-									Dock = DockStyle.Fill,
-									TabIndex = 0,
-									UseVisualStyleBackColor = true,
-									Checked = checkBoxIter < currentValue
-								};
-								checkBox.Click += new EventHandler(valueChanged);
-								checkBox.AutoCheck = false;
-								checkBoxes.Add(checkBox);
+									newControl = new CheckBox
+									{
+										Anchor = AnchorStyles.None,
+										AutoSize = true,
+										Size = new Size(15, 14),
+										Dock = DockStyle.None,
+										TabIndex = 0,
+										UseVisualStyleBackColor = true,
+										Checked = controlIter < currentValue,
+										AutoCheck = false
+									};
+								}
+								else
+								{
+									newControl = new RadioButton
+									{
+										Anchor = AnchorStyles.None,
+										AutoSize = true,
+										Size = new Size(15, 14),
+										Dock = DockStyle.None,
+										TabIndex = 0,
+										UseVisualStyleBackColor = true,
+										Checked = controlIter < currentValue,
+										AutoCheck = false
+									};
+								}
+								newControl.Click += new EventHandler(RecomputeValue);
+
+								controls.Add(newControl);
 							}
-							uiElement.Controls.Add(checkBoxes[checkBoxIter], c, r);
-							checkBoxIter++;
+							uiElement.Controls.Add(controls[controlIter], c, r);
+							++controlIter;
 						}
 					}
 				}
 			}
 
-			currentValue = Math.Min(currentValue, maxValue);
-
-			onValueChanged();
-			
-			for (int r = 0; r < rowAmount; r++)
+			if (CanChangeValue)
 			{
-				uiElement.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / rowAmount));
-				for (int c = 0; c < columnAmount; c++)
-				{
-					if ((c + 1) % 6 == 0)
-					{
-						//break, to separate groups of 5
-						if (r == 0)
-						{
-							uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, separatorWidth));
-						}
-					}
-					else
-					{
-						int checkBoxNr = checkBoxes.Count;
-						if (r == 0)
-						{
-							uiElement.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, separatorWidth * separatorProportion));
-						}
-						if (checkBoxNr < maxValue)
-						{
-							
-						}
-					}
-				}
+				currentValue = Math.Min(currentValue, MaxValue.CurrentValue);
 			}
-			onValueChanged();
+
+			OnValueChanged();
 		}
 
-		void onValueChanged()
+		void OnValueChanged()
 		{
-			for (int i = checkBoxes.Count - 1; i >= 0; i--)
+			for (int i = controls.Count - 1; i >= 0; i--)
 			{
-				checkBoxes[i].Checked = i < currentValue;
+				if (controls[i] is CheckBox checkBox)
+				{
+					checkBox.Checked = i < currentValue;
+				}
+				else if (controls[i] is RadioButton pip)
+				{
+					pip.Checked = i < currentValue;
+				}
+				else
+				{
+					throw new Exception("unrecognized control in ResourceComponent");
+				}
 			}
 
-			onComponentChanged();
+			OnComponentChanged();
+		}
+
+		public override int QueryInt(List<string> path)
+		{
+			if (path.Count > 1)
+			{
+				if (String.Equals(path[1], "MaxValue", StringComparison.OrdinalIgnoreCase))
+				{
+					isCurrentlyIncludedInModFormula = true;
+					return MaxValue.CurrentValue;
+				}
+				if (String.Equals(path[1], "Value", StringComparison.OrdinalIgnoreCase))
+				{
+					isCurrentlyIncludedInModFormula = true;
+					return currentValue;
+				}
+			}
+
+			throw new Exception("Component could not complete Query: " + path.ToString());
+		}
+
+		override public void ApplyModification(Modification mod, Sheet sheet)
+		{
+			if (mod is IntModification intMod)
+			{
+				if (mod.path.Count > 1)
+				{
+					if (String.Equals(mod.path[1], "MaxValue", StringComparison.OrdinalIgnoreCase))
+					{
+						MaxValue.ApplyModification(intMod, sheet);
+						isCurrentlyModified = true;
+					}
+				}
+			}
+		}
+
+		override public void ResetModifications()
+		{
+			base.ResetModifications();
+			MaxValue.Reset();
+		}
+
+		override public void OnModificationsComplete()
+		{
+			if (isCurrentlyModified || wasPreviouslyModified)
+			{
+				OnMaxValueChanged(true);
+			}
 		}
 	}
 }

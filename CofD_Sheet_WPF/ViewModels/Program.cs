@@ -38,7 +38,7 @@ namespace CofD_Sheet_WPF.ViewModels
 			}
 
 			watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
-			watcher.Changed += new FileSystemEventHandler(reload);
+			watcher.Changed += new FileSystemEventHandler(Reload);
 		}
 		
 		public string windowTitle
@@ -77,7 +77,7 @@ namespace CofD_Sheet_WPF.ViewModels
 
 		public RelayCommand onSaveSheetButtonPressed => new RelayCommand(saveSheetClicked);
 
-		public RelayCommand onLoadSheetButtonPressed => new RelayCommand(loadSheetClicked);
+		public RelayCommand onLoadSheetButtonPressed => new RelayCommand(LoadSheetClicked);
 
 		private void saveSheetClicked()
 		{
@@ -94,12 +94,12 @@ namespace CofD_Sheet_WPF.ViewModels
 			{
 				string path = saveFileDialog1.FileName;
 				watcher.Path = path.Substring(0, path.LastIndexOf('\\'));
-				saveSheet(path);
+				SaveSheet(path);
 				//sheet.changedSinceSave = false;
 			}
 		}
 
-		private void loadSheetClicked()
+		private void LoadSheetClicked()
 		{
 			OpenFileDialog openFileDialog1 = new OpenFileDialog
 			{
@@ -114,14 +114,14 @@ namespace CofD_Sheet_WPF.ViewModels
 			{
 				string path = openFileDialog1.FileName;
 				watcher.Path = path.Substring(0, path.LastIndexOf('\\'));
-				loadSheet(path);
+				LoadSheet(path);
 				//sheet.changedSinceSave = false;
 			}
 
 			//autoSaveDisabled = false;
 		}
 
-		public void saveSheet(string path)
+		public void SaveSheet(string path)
 		{
 			try
 			{
@@ -133,11 +133,18 @@ namespace CofD_Sheet_WPF.ViewModels
 			}
 			catch (Exception e)
 			{
-				MessageBox.Show("Error: Could not save file to disk. " + e.Message);
+				string ExceptionTrace = "";
+				Exception Inner = e.InnerException;
+				while (Inner != null)
+				{
+					ExceptionTrace += "\r\n" + Inner.Message;
+					Inner = Inner.InnerException;
+				}
+				MessageBox.Show("Error: Could not save file to disk. " + e.Message + ExceptionTrace);
 			}
 		}
 
-		public bool loadSheet(string path)
+		public bool LoadSheet(string path)
 		{
 			try
 			{
@@ -150,22 +157,29 @@ namespace CofD_Sheet_WPF.ViewModels
 			}
 			catch (Exception e)
 			{
-				MessageBox.Show("Error: Could not load file from disk. " + e.Message);
+				string ExceptionTrace = "";
+				Exception Inner = e.InnerException;
+				while (Inner != null)
+				{
+					ExceptionTrace += "\r\n" + Inner.Message;
+					Inner = Inner.InnerException;
+				}
+				MessageBox.Show("Error: Could not load file from disk. " + e.Message + ExceptionTrace);
 				return false;
 			}
 		}
 
-		public void resave()
+		public void Resave()
 		{
 			if (assosiatedFile.Length > 0)
 			{
 				watcher.EnableRaisingEvents = false;
-				saveSheet(assosiatedFile);
+				SaveSheet(assosiatedFile);
 				//sheet.changedSinceSave = false;
 			}
 		}
 
-		public void reload(object sender, FileSystemEventArgs e)
+		public void Reload(object sender, FileSystemEventArgs e)
 		{
 			if (e.FullPath == assosiatedFile)
 			{
@@ -174,12 +188,19 @@ namespace CofD_Sheet_WPF.ViewModels
 					bool fileRead = false;
 					while (!fileRead)
 					{
-						fileRead = loadSheet(assosiatedFile);
+						fileRead = LoadSheet(assosiatedFile);
 					}
 				}
 				catch (Exception ex)
 				{
-					MessageBox.Show("Error: Could not reload file from disk. Original error: " + ex.Message);
+					string ExceptionTrace = "";
+					Exception Inner = ex.InnerException;
+					while (Inner != null)
+					{
+						ExceptionTrace += "\r\n" + Inner.Message;
+						Inner = Inner.InnerException;
+					}
+					MessageBox.Show("Error: Could not reload file from disk. Original error: " + ex.Message + ExceptionTrace);
 				}
 			}
 		}

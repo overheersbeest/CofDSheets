@@ -1,4 +1,6 @@
-﻿using System.Windows.Forms;
+﻿using CofD_Sheet.Modifications;
+using System.Collections.Generic;
+using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -17,20 +19,38 @@ namespace CofD_Sheet.Sheet_Components
 	}
 	[XmlInclude(typeof(AdvantagesComponent))]
 	[XmlInclude(typeof(AspirationsComponent))]
-	[XmlInclude(typeof(AttributesComponent))]
 	[XmlInclude(typeof(ExperienceComponent))]
 	[XmlInclude(typeof(HealthComponent))]
-	[XmlInclude(typeof(MeritsComponent))]
+	[XmlInclude(typeof(ModificationSetComponent))]
 	[XmlInclude(typeof(ResourceComponent))]
-	[XmlInclude(typeof(SkillsComponent))]
-	[XmlInclude(typeof(StatComponent))]
+	[XmlInclude(typeof(TraitsComponent))]
+	[XmlInclude(typeof(TableComponent))]
+	[XmlInclude(typeof(TreeComponent))]
 	public abstract class ISheetComponent
 	{
 		[XmlIgnore]
-		public const int componentWidth = 315;
+		public const int rowHeight = 23;
 
 		[XmlIgnore]
-		protected TableLayoutPanel uiElement = new TableLayoutPanel();
+		public const int inputBoxHeight = 35;
+
+		[XmlIgnore]
+		public const int filledInputBoxHeight = 26;
+
+		[XmlIgnore]
+		public const int componentWidth = 303;
+
+		[XmlIgnore]
+		public TableLayoutPanel uiElement = new TableLayoutPanel();
+
+		[XmlIgnore]
+		protected bool isCurrentlyModified = false;
+
+		[XmlIgnore]
+		protected bool wasPreviouslyModified = false;
+
+		[XmlIgnore]
+		protected bool isCurrentlyIncludedInModFormula = false;
 
 		[XmlAttribute]
 		public string name;
@@ -38,32 +58,78 @@ namespace CofD_Sheet.Sheet_Components
 		[XmlAttribute]
 		public ColumnId column = ColumnId.Undefined;
 
+		[XmlIgnore]
+		public Sheet sheet = null;
+
 		public ISheetComponent(string componentName, ColumnId _column)
 		{
 			name = componentName;
 			column = _column;
 		}
 
-		abstract public Control getUIElement();
-		
-		protected void resizeParentColumn()
+		virtual public void Init(Sheet parentSheet)
 		{
-			Form1.resizeComponentColumn(uiElement);
+			sheet = parentSheet;
 		}
 
-		protected void onComponentChanged()
+		abstract public Control ConstructUIElement();
+
+		public void ResizeParentColumn()
 		{
-			if (Form1.instance.autoSave)
+			Form1.ResizeComponentColumn(uiElement);
+		}
+
+		protected void OnComponentChanged()
+		{
+			if (sheet.form is Form1 sheetForm)
 			{
-				if (Form1.instance.assosiatedFile.Length != 0)
+				if (sheetForm.AutoSave)
 				{
-					Form1.instance.saveAgain();
+					if (sheetForm.AssosiatedFile.Length != 0)
+					{
+						sheetForm.SaveAgain();
+					}
+				}
+				else
+				{
+					sheet.ChangedSinceSave = true;
+				}
+
+				if (isCurrentlyIncludedInModFormula)
+				{
+					sheet.RefreshModifications();
 				}
 			}
-			else
-			{
-				Form1.instance.sheet.changedSinceSave = true;
-			}
+		}
+
+		virtual public int QueryInt(List<string> path)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		virtual public string QueryString(List<string> path)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		virtual public void ApplyModification(Modification mod, Sheet sheet)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		virtual public void ResetModifications()
+		{
+			wasPreviouslyModified = isCurrentlyModified;
+			isCurrentlyModified = false;
+			isCurrentlyIncludedInModFormula = false;
+		}
+
+		virtual public void OnModificationsComplete()
+		{ }
+
+		public void PostModificationsComplete()
+		{
+			wasPreviouslyModified = false;
 		}
 	}
 }
