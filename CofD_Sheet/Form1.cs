@@ -65,7 +65,7 @@ namespace CofD_Sheet
 
 		static public Dictionary<SheetType, List<SheetType>> SheetTypeParentage = new Dictionary<SheetType, List<SheetType>>()
 		{
-			{ SheetType.None, new List<SheetType>() { SheetType.Mortal, SheetType.Mage, SheetType.Vampire, SheetType.Werewolf, SheetType.Promethean, SheetType.Ephemeral_Entity, SheetType.Other } },
+			{ SheetType.None, new List<SheetType>() { SheetType.Mortal, SheetType.Mage, SheetType.Vampire, SheetType.Werewolf, SheetType.Promethean, SheetType.Bound, SheetType.Ephemeral_Entity, SheetType.Other } },
 			{ SheetType.Mage, new List<SheetType>() { SheetType.Proximi } },
 			{ SheetType.Vampire, new List<SheetType>() { SheetType.Ghoul} },
 			{ SheetType.Werewolf, new List<SheetType>() { SheetType.Wolf_Blooded} },

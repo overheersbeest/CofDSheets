@@ -18,6 +18,7 @@ namespace CofD_Sheet
 		Werewolf,
 		Vampire,
 		Promethean,
+		Bound,
 
 		//minor splats
 		Proximi,
@@ -183,6 +184,24 @@ namespace CofD_Sheet
 					components.Add(new ResourceComponent("Blood Potency", false, false, 1, 10, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Vitae", true, true, 0, 10, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Humanity", false, false, 7, 10, ColumnId.Right, this));
+					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right, this));
+					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right, this));
+					components.Add(new TraitsComponent("Equipment", false, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right, this));
+					break;
+				case SheetType.Bound:
+					AddMortalSkillsAndAttributes();
+
+					components.Add(new TraitsComponent("Merits", true, "subtype", true, "merit", false, new List<string>(), 0, 5, ColumnId.Middle, this));
+					components.Add(new TraitsComponent("Remembrance Traits", true, "note", true, "remembrance trait", false, new List<string>(), 0, 0, ColumnId.Middle, this));
+					components.Add(new TraitsComponent("Keys", true, "note", true, "key", false, new List<string>(), 0, 0, ColumnId.Middle, this));
+					components.Add(new TraitsComponent("Manifestations", true, "note", true, "manifestation", false, new List<string>(), 0, 5, ColumnId.Middle, this));
+					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle, this));
+					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle, this));
+
+					components.Add(new HealthComponent("Health", ColumnId.Right, this));
+					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Synergy", false, false, 1, 10, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Plasm", true, true, 0, 5, ColumnId.Right, this));
 					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right, this));
 					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right, this));
 					components.Add(new TraitsComponent("Equipment", false, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right, this));
@@ -469,6 +488,10 @@ namespace CofD_Sheet
 				case SheetType.Vampire:
 					retVal.Add(new AdvantagesComponent.StringAdvantage("Mask"));
 					retVal.Add(new AdvantagesComponent.StringAdvantage("Dirge"));
+					break;
+				case SheetType.Bound:
+					retVal.Add(new AdvantagesComponent.StringAdvantage("Root"));
+					retVal.Add(new AdvantagesComponent.StringAdvantage("Bloom"));
 					break;
 				case SheetType.Spirit:
 					//nothing unique
