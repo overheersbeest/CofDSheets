@@ -1,4 +1,6 @@
-﻿namespace CofD_Sheet
+﻿using System.Drawing;
+
+namespace CofD_Sheet
 {
 	partial class Form1
 	{
