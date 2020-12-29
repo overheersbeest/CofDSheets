@@ -18,11 +18,11 @@ namespace CofD_Sheet.Sheet_Components
 			{ }
 			public Trait(string _name)
 			{
-				this.name = _name;
+				this.name = _name.Trim();
 			}
 			public Trait(string _name, int _value)
 			{
-				this.name = _name;
+				this.name = _name.Trim();
 				this.Value.CurrentValue = _value;
 			}
 
@@ -185,21 +185,40 @@ namespace CofD_Sheet.Sheet_Components
 
 		public Trait FindTraitByName(string labelText)
 		{
-			string traitText = labelText;
-			int notesStartIndex = labelText.IndexOf('(');
-			if (notesStartIndex > 0)
+			string traitText;
+			int searchStartIndex = 0;
+			while (searchStartIndex < labelText.Length)
 			{
-				traitText = traitText.Substring(0, notesStartIndex);
-			}
-			traitText = traitText.Trim();
-			foreach (Trait trait in Traits)
-			{
-				if (String.Equals(traitText, trait.name, StringComparison.OrdinalIgnoreCase)
-					|| String.Equals(traitText.Replace(' ', '_'), trait.name, StringComparison.OrdinalIgnoreCase))
+				int notesStartIndex;
+				try
 				{
-					return trait;
+					notesStartIndex = labelText.IndexOf('(', searchStartIndex);
+					searchStartIndex = notesStartIndex + 1;
+				}
+				catch (ArgumentOutOfRangeException)
+				{
+					//we could not find another opening bracket, so there are no specialties, check the full name and make sure we don't loop again
+					notesStartIndex = 0;
+					searchStartIndex = labelText.Length;
+				}
+				if (notesStartIndex > 0)
+				{
+					traitText = labelText.Substring(0, notesStartIndex).Trim();
+				}
+				else
+				{
+					traitText = labelText;
+				}
+				foreach (Trait trait in Traits)
+				{
+					if (String.Equals(traitText, trait.name, StringComparison.OrdinalIgnoreCase)
+						|| String.Equals(traitText.Replace(' ', '_'), trait.name, StringComparison.OrdinalIgnoreCase))
+					{
+						return trait;
+					}
 				}
 			}
+			
 			return null;
 		}
 
