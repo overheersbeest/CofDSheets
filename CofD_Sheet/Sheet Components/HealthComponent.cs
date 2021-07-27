@@ -1,4 +1,5 @@
-﻿using CofD_Sheet.Modifications;
+﻿using CofD_Sheet.Helpers;
+using CofD_Sheet.Modifications;
 using CofD_Sheet.Modifyables;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,15 @@ using System.Xml.Serialization;
 
 namespace CofD_Sheet.Sheet_Components
 {
+	[Serializable]
+	public enum DamageCombinationType
+	{
+		[XmlEnum(Name = "Rollover")]
+		Rollover,
+		[XmlEnum(Name = "OverwriteLesser")]
+		OverwriteLesser
+	}
+
 	[Serializable]
 	public class HealthComponent : ISheetComponent
 	{
@@ -26,7 +36,7 @@ namespace CofD_Sheet.Sheet_Components
 		public bool AllowAggravated = true;
 
 		[XmlElement]
-		public bool OverwriteLesserDamage = false;
+		public DamageCombinationType CombinationType = DamageCombinationType.Rollover;
 
 		[XmlAttribute]
 		public int aggravated = 0;
@@ -43,11 +53,11 @@ namespace CofD_Sheet.Sheet_Components
 		public HealthComponent() : base("HealthComponent", ColumnId.Undefined)
 		{ }
 
-		public HealthComponent(string componentName, int _MaxValue, bool _AllowAggravated, bool _OverwriteLesserDamage, ColumnId _column, Sheet parentSheet) : base(componentName, _column)
+		public HealthComponent(string componentName, int _MaxValue, bool _AllowAggravated, DamageCombinationType _CombinationType, ColumnId _column, Sheet parentSheet) : base(componentName, _column)
 		{
 			MaxValue.CurrentValue = _MaxValue;
 			AllowAggravated = _AllowAggravated;
-			OverwriteLesserDamage = _OverwriteLesserDamage;
+			CombinationType = _CombinationType;
 
 			Init(parentSheet);
 		}
@@ -111,13 +121,14 @@ namespace CofD_Sheet.Sheet_Components
 		{
 			if (CanChangeValue)
 			{
-				if (OverwriteLesserDamage)
+				switch (CombinationType)
 				{
-					CapDamageToMax();
-				}
-				else
-				{
-					HandleDamageRollover();
+					case DamageCombinationType.Rollover:
+						HandleDamageRollover();
+						break;
+					case DamageCombinationType.OverwriteLesser:
+						CapDamageToMax();
+						break;
 				}
 			}
 
@@ -183,51 +194,52 @@ namespace CofD_Sheet.Sheet_Components
 
 		void RecomputeValues(object sender, EventArgs e)
 		{
-			if (OverwriteLesserDamage)
+			switch (CombinationType)
 			{
-				//check new values, so we can check the delta
-				int newAggravated = 0;
-				int newLethal = 0;
-				int newBashing = 0;
-				for (int i = 0; i < slots.Count; ++i)
-				{
-					string text = slots[i].Text;
-					if (AllowAggravated) newAggravated += text.Count(f => f == '*');
-					newLethal += text.Count(f => f == 'x' || f == 'X');
-					newBashing += text.Count(f => f == '/' || f == '\\');
-				}
+				case DamageCombinationType.Rollover:
+					aggravated = 0;
+					lethal = 0;
+					bashing = 0;
+					for (int i = 0; i < slots.Count; ++i)
+					{
+						string text = slots[i].Text;
+						if (AllowAggravated) aggravated += text.Count(f => f == '*');
+						lethal += text.Count(f => f == 'x' || f == 'X');
+						bashing += text.Count(f => f == '/' || f == '\\');
+						HandleDamageRollover();
+					}
+					break;
+				case DamageCombinationType.OverwriteLesser:
+					//check new values, so we can check the delta
+					int newAggravated = 0;
+					int newLethal = 0;
+					int newBashing = 0;
+					for (int i = 0; i < slots.Count; ++i)
+					{
+						string text = slots[i].Text;
+						if (AllowAggravated) newAggravated += text.Count(f => f == '*');
+						newLethal += text.Count(f => f == 'x' || f == 'X');
+						newBashing += text.Count(f => f == '/' || f == '\\');
+					}
 
-				//least severe damage upgrades first, and each damage overwrites the most severe damage they can. 
-				int lethalIncrease = Math.Max(0, newLethal - lethal);
-				int aggIncrease = Math.Max(0, newAggravated - aggravated);
+					//least severe damage upgrades first, and each damage overwrites the most severe damage they can. 
+					int lethalIncrease = Math.Max(0, newLethal - lethal);
+					int aggIncrease = Math.Max(0, newAggravated - aggravated);
 
-				// upgrade lethal
-				newBashing = Math.Max(0, newBashing - lethalIncrease);
+					// upgrade lethal
+					newBashing = Math.Max(0, newBashing - lethalIncrease);
 
-				//upgrade aggravated
-				int spilloverToBashing = Math.Max(0, aggIncrease - newLethal);
-				newLethal = Math.Max(0, newLethal - aggIncrease);
-				newBashing = Math.Max(0, newBashing - spilloverToBashing);
+					//upgrade aggravated
+					int spilloverToBashing = Math.Max(0, aggIncrease - newLethal);
+					newLethal = Math.Max(0, newLethal - aggIncrease);
+					newBashing = Math.Max(0, newBashing - spilloverToBashing);
 
-				aggravated = newAggravated;
-				lethal = newLethal;
-				bashing = newBashing;
+					aggravated = newAggravated;
+					lethal = newLethal;
+					bashing = newBashing;
 
-				CapDamageToMax();
-			}
-			else
-			{
-				aggravated = 0;
-				lethal = 0;
-				bashing = 0;
-				for (int i = 0; i < slots.Count; ++i)
-				{
-					string text = slots[i].Text;
-					if (AllowAggravated) aggravated += text.Count(f => f == '*');
-					lethal += text.Count(f => f == 'x' || f == 'X');
-					bashing += text.Count(f => f == '/' || f == '\\');
-					HandleDamageRollover();
-				}
+					CapDamageToMax();
+					break;
 			}
 
 			OnValueChanged();
@@ -377,7 +389,8 @@ namespace CofD_Sheet.Sheet_Components
 				}
 			}
 
-			throw new Exception("Component could not complete Query: " + path.ToString());
+			StaticErrorLogger.AddQueryError(path);
+			return 0;
 		}
 
 		override public void ApplyModification(Modification mod, Sheet sheet)

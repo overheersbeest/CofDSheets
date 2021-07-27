@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CofD_Sheet.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -246,7 +247,8 @@ namespace CofD_Sheet.Sheet_Components
 				}
 			}
 
-			throw new Exception("Component could not complete Query: " + path.ToString());
+			StaticErrorLogger.AddQueryError(path);
+			return 0;
 		}
 	}
 }

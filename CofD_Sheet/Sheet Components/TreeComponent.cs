@@ -489,7 +489,23 @@ namespace CofD_Sheet.Sheet_Components
 
 			if (confirmed)
 			{
-				nodes.Remove(node);
+				RecursiveRemoveNode(nodes, node);
+				bool RecursiveRemoveNode(List<TreeNode> listToRemoveFrom, TreeNode nodeToRemove)
+				{
+					bool found = listToRemoveFrom.Remove(nodeToRemove);
+					if (!found)
+					{
+						foreach (TreeNode parentNode in listToRemoveFrom)
+						{
+							found = RecursiveRemoveNode(parentNode.childNodes, nodeToRemove);
+							if (found)
+							{
+								break;
+							}
+						}
+					}
+					return found;
+				}
 
 				OnTreeChanged();
 			}

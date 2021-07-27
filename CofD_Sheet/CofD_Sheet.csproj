@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DrawingHelper.cs" />
+    <Compile Include="Helpers\StaticErrorLogger.cs" />
     <Compile Include="Modifications\IntModification.cs" />
     <Compile Include="Modifications\Modification.cs" />
     <Compile Include="Modifications\StringModification.cs" />

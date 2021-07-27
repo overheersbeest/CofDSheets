@@ -1,4 +1,5 @@
-﻿using CofD_Sheet.Modifications;
+﻿using CofD_Sheet.Helpers;
+using CofD_Sheet.Modifications;
 using CofD_Sheet.Modifyables;
 using System;
 using System.Collections.Generic;
@@ -693,7 +694,8 @@ namespace CofD_Sheet.Sheet_Components
 				}
 			}
 
-			throw new Exception("Component could not complete Query: " + path.ToString());
+			StaticErrorLogger.AddQueryError(path);
+			return 0;
 		}
 
 		override public void ApplyModification(Modification mod, Sheet sheet)
