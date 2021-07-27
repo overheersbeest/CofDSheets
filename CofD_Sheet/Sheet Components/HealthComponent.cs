@@ -22,23 +22,33 @@ namespace CofD_Sheet.Sheet_Components
 		[XmlElement]
 		public ModifiableInt MaxValue = new ModifiableInt(0);
 
+		[XmlElement]
+		public bool AllowAggravated = true;
+
+		[XmlElement]
+		public bool OverwriteLesserDamage = false;
+
 		[XmlAttribute]
-		public int aggrivated = 0;
+		public int aggravated = 0;
 
 		[XmlAttribute]
 		public int lethal = 0;
 
 		[XmlAttribute]
 		public int bashing = 0;
-
+		
 		[XmlIgnore]
 		private readonly List<TextBox> slots = new List<TextBox>();
 
 		public HealthComponent() : base("HealthComponent", ColumnId.Undefined)
 		{ }
 
-		public HealthComponent(string componentName, ColumnId _column, Sheet parentSheet) : base(componentName, _column)
+		public HealthComponent(string componentName, int _MaxValue, bool _AllowAggravated, bool _OverwriteLesserDamage, ColumnId _column, Sheet parentSheet) : base(componentName, _column)
 		{
+			MaxValue.CurrentValue = _MaxValue;
+			AllowAggravated = _AllowAggravated;
+			OverwriteLesserDamage = _OverwriteLesserDamage;
+
 			Init(parentSheet);
 		}
 
@@ -101,7 +111,14 @@ namespace CofD_Sheet.Sheet_Components
 		{
 			if (CanChangeValue)
 			{
-				HandleDamageRollover();
+				if (OverwriteLesserDamage)
+				{
+					CapDamageToMax();
+				}
+				else
+				{
+					HandleDamageRollover();
+				}
 			}
 
 			int rowAmount = Convert.ToInt32(Math.Ceiling(MaxValue.CurrentValue / Convert.ToSingle(maxPerRow)));
@@ -166,16 +183,51 @@ namespace CofD_Sheet.Sheet_Components
 
 		void RecomputeValues(object sender, EventArgs e)
 		{
-			aggrivated = 0;
-			lethal = 0;
-			bashing = 0;
-			for (int i = 0; i < slots.Count; ++i)
+			if (OverwriteLesserDamage)
 			{
-				string text = slots[i].Text;
-				aggrivated += text.Count(f => f == '*');
-				lethal += text.Count(f => f == 'x' || f == 'X');
-				bashing += text.Count(f => f == '/' || f == '\\');
-				HandleDamageRollover();
+				//check new values, so we can check the delta
+				int newAggravated = 0;
+				int newLethal = 0;
+				int newBashing = 0;
+				for (int i = 0; i < slots.Count; ++i)
+				{
+					string text = slots[i].Text;
+					if (AllowAggravated) newAggravated += text.Count(f => f == '*');
+					newLethal += text.Count(f => f == 'x' || f == 'X');
+					newBashing += text.Count(f => f == '/' || f == '\\');
+				}
+
+				//least severe damage upgrades first, and each damage overwrites the most severe damage they can. 
+				int lethalIncrease = Math.Max(0, newLethal - lethal);
+				int aggIncrease = Math.Max(0, newAggravated - aggravated);
+
+				// upgrade lethal
+				newBashing = Math.Max(0, newBashing - lethalIncrease);
+
+				//upgrade aggravated
+				int spilloverToBashing = Math.Max(0, aggIncrease - newLethal);
+				newLethal = Math.Max(0, newLethal - aggIncrease);
+				newBashing = Math.Max(0, newBashing - spilloverToBashing);
+
+				aggravated = newAggravated;
+				lethal = newLethal;
+				bashing = newBashing;
+
+				CapDamageToMax();
+			}
+			else
+			{
+				aggravated = 0;
+				lethal = 0;
+				bashing = 0;
+				for (int i = 0; i < slots.Count; ++i)
+				{
+					string text = slots[i].Text;
+					if (AllowAggravated) aggravated += text.Count(f => f == '*');
+					lethal += text.Count(f => f == 'x' || f == 'X');
+					bashing += text.Count(f => f == '/' || f == '\\');
+					HandleDamageRollover();
+				}
 			}
 
 			OnValueChanged();
@@ -183,8 +235,8 @@ namespace CofD_Sheet.Sheet_Components
 
 		void HandleDamageRollover()
 		{
-			int overDamage = Math.Max(0, aggrivated + lethal + bashing - MaxValue.CurrentValue);
-			while (aggrivated < MaxValue.CurrentValue
+			int overDamage = Math.Max(0, aggravated + lethal + bashing - MaxValue.CurrentValue);
+			while (aggravated < MaxValue.CurrentValue
 				   && overDamage > 0)
 			{
 				if (bashing > 0)
@@ -199,28 +251,45 @@ namespace CofD_Sheet.Sheet_Components
 					}
 					else
 					{
-						//bashing + lethal -> aggrivated
+						//bashing + lethal -> aggravated
 						lethal--;
-						++aggrivated;
+						++aggravated;
 					}
 				}
 				else
 				{
 					//no bashing damage, but still too much damage
-					//2 lethal -> 1 aggrivated
+					//2 lethal -> 1 aggravated
 					lethal -= 2;
-					++aggrivated;
+					++aggravated;
 				}
 				overDamage--;
 			}
 
-			//in case we still have damage left after having a health track filled with aggrivated damage, remove all other damages
-			if (aggrivated >= MaxValue.CurrentValue)
+			//in case we still have damage left after having a health track filled with aggravated damage, remove all other damages
+			if (aggravated >= MaxValue.CurrentValue)
 			{
-				aggrivated = MaxValue.CurrentValue;
+				aggravated = MaxValue.CurrentValue;
 				lethal = 0;
 				bashing = 0;
 			}
+		}
+
+		void CapDamageToMax()
+		{
+			int overDamage = Math.Max(0, aggravated + lethal + bashing - MaxValue.CurrentValue);
+			//Bashing
+			int bashingReduction = Math.Min(bashing, overDamage);
+			bashing -= bashingReduction;
+			overDamage -= bashingReduction;
+			//Lethal
+			int lethalReduction = Math.Min(lethal, overDamage);
+			bashing -= lethalReduction;
+			overDamage -= lethalReduction;
+			//Aggravated
+			int aggReduction = Math.Min(aggravated, overDamage);
+			bashing -= aggReduction;
+			//overDamage -= aggReduction;
 		}
 
 		void OnValueChanged()
@@ -228,15 +297,15 @@ namespace CofD_Sheet.Sheet_Components
 			for (int i = 0; i < slots.Count; ++i)
 			{
 				slots[i].TextChanged -= RecomputeValues;
-				if (i < aggrivated)
+				if (i < aggravated)
 				{
 					slots[i].Text = "*";
 				}
-				else if (i < aggrivated + lethal)
+				else if (i < aggravated + lethal)
 				{
 					slots[i].Text = "x";
 				}
-				else if (i < aggrivated + lethal + bashing)
+				else if (i < aggravated + lethal + bashing)
 				{
 					slots[i].Text = "/";
 				}
@@ -301,10 +370,10 @@ namespace CofD_Sheet.Sheet_Components
 					isCurrentlyIncludedInModFormula = true;
 					return lethal;
 				}
-				if (String.Equals(path[1], "Aggrivated", StringComparison.OrdinalIgnoreCase))
+				if (String.Equals(path[1], "Aggravated", StringComparison.OrdinalIgnoreCase))
 				{
 					isCurrentlyIncludedInModFormula = true;
-					return aggrivated;
+					return aggravated;
 				}
 			}
 

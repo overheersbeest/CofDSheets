@@ -19,6 +19,7 @@ namespace CofD_Sheet
 		Vampire,
 		Promethean,
 		Bound,
+		Lost,
 
 		//minor splats
 		Proximi,
@@ -101,7 +102,7 @@ namespace CofD_Sheet
 					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle, this));
 					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle, this));
 
-					components.Add(new HealthComponent("Health", ColumnId.Right, this));
+					components.Add(new HealthComponent("Health", 0, true, false, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Integrity", false, false, 7, 10, ColumnId.Right, this));
 					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right, this));
@@ -118,7 +119,7 @@ namespace CofD_Sheet
 					components.Add(new ExperienceComponent("Arcane_Experience", "Arcane_Beats", ColumnId.Middle, this));
 					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle, this));
 
-					components.Add(new HealthComponent("Health", ColumnId.Right, this));
+					components.Add(new HealthComponent("Health", 0, true, false, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Gnosis", false, false, 1, 10, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Mana", true, true, 0, 10, ColumnId.Right, this));
@@ -140,7 +141,7 @@ namespace CofD_Sheet
 					components.Add(new TraitsComponent("Rites", true, "symbol", true, "rite", false, new List<string>(), 0, 0, ColumnId.Middle, this));
 					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle, this));
 
-					components.Add(new HealthComponent("Health", ColumnId.Right, this));
+					components.Add(new HealthComponent("Health", 0, true, false, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Primal_Urge", false, false, 1, 10, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Essence", true, true, 0, 10, ColumnId.Right, this));
@@ -160,7 +161,7 @@ namespace CofD_Sheet
 					components.Add(new TreeComponent("Transmutations", new List<string>() { "Transmutation", "Alembic", "Distillation", "Description" }, new List<TreeComponent.TreeNode>(), ColumnId.Middle, this));
 					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle, this));
 
-					components.Add(new HealthComponent("Health", ColumnId.Right, this));
+					components.Add(new HealthComponent("Health", 0, true, false, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Azoth", false, false, 1, 10, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Pyros", true, true, 0, 10, ColumnId.Right, this));
@@ -179,7 +180,7 @@ namespace CofD_Sheet
 					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle, this));
 					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle, this));
 
-					components.Add(new HealthComponent("Health", ColumnId.Right, this));
+					components.Add(new HealthComponent("Health", 0, true, false, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Blood Potency", false, false, 1, 10, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Vitae", true, true, 0, 10, ColumnId.Right, this));
@@ -197,13 +198,39 @@ namespace CofD_Sheet
 					components.Add(new TraitsComponent("Manifestations", true, "note", true, "manifestation", false, new List<string>(), 0, 5, ColumnId.Middle, this));
 					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle, this));
 					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle, this));
+					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle, this));
 
-					components.Add(new HealthComponent("Health", ColumnId.Right, this));
+					components.Add(new HealthComponent("Health", 0, true, false, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Synergy", false, false, 1, 10, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Plasm", true, true, 0, 5, ColumnId.Right, this));
 					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right, this));
 					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right, this));
+					components.Add(new TraitsComponent("Equipment", false, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right, this));
+					break;
+				case SheetType.Lost:
+					AddMortalSkillsAndAttributes();
+
+					components.Add(new TraitsComponent("Merits", true, "subtype", true, "merit", false, new List<string>(), 0, 5, ColumnId.Middle, this));
+					components.Add(new TraitsComponent("Favored Regalia", false, "note", true, "bane", false, new List<string>(), 0, 0, ColumnId.Middle, this));
+					components.Add(new TraitsComponent("Frailties", false, "note", true, "bane", false, new List<string>(), 0, 0, ColumnId.Middle, this));
+					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle, this));
+					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle, this));
+					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle, this));
+
+					components.Add(new HealthComponent("Health", 0, true, false, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Wyrd", false, false, 1, 10, ColumnId.Right, this));
+					components.Add(new ResourceComponent("Glamour", true, true, 10, 10, ColumnId.Right, this));
+					components.Add(new HealthComponent("Clarity", 0, false, true, ColumnId.Right, this));
+					components.Add(new TableComponent("Touchstones", true, "touchstone",
+						new List<Tuple<string, TableComponent.TableValue>> {
+							new Tuple<string, TableComponent.TableValue>("Rating", new TableComponent.TableValue_Numeric(0, false, false)),
+							new Tuple<string, TableComponent.TableValue>("Touchstone", new TableComponent.TableValue_String(""))
+						}, ColumnId.Middle, this));
+					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right, this));
+					components.Add(new AspirationsComponent("Aspirations", 3, ColumnId.Right, this));
+					components.Add(new TraitsComponent("Contracts", true, "note", true, "contract", false, new List<string>(), 0, 0, ColumnId.Right, this));
 					components.Add(new TraitsComponent("Equipment", false, "note", true, "equipment", false, new List<string>(), 0, 0, ColumnId.Right, this));
 					break;
 
@@ -219,7 +246,7 @@ namespace CofD_Sheet
 					components.Add(new ExperienceComponent("Arcane_Experience", "Arcane_Beats", ColumnId.Middle, this));
 					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle, this));
 
-					components.Add(new HealthComponent("Health", ColumnId.Right, this));
+					components.Add(new HealthComponent("Health", 0, true, false, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Mana", true, true, 0, 5, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Integrity", false, false, 7, 10, ColumnId.Right, this));
@@ -237,7 +264,7 @@ namespace CofD_Sheet
 					components.Add(new TraitsComponent("Rites", true, "symbol", true, "rite", false, new List<string>(), 0, 0, ColumnId.Middle, this));
 					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle, this));
 
-					components.Add(new HealthComponent("Health", ColumnId.Right, this));
+					components.Add(new HealthComponent("Health", 0, true, false, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Integrity", false, false, 7, 10, ColumnId.Right, this));
 					components.Add(new TraitsComponent("Conditions", true, "effect", true, "condition", false, new List<string>(), 0, 0, ColumnId.Right, this));
@@ -253,7 +280,7 @@ namespace CofD_Sheet
 					components.Add(new ExperienceComponent("Experience", "Beats", ColumnId.Middle, this));
 					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle, this));
 
-					components.Add(new HealthComponent("Health", ColumnId.Right, this));
+					components.Add(new HealthComponent("Health", 0, true, false, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Vitae", true, true, 0, 0, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Integrity", false, false, 7, 10, ColumnId.Right, this));
@@ -272,7 +299,7 @@ namespace CofD_Sheet
 					components.Add(new TraitsComponent("Numina", true, "note", true, "numina", false, new List<string>(), 0, 0, ColumnId.Middle, this));
 					components.Add(new TraitsComponent("Manifestations", true, "note", true, "manifestation", false, new List<string>() { "Twilight Form" }, 0, 0, ColumnId.Middle, this));
 
-					components.Add(new HealthComponent("Corpus", ColumnId.Right, this));
+					components.Add(new HealthComponent("Corpus", 0, true, false, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Essence", true, true, 0, 10, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Rank", false, false, 0, 5, ColumnId.Right, this));
@@ -287,7 +314,7 @@ namespace CofD_Sheet
 					components.Add(new TraitsComponent("Numina", true, "note", true, "numina", false, new List<string>(), 0, 0, ColumnId.Middle, this));
 					components.Add(new TraitsComponent("Manifestations", true, "note", true, "manifestation", false, new List<string>() { "Twilight Form" }, 0, 0, ColumnId.Middle, this));
 
-					components.Add(new HealthComponent("Corpus", ColumnId.Right, this));
+					components.Add(new HealthComponent("Corpus", 0, true, false, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Essence", true, true, 0, 10, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Rank", false, false, 0, 5, ColumnId.Right, this));
@@ -303,7 +330,7 @@ namespace CofD_Sheet
 					components.Add(new TraitsComponent("Numina", true, "note", true, "numina", false, new List<string>(), 0, 0, ColumnId.Middle, this));
 					components.Add(new TraitsComponent("Manifestations", true, "note", true, "manifestation", false, new List<string>() { "Twilight Form" }, 0, 0, ColumnId.Middle, this));
 
-					components.Add(new HealthComponent("Corpus", ColumnId.Right, this));
+					components.Add(new HealthComponent("Corpus", 0, true, false, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Essence", true, true, 0, 10, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Rank", false, false, 0, 5, ColumnId.Right, this));
@@ -318,7 +345,7 @@ namespace CofD_Sheet
 					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle, this));
 					components.Add(new TraitsComponent("Numina", true, "note", true, "numina", false, new List<string>(), 0, 0, ColumnId.Middle, this));
 
-					components.Add(new HealthComponent("Corpus", ColumnId.Right, this));
+					components.Add(new HealthComponent("Corpus", 0, true, false, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Essence", true, true, 0, 10, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Rank", false, false, 0, 5, ColumnId.Right, this));
@@ -331,7 +358,7 @@ namespace CofD_Sheet
 					components.Add(new TraitsComponent("Arcana", false, "note", false, "arcanum", false, new List<string> { "Death", "Fate", "Forces", "Life", "Matter", "Mind", "Prime", "Space", "Spirit", "Time" }, 0, 5, ColumnId.Middle, this));
 					components.Add(new AdvantagesComponent("Advantages", GetAdvantages(type), ColumnId.Middle, this));
 
-					components.Add(new HealthComponent("Corpus", ColumnId.Right, this));
+					components.Add(new HealthComponent("Corpus", 0, true, false, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Mana", true, true, 0, 10, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Rank", false, false, 0, 5, ColumnId.Right, this));
@@ -354,7 +381,7 @@ namespace CofD_Sheet
 					components.Add(new TableComponent("Weapons", true, "weapon", GetWeaponColumns(), ColumnId.Middle, this));
 					components.Add(new TreeComponent("Tree", new List<string>() { "Transmutation", "Alembic", "Distillation", "Description" }, new List<TreeComponent.TreeNode>(), ColumnId.Middle, this));
 
-					components.Add(new HealthComponent("Health", ColumnId.Right, this));
+					components.Add(new HealthComponent("Health", 0, true, false, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Willpower", true, true, 0, 0, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Power_Stat", false, false, 1, 10, ColumnId.Right, this));
 					components.Add(new ResourceComponent("Juice", true, true, 0, 10, ColumnId.Right, this));
@@ -492,6 +519,10 @@ namespace CofD_Sheet
 				case SheetType.Bound:
 					retVal.Add(new AdvantagesComponent.StringAdvantage("Root"));
 					retVal.Add(new AdvantagesComponent.StringAdvantage("Bloom"));
+					break;
+				case SheetType.Lost:
+					retVal.Add(new AdvantagesComponent.StringAdvantage("Needle"));
+					retVal.Add(new AdvantagesComponent.StringAdvantage("Thread"));
 					break;
 				case SheetType.Spirit:
 					//nothing unique
@@ -632,6 +663,9 @@ namespace CofD_Sheet
 			{
 				case SheetType.Ghoul:
 					DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Vitae", "MaxValue" }, 0, "Physical_Attributes.Stamina", IntModificationType.Delta));
+					break;
+				case SheetType.Lost:
+					DefaultModSet.modifications.Add(new IntModification(new List<string>() { "Clarity", "MaxValue" }, 0, "(Mental_Attributes.Resolve+Social_Attributes.Composure)", IntModificationType.Delta));
 					break;
 			}
 		}
